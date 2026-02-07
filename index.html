@@ -1,196 +1,250 @@
 <!DOCTYPE html>
 <html data-bs-theme="dark">
+
 <head>
     <title>Ryan Barry - Game Developer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <script src="js/bootstrap.bundle.js"> </script>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link type="text/css" rel="stylesheet" href="css/custom.css"/>
-	<meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="css/custom.css" />
+    <meta charset="utf-8" />
 </head>
 
 <body>
 
-    <!-- MAIN HEADER -->
+    <!-- MAIN CONTAINER -->
+    <!-- HEADER -->
     <div class="container mt-4 mb-4">
         <h1>Ryan Barry</h1>
         <p class="lead">Game Developer | MonoGame | C# | Unity </p>
         <hr>
+        <main>
+            <!-- MAIN CONTENT (inside container). g-4 creates spacing between columns -->
+            <div class="top-buffer row gy-4" id="mainContent">
+
+                <!-- PROJECT 1: PALE ROOTS -->
+                <div class="col-md-6">
+                    <!-- CRUCIAL: h-100 makes all cards equal height -->
+                    <div class="card h-100 text-white bg-dark mb-3">
+                        <!-- Carousel Start -->
+                        <div id="carouselPR" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="Content/Images/PR.png" class="d-block w-100" alt="Pale Roots Main">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/PRimg1.png" class="d-block w-100"
+                                        alt="Pale Roots Gameplay">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/PRimg2.png" class="d-block w-100" alt="Pale Roots System">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/PRimg3.png" class="d-block w-100" alt="Pale Roots Code">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselPR"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselPR"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <!-- Carousel End -->
+
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title">Pale Roots</h3>
+                            <h4 class="card-title">MonoGame</h4>
+                            <div>
+                                <span class="badge bg-info text-dark">C#</span>
+                                <span class="badge bg-info text-dark">Engine Design</span>
+                            </div>
+                            <p class="card-text mt-3">
+                                <strong>Engine Architecture:</strong> Built the engine systems from the ground up rather
+                                than using a pre-made engine like Unity. This involves writing custom handlers for the
+                                game loop, sprite batching, and tile-based collision detection.
+                                <br><br>
+                                <strong>Systems Design:</strong> Implemented complex grid-based farming mechanics and
+                                real-time combat logic entirely in C#.
+                                <br><br>
+                                <strong>Goal:</strong> Demonstrating a deep understanding of core programming concepts
+                                and memory management by handling low-level game architecture manually.
+                            </p>
+                            <a class="btn btn-primary mt-auto mt-auto"
+                                href="https://github.com/RyanBarry2203/Pale-Roots.git">Go to repository &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJECT 2: DYING FIRE -->
+                <div class="col-md-6">
+                    <div class="card h-100 text-white bg-dark mb-3">
+                        <!-- Carousel Start -->
+                        <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="Content/Images/DF.png" class="d-block w-100" alt="Dying Fire Main">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/DFimg1.png" class="d-block w-100"
+                                        alt="Dying Fire Gameplay">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/DFimg2.png" class="d-block w-100"
+                                        alt="Dying Fire Inventory">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/DFimg3.png" class="d-block w-100" alt="Dying Fire Code">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselDF"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselDF"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <!-- Carousel End -->
+
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title">Dying Fire</h3>
+                            <h4 class="card-title">XAML, WPF</h4>
+                            <div>
+                                <span class="badge bg-info text-dark">C#</span>
+                                <span class="badge bg-info text-dark">UI Logic & Databases</span>
+                            </div>
+                            <p class="card-text mt-3">
+                                <strong>Architecture:</strong> Utilized a robust OOP class hierarchy to manage entities,
+                                employing Polymorphism and Inheritance to distinguish between Player, Enemy, and
+                                Interactive Objects.
+                                <br><br>
+                                <strong>Inventory System:</strong> Built a dynamic inventory management system using
+                                ObservableCollections and LINQ queries for real-time sorting and filtering.
+                                <br><br>
+                                <strong>Data Persistence:</strong> Implemented JSON parsing for complex dialogue trees
+                                and SQL database integration to persist player stats and progression.
+                                <br><br>
+                                <strong>Game Logic:</strong> Developed a Finite State Machine (FSM) to handle the
+                                transition between the "Investigation Phase" (Point-and-Click) and "Descent Phase"
+                                (Turn-Based Combat).
+                            </p>
+                            <a class="btn btn-primary mt-auto" href="https://github.com/RyanBarry2203/DyingFire.git">Go
+                                to repository &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJECT 3: HOUSE OF HISTORY -->
+                <div class="col-md-6">
+                    <div class="card h-100 text-white bg-dark mb-3">
+                        <!-- Carousel Start -->
+                        <div id="carouselHOH" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="Content/Images/HOH.png" class="d-block w-100" alt="House of History Main">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/HOHimg1.png" class="d-block w-100" alt="HOH Gameplay">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/HOHimg2.png" class="d-block w-100" alt="HOH Logic">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="Content/Images/HOHimg3.png" class="d-block w-100" alt="HOH Code">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHOH"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselHOH"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <!-- Carousel End -->
+
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title">House Of History</h3>
+                            <h4 class="card-title">Console App</h4>
+                            <div>
+                                <span class="badge bg-info text-dark">C#</span>
+                                <span class="badge bg-info text-dark">OOP Principles</span>
+                            </div>
+                            <p class="card-text mt-3">
+                                <strong>Pure Logic & OOP:</strong> Built entirely as a standard Console Application to
+                                focus strictly on Object-Oriented Programming principles and C# syntax.
+                                <br><br>
+                                <strong>Creative Constraints:</strong> Challenged myself to create atmosphere and
+                                tension using only text parsing and pacing, requiring robust input validation and state
+                                management.
+                                <br><br>
+                                <strong>Narrative Design:</strong> Structured a non-linear narrative path that reacts to
+                                user input within the command line interface.
+                            </p>
+                            <a class="btn btn-primary mt-auto"
+                                href="https://github.com/RyanBarry2203/Escape-Room-Personal.git">Go to repository
+                                &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJECT 4: ABOUT ME / LINKEDIN / CV -->
+                <div class="col-md-6">
+                    <div class="card h-100 text-white bg-dark mb-3">
+                        <!-- Ensure your file is named Profile.jpg (Capital P) in Content/Images/ -->
+                        <img src="Content/Images/Profile.jpg" class="card-img-top" alt="Ryan Barry Profile">
+
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title">About Me</h3>
+                            <h4 class="card-title">The Drive to Create</h4>
+                            <p class="card-text mt-3">
+                                My obsession with games goes beyond playing; it is about understanding the mechanics
+                                that create immersion. From the narrative depth of <em>Red Dead Redemption 2</em> to the
+                                punishing precision of <em>Dark Souls</em>, I study how systems combine to create
+                                emotional impact.
+                                <br><br>
+                                <strong>My Ambition:</strong> My goal is to become a Game Director capable of
+                                understanding every element of the pipeline—from Art to UI to Core Architecture. I
+                                believe every morsel of a game must be deliberate.
+                                <br><br>
+                                <strong>Why Hire Me:</strong> I balance my Second Year studies (on track for First Class
+                                Honours) with a management role in a high-volume bar. This has forged a work ethic and
+                                leadership ability that I apply directly to development. I have pushed myself to build
+                                custom engines and complex systems to ensure I am as technically capable as any
+                                graduate.
+                                <br><br>
+                                I am seeking an internship opportunity to prove my value. I just need a foot in the
+                                door; I will do the rest.
+                            </p>
+
+                            <div class="d-flex flex-row mt-auto" id="links">
+                                <!-- LINKEDIN BUTTON -->
+                                <a class="btn btn-primary" href="https://www.linkedin.com/in/ryan-barry-gamedev/"
+                                    target="_blank">Connect on LinkedIn &raquo;</a>
+
+                                <!-- CV BUTTON (Make sure you upload RyanBarry_CV.pdf to the Content folder!) -->
+                                <a class="btn btn-success" href="Content/RyanBarry_CV.pdf" target="_blank">Download CV
+                                    &raquo;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
 
-    <div class="row top-buffer">
-        
-        <!-- PROJECT 1: PALE ROOTS -->
-        <div class="col-sm-6">
-            <div class="card text-white bg-dark mb-3">
-                <!-- Carousel Start -->
-                <div id="carouselPR" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/PR.png" class="d-block w-100" alt="Pale Roots Main">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/PRimg1.png" class="d-block w-100" alt="Pale Roots Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/PRimg2.png" class="d-block w-100" alt="Pale Roots System">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/PRimg3.png" class="d-block w-100" alt="Pale Roots Code">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPR" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPR" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <!-- Carousel End -->
-
-                <div class="card-body">
-                    <h3 class="card-title">Pale Roots</h3>
-                    <h4 class="card-title">MonoGame</h4>
-                    <span class="badge bg-info text-dark">C#</span>
-                    <span class="badge bg-info text-dark">Engine Design</span>
-                    <p class="card-text mt-3">
-                        <strong>Engine Architecture:</strong> Built the engine systems from the ground up rather than using a pre-made engine like Unity. This involves writing custom handlers for the game loop, sprite batching, and tile-based collision detection.
-                        <br><br>
-                        <strong>Systems Design:</strong> Implemented complex grid-based farming mechanics and real-time combat logic entirely in C#.
-                        <br><br>
-                        <strong>Goal:</strong> Demonstrating a deep understanding of core programming concepts and memory management by handling low-level game architecture manually.
-                    </p>
-                    <a class="btn btn-primary" href="https://github.com/RyanBarry2203/Pale-Roots.git">Go to repository &raquo;</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROJECT 2: DYING FIRE -->
-        <div class="col-sm-6">
-            <div class="card text-white bg-dark mb-3">
-                <!-- Carousel Start -->
-                <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/DF.png" class="d-block w-100" alt="Dying Fire Main">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg1.png" class="d-block w-100" alt="Dying Fire Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg2.png" class="d-block w-100" alt="Dying Fire Inventory">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg3.png" class="d-block w-100" alt="Dying Fire Code">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDF" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselDF" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <!-- Carousel End -->
-
-                <div class="card-body">
-                    <h3 class="card-title">Dying Fire</h3>
-                    <h4 class="card-title">XAML, WPF</h4>
-                    <span class="badge bg-info text-dark">C#</span>
-                    <span class="badge bg-info text-dark">UI Logic & Databases</span>
-                    <p class="card-text mt-3">
-                        <strong>Architecture:</strong> Utilized a robust OOP class hierarchy to manage entities, employing Polymorphism and Inheritance to distinguish between Player, Enemy, and Interactive Objects.
-                        <br><br>
-                        <strong>Inventory System:</strong> Built a dynamic inventory management system using ObservableCollections and LINQ queries for real-time sorting and filtering.
-                        <br><br>
-                        <strong>Data Persistence:</strong> Implemented JSON parsing for complex dialogue trees and SQL database integration to persist player stats and progression.
-                        <br><br>
-                        <strong>Game Logic:</strong> Developed a Finite State Machine (FSM) to handle the transition between the "Investigation Phase" (Point-and-Click) and "Descent Phase" (Turn-Based Combat).
-                    </p>
-                    <a class="btn btn-primary" href="https://github.com/RyanBarry2203/DyingFire.git">Go to repository &raquo;</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROJECT 3: HOUSE OF HISTORY -->
-        <div class="col-sm-6">
-            <div class="card text-white bg-dark mb-3">
-                <!-- Carousel Start -->
-                <div id="carouselHOH" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/HOH.png" class="d-block w-100" alt="House of History Main">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg1.png" class="d-block w-100" alt="HOH Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg2.png" class="d-block w-100" alt="HOH Logic">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg3.png" class="d-block w-100" alt="HOH Code">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHOH" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselHOH" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <!-- Carousel End -->
-
-                <div class="card-body">
-                    <h3 class="card-title">House Of History</h3>
-                    <h4 class="card-title">Console App</h4>
-                    <span class="badge bg-info text-dark">C#</span>
-                    <span class="badge bg-info text-dark">OOP Principles</span>
-                    <p class="card-text mt-3">
-                        <strong>Pure Logic & OOP:</strong> Built entirely as a standard Console Application to focus strictly on Object-Oriented Programming principles and C# syntax.
-                        <br><br>
-                        <strong>Creative Constraints:</strong> Challenged myself to create atmosphere and tension using only text parsing and pacing, requiring robust input validation and state management.
-                        <br><br>
-                        <strong>Narrative Design:</strong> Structured a non-linear narrative path that reacts to user input within the command line interface.
-                    </p>
-                    <a class="btn btn-primary" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git">Go to repository &raquo;</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROJECT 4: ABOUT ME / LINKEDIN / CV -->
-        <div class="col-sm-6">
-            <div class="card text-white bg-dark mb-3">
-                <!-- Ensure your file is named Profile.jpg (Capital P) in Content/Images/ -->
-                <img src="Content/Images/Profile.jpg" class="card-img-top" alt="Ryan Barry Profile" style="object-fit: cover; max-height: 400px;">
-                
-                <div class="card-body">
-                    <h3 class="card-title">About Me</h3>
-                    <h4 class="card-title">The Drive to Create</h4>
-                    <p class="card-text mt-3">
-                        My obsession with games goes beyond playing; it is about understanding the mechanics that create immersion. From the narrative depth of <em>Red Dead Redemption 2</em> to the punishing precision of <em>Dark Souls</em>, I study how systems combine to create emotional impact.
-                        <br><br>
-                        <strong>My Ambition:</strong> My goal is to become a Game Director capable of understanding every element of the pipeline—from Art to UI to Core Architecture. I believe every morsel of a game must be deliberate.
-                        <br><br>
-                        <strong>Why Hire Me:</strong> I balance my Second Year studies (on track for First Class Honours) with a management role in a high-volume bar. This has forged a work ethic and leadership ability that I apply directly to development. I have pushed myself to build custom engines and complex systems to ensure I am as technically capable as any graduate.
-                        <br><br>
-                        I am seeking an internship opportunity to prove my value. I just need a foot in the door; I will do the rest.
-                    </p>
-                    
-                    <!-- LINKEDIN BUTTON -->
-                    <a class="btn btn-primary" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank">Connect on LinkedIn &raquo;</a>
-                    
-                    <!-- CV BUTTON (Make sure you upload RyanBarry_CV.pdf to the Content folder!) -->
-                    <a class="btn btn-success" href="Content/RyanBarry_CV.pdf" target="_blank">Download CV &raquo;</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
 </body>
+
 </html>
