@@ -1,1 +1,35 @@
 .top-buffer { margin-top:20px; }
+
+/* This will define a fix height for all carousel images - no more UI jumping on image change (CLS) */
+.carousel-item img, .card-img-top { /* Card-img-top targets About Me picture */
+    height: 300px; /* Adjust this value up to your preference 200,300 etc */
+    object-fit: cover; /* Key property: crops image to fill space without stretching */
+    object-position: center; /* Centers the image */
+    width: 100%; /* Make image restricted by container */
+}
+
+/* Override Bootstrap default black color for carousel buttons by removing the filter */
+[data-bs-theme=dark] .carousel .carousel-control-next-icon, [data-bs-theme=dark] .carousel .carousel-control-prev-icon, [data-bs-theme=dark].carousel .carousel-control-next-icon, [data-bs-theme=dark].carousel .carousel-control-prev-icon {
+    filter: none;
+}
+
+/* Styling for links for "About Me" section */
+#links {
+    gap: 0.5rem; /* spacing between buttons */
+}
+
+#links a {
+    flex-basis: 200px; /* This is button's "mininum width" so they're the same size */
+    flex-grow: 1; /* Makes sure buttons equally proportionally take available space */
+    flex-shrink: 1; /* Makes sure buttons proportionally shrink in limited space */
+}
+
+@media(min-width: 768px) {
+    /* 
+        Before 768px - on phones buttons will stretch to fill the container - easy to tap
+        On desktop - it will have a fixed size of 200px, nice and easy to click with the mouse
+    */
+    .card-body > a {
+        max-width: 200px;
+    }
+}
