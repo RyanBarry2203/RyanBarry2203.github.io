@@ -36,60 +36,33 @@
         h1, h2, h3, h4, .card-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
+            color: #fff;
+        }
+
+        /* --- HEADER STYLES --- */
+        /* Keeping strictly to your original layout, just adjusting colors for visibility */
+        .container h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .lead {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        hr {
+            border-top: 2px solid var(--primary-accent);
+            opacity: 0.5;
+            margin-top: 20px;
+            margin-bottom: 40px;
         }
 
         /* --- ANIMATIONS --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes shine {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
-        }
-
-        /* --- HERO SECTION --- */
-        .hero-section {
-            padding: 100px 0 80px;
-            text-align: center;
-            background: radial-gradient(circle at center, rgba(26,28,35,0.0) 0%, rgba(15,16,20,1) 100%);
-            margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero-name {
-            font-size: 4rem;
-            /* Animated Gradient Text */
-            background: linear-gradient(90deg, #ffffff, var(--primary-accent), #ffffff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
-            margin-bottom: 10px;
-            letter-spacing: -2px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        .hero-divider {
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--secondary-accent), var(--primary-accent));
-            margin: 25px auto;
-            border-radius: 4px;
-            border: none;
-            opacity: 1;
         }
 
         /* --- CARDS --- */
@@ -99,8 +72,7 @@
             border-radius: 16px;
             overflow: hidden;
             height: 100%;
-            /* Interactions */
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
@@ -111,7 +83,6 @@
         }
 
         .card-body { padding: 1.5rem; }
-        .card-title { color: #fff; margin-bottom: 0.2rem; }
         
         .card-subtitle {
             color: var(--primary-accent);
@@ -123,22 +94,21 @@
             display: block;
         }
 
-        /* --- STAGGERED ENTRANCE ANIMATION FOR CARDS --- */
+        /* --- STAGGERED ENTRANCE --- */
         .project-card-container {
             opacity: 0;
             animation: fadeInUp 0.8s ease-out forwards;
         }
-        /* Delays for each card so they appear one by one */
-        .project-card-container:nth-child(1) { animation-delay: 0.2s; }
-        .project-card-container:nth-child(2) { animation-delay: 0.4s; }
-        .project-card-container:nth-child(3) { animation-delay: 0.6s; }
-        .project-card-container:nth-child(4) { animation-delay: 0.8s; }
+        .project-card-container:nth-child(1) { animation-delay: 0.1s; }
+        .project-card-container:nth-child(2) { animation-delay: 0.3s; }
+        .project-card-container:nth-child(3) { animation-delay: 0.5s; }
+        .project-card-container:nth-child(4) { animation-delay: 0.7s; }
 
         /* --- BADGES --- */
         .badge {
             padding: 0.6em 0.9em;
             font-weight: 500;
-            border-radius: 50px; /* Pill shape */
+            border-radius: 50px;
             font-size: 0.7rem;
             letter-spacing: 0.5px;
         }
@@ -161,78 +131,58 @@
             object-position: top center;
         }
 
-        /* --- BUTTONS (The Dynamic Part) --- */
+        /* --- BUTTONS --- */
         .btn-custom {
-            position: relative;
-            background: transparent;
-            border: 2px solid var(--primary-accent);
-            color: var(--primary-accent);
-            font-weight: 700;
-            border-radius: 8px;
-            padding: 10px 20px;
-            z-index: 1;
-            overflow: hidden; /* Needed for the fill effect */
-            transition: color 0.4s ease-in-out;
+            display: block;
             width: 100%;
             margin-top: auto;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            
+            /* Default State */
+            background-color: transparent;
+            border: 2px solid var(--primary-accent);
+            color: var(--primary-accent);
         }
 
-        /* The sliding fill effect */
-        .btn-custom::before {
-            content: "";
-            position: absolute;
-            background: var(--primary-accent);
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            z-index: -1;
-            transition: width 0.3s ease-in-out;
-        }
-
+        /* Hover State - Changes Color */
         .btn-custom:hover {
-            color: #0f1014; /* Text turns dark */
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
-        }
-
-        .btn-custom:hover::before {
-            width: 100%; /* Fills the button */
+            background-color: var(--primary-accent);
+            color: #0f1014; /* Dark text for contrast */
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); /* Glowing effect */
+            transform: translateY(-2px);
         }
 
         /* Social Buttons */
         .btn-social {
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
             border-radius: 8px;
             font-weight: 600;
         }
         .btn-social:hover {
-            transform: scale(1.05);
-            animation: pulse-glow 2s infinite;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
         }
 
-        /* About Section Extras */
         .profile-img {
             object-fit: cover;
             max-height: 400px;
             width: 100%;
             border-bottom: 4px solid var(--secondary-accent);
-            filter: grayscale(20%); /* Artistic touch */
-            transition: filter 0.5s;
-        }
-        .card:hover .profile-img {
-            filter: grayscale(0%); /* Color returns on hover */
         }
     </style>
 </head>
 
 <body>
 
-    <div class="hero-section">
-        <div class="container">
-            <h1 class="hero-name">Ryan Barry</h1>
-            <hr class="hero-divider">
-            <p class="hero-subtitle">Game Developer <span style="color:var(--primary-accent)">//</span> MonoGame <span style="color:var(--primary-accent)">//</span> C# <span style="color:var(--primary-accent)">//</span> Unity</p>
-        </div>
+    <div class="container mt-4 mb-4" style="animation: fadeInUp 0.8s ease-out;">
+        <h1>Ryan Barry</h1>
+        <p class="lead">Game Developer | MonoGame | C# | Unity </p>
+        <hr>
     </div>
 
     <div class="container mb-5">
@@ -269,7 +219,7 @@
                             <br><br>
                             <strong class="text-white">Goal:</strong> Demonstrating a deep understanding of core programming concepts and memory management by handling low-level game architecture manually.
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Pale-Roots.git" target="_blank">View Repository</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Pale-Roots.git" target="_blank">View Repository &raquo;</a>
                     </div>
                 </div>
             </div>
@@ -305,7 +255,7 @@
                             <br><br>
                             <strong class="text-white">Data Persistence:</strong> Implemented JSON parsing for complex dialogue trees and SQL database integration to persist player stats and progression.
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/DyingFire.git" target="_blank">View Repository</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/DyingFire.git" target="_blank">View Repository &raquo;</a>
                     </div>
                 </div>
             </div>
@@ -341,7 +291,7 @@
                             <br><br>
                             <strong class="text-white">Narrative Design:</strong> Structured a non-linear narrative path that reacts to user input within the command line interface.
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git" target="_blank">View Repository</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git" target="_blank">View Repository &raquo;</a>
                     </div>
                 </div>
             </div>
