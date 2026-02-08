@@ -9,12 +9,12 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-accent: #00d2ff; /* Cyan */
-            --secondary-accent: #9d4edd; /* Purple */
+            --primary-accent: #00d2ff; /* Cyan for tech/code vibe */
+            --secondary-accent: #9d4edd; /* Purple for creative vibe */
             --bg-dark: #0f1014;
             --card-bg: #1a1c23;
             --text-main: #e0e0e0;
@@ -25,170 +25,193 @@
             background-color: var(--bg-dark);
             font-family: 'Inter', sans-serif;
             color: var(--text-main);
-            /* Subtle Cyber-Grid Background */
-            background-image: 
-                linear-gradient(rgba(15, 16, 20, 0.95), rgba(15, 16, 20, 0.95)),
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
+            background-image: radial-gradient(circle at 10% 10%, #1a1c23 0%, #0f1014 90%);
         }
 
         h1, h2, h3, h4, .card-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            color: #fff;
         }
 
-        /* --- HEADER STYLES --- */
-        /* Keeping strictly to your original layout, just adjusting colors for visibility */
-        .container h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
+        /* HERO SECTION */
+        .hero-section {
+            padding: 80px 0 60px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(26,28,35,0.8) 0%, rgba(15,16,20,0.9) 100%);
+            border-bottom: 1px solid #333;
+            margin-bottom: 50px;
         }
-        
-        .lead {
+
+        .hero-name {
+            font-size: 3.5rem;
+            background: -webkit-linear-gradient(45deg, var(--primary-accent), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
             font-size: 1.25rem;
             color: var(--text-muted);
             font-weight: 300;
         }
 
-        hr {
-            border-top: 2px solid var(--primary-accent);
-            opacity: 0.5;
-            margin-top: 20px;
-            margin-bottom: 40px;
+        .hero-divider {
+            width: 60px;
+            height: 4px;
+            background: var(--primary-accent);
+            margin: 20px auto;
+            border-radius: 2px;
+            opacity: 1;
+            border: none;
         }
 
-        /* --- ANIMATIONS --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- CARDS --- */
+        /* CARDS */
         .card {
             background-color: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .card:hover {
-            transform: translateY(-8px) scale(1.01);
-            border-color: rgba(0, 210, 255, 0.5);
-            box-shadow: 0 15px 40px rgba(0, 210, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.15);
+            border-color: rgba(0, 210, 255, 0.3);
         }
 
-        .card-body { padding: 1.5rem; }
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
         
         .card-subtitle {
             color: var(--primary-accent);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* --- STAGGERED ENTRANCE --- */
-        .project-card-container {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-        .project-card-container:nth-child(1) { animation-delay: 0.1s; }
-        .project-card-container:nth-child(2) { animation-delay: 0.3s; }
-        .project-card-container:nth-child(3) { animation-delay: 0.5s; }
-        .project-card-container:nth-child(4) { animation-delay: 0.7s; }
-
-        /* --- BADGES --- */
+        /* BADGES */
         .badge {
-            padding: 0.6em 0.9em;
+            padding: 0.5em 0.8em;
             font-weight: 500;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
+            border-radius: 6px;
+            font-size: 0.75rem;
         }
+        
         .bg-tech {
-            background-color: rgba(0, 210, 255, 0.1);
+            background-color: rgba(0, 210, 255, 0.15);
             color: var(--primary-accent);
-            border: 1px solid rgba(0, 210, 255, 0.2);
-            transition: 0.3s;
-        }
-        .card:hover .bg-tech {
-            background-color: var(--primary-accent);
-            color: #000;
-            box-shadow: 0 0 10px var(--primary-accent);
+            border: 1px solid rgba(0, 210, 255, 0.3);
         }
 
-        /* --- IMAGES --- */
         .carousel-item img {
             height: 250px;
             object-fit: cover;
             object-position: top center;
         }
 
-        /* --- BUTTONS --- */
-        .btn-custom {
-            display: block;
-            width: 100%;
-            margin-top: auto;
-            padding: 10px 20px;
+        strong { color: #fff; }
+
+        /* --- FANCY BUTTONS START HERE --- */
+        
+        /* Base style for all buttons */
+        .btn {
+            border-width: 2px;
+            font-weight: 600;
             border-radius: 8px;
-            font-weight: 700;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-            
-            /* Default State */
-            background-color: transparent;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 1. Repository Buttons (Cyan) */
+        .btn-custom {
+            background: transparent;
             border: 2px solid var(--primary-accent);
             color: var(--primary-accent);
+            width: 100%;
+            margin-top: auto;
         }
 
-        /* Hover State - Changes Color */
         .btn-custom:hover {
-            background-color: var(--primary-accent);
+            background: var(--primary-accent);
             color: #0f1014; /* Dark text for contrast */
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); /* Glowing effect */
-            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); /* Cyan Glow */
+            transform: translateY(-3px); /* Lifts up */
         }
 
-        /* Social Buttons */
-        .btn-social {
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-radius: 8px;
-            font-weight: 600;
+        /* 2. LinkedIn Button (Blue) */
+        .btn-linkedin {
+            background: transparent;
+            border: 2px solid #0077b5;
+            color: white; /* Starts white/transparent */
+            margin-right: 10px;
         }
-        .btn-social:hover {
+
+        .btn-linkedin:hover {
+            background-color: #0077b5;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 119, 181, 0.6); /* Blue Glow */
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+        }
+        
+        /* 3. CV Button (Green) */
+        .btn-cv {
+            background: transparent;
+            border: 2px solid #28a745;
+            color: white; /* Starts white/transparent */
         }
 
+        .btn-cv:hover {
+            background-color: #28a745;
+            color: white;
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6); /* Green Glow */
+            transform: translateY(-3px);
+        }
+
+        /* About Me Section specific */
         .profile-img {
             object-fit: cover;
             max-height: 400px;
             width: 100%;
             border-bottom: 4px solid var(--secondary-accent);
         }
+        
+        .about-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="container mt-4 mb-4" style="animation: fadeInUp 0.8s ease-out;">
-        <h1>Ryan Barry</h1>
-        <p class="lead">Game Developer | MonoGame | C# | Unity </p>
-        <hr>
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="hero-name">Ryan Barry</h1>
+            <hr class="hero-divider">
+            <p class="hero-subtitle">Game Developer <span style="color:var(--primary-accent)">|</span> MonoGame <span style="color:var(--primary-accent)">|</span> C# <span style="color:var(--primary-accent)">|</span> Unity</p>
+        </div>
     </div>
 
     <div class="container mb-5">
-        <div class="row g-4">
-        
-            <div class="col-lg-6 project-card-container">
+        <div class="row g-4"> 
+            
+            <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselPR" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -204,7 +227,6 @@
                             <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span>
                         </button>
                     </div>
-
                     <div class="card-body d-flex flex-column">
                         <span class="card-subtitle">MonoGame</span>
                         <h3 class="card-title">Pale Roots</h3>
@@ -213,18 +235,18 @@
                             <span class="badge bg-tech">Engine Design</span>
                         </div>
                         <p class="card-text mt-2 flex-grow-1 text-muted">
-                            <strong class="text-white">Engine Architecture:</strong> Built the engine systems from the ground up rather than using a pre-made engine like Unity. This involves writing custom handlers for the game loop, sprite batching, and tile-based collision detection.
+                            <strong>Engine Architecture:</strong> Built the engine systems from the ground up rather than using a pre-made engine like Unity. This involves writing custom handlers for the game loop, sprite batching, and tile-based collision detection.
                             <br><br>
-                            <strong class="text-white">Systems Design:</strong> Implemented complex grid-based farming mechanics and real-time combat logic entirely in C#.
+                            <strong>Systems Design:</strong> Implemented complex grid-based farming mechanics and real-time combat logic entirely in C#.
                             <br><br>
-                            <strong class="text-white">Goal:</strong> Demonstrating a deep understanding of core programming concepts and memory management by handling low-level game architecture manually.
+                            <strong>Goal:</strong> Demonstrating a deep understanding of core programming concepts and memory management by handling low-level game architecture manually.
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Pale-Roots.git" target="_blank">View Repository &raquo;</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Pale-Roots.git" target="_blank">View Repository</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6 project-card-container">
+            <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -240,7 +262,6 @@
                             <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span>
                         </button>
                     </div>
-
                     <div class="card-body d-flex flex-column">
                         <span class="card-subtitle">XAML, WPF</span>
                         <h3 class="card-title">Dying Fire</h3>
@@ -249,18 +270,20 @@
                             <span class="badge bg-tech">UI Logic & Databases</span>
                         </div>
                         <p class="card-text mt-2 flex-grow-1 text-muted">
-                            <strong class="text-white">Architecture:</strong> Utilized a robust OOP class hierarchy to manage entities, employing Polymorphism and Inheritance to distinguish between Player, Enemy, and Interactive Objects.
+                            <strong>Architecture:</strong> Utilized a robust OOP class hierarchy to manage entities, employing Polymorphism and Inheritance to distinguish between Player, Enemy, and Interactive Objects.
                             <br><br>
-                            <strong class="text-white">Inventory System:</strong> Built a dynamic inventory management system using ObservableCollections and LINQ queries for real-time sorting and filtering.
+                            <strong>Inventory System:</strong> Built a dynamic inventory management system using ObservableCollections and LINQ queries for real-time sorting and filtering.
                             <br><br>
-                            <strong class="text-white">Data Persistence:</strong> Implemented JSON parsing for complex dialogue trees and SQL database integration to persist player stats and progression.
+                            <strong>Data Persistence:</strong> Implemented JSON parsing for complex dialogue trees and SQL database integration to persist player stats and progression.
+                            <br><br>
+                            <strong>Game Logic:</strong> Developed a Finite State Machine (FSM) to handle the transition between the "Investigation Phase" (Point-and-Click) and "Descent Phase" (Turn-Based Combat).
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/DyingFire.git" target="_blank">View Repository &raquo;</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/DyingFire.git" target="_blank">View Repository</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6 project-card-container">
+            <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselHOH" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -276,7 +299,6 @@
                             <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span>
                         </button>
                     </div>
-
                     <div class="card-body d-flex flex-column">
                         <span class="card-subtitle">Console App</span>
                         <h3 class="card-title">House Of History</h3>
@@ -285,25 +307,25 @@
                             <span class="badge bg-tech">OOP Principles</span>
                         </div>
                         <p class="card-text mt-2 flex-grow-1 text-muted">
-                            <strong class="text-white">Pure Logic & OOP:</strong> Built entirely as a standard Console Application to focus strictly on Object-Oriented Programming principles and C# syntax.
+                            <strong>Pure Logic & OOP:</strong> Built entirely as a standard Console Application to focus strictly on Object-Oriented Programming principles and C# syntax.
                             <br><br>
-                            <strong class="text-white">Creative Constraints:</strong> Challenged myself to create atmosphere and tension using only text parsing and pacing, requiring robust input validation and state management.
+                            <strong>Creative Constraints:</strong> Challenged myself to create atmosphere and tension using only text parsing and pacing, requiring robust input validation and state management.
                             <br><br>
-                            <strong class="text-white">Narrative Design:</strong> Structured a non-linear narrative path that reacts to user input within the command line interface.
+                            <strong>Narrative Design:</strong> Structured a non-linear narrative path that reacts to user input within the command line interface.
                         </p>
-                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git" target="_blank">View Repository &raquo;</a>
+                        <a class="btn btn-custom mt-3" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git" target="_blank">View Repository</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6 project-card-container">
+            <div class="col-lg-6">
                 <div class="card h-100">
                     <img src="Content/Images/Profile.jpg" class="profile-img" alt="Ryan Barry Profile">
                     
                     <div class="card-body d-flex flex-column">
                         <span class="card-subtitle" style="color: var(--secondary-accent)">The Drive to Create</span>
                         <h3 class="card-title">About Me</h3>
-                        <div class="mt-3 about-text flex-grow-1 text-muted">
+                        <div class="mt-3 about-text flex-grow-1">
                             <p>
                                 My obsession with games goes beyond playing; it is about understanding the mechanics that create immersion. From the narrative depth of <em>Red Dead Redemption 2</em> to the punishing precision of <em>Dark Souls</em>, I study how systems combine to create emotional impact.
                             </p>
@@ -319,13 +341,15 @@
                         </div>
                         
                         <div class="mt-4 d-grid gap-2 d-md-block">
-                            <a class="btn btn-primary btn-lg btn-social" style="background-color: #0077b5; border:none;" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank">Connect on LinkedIn &raquo;</a>
-                            <a class="btn btn-success btn-lg btn-social" style="background-color: #28a745; border:none;" href="Content/RyanBarry_CV.pdf" target="_blank">Download CV &raquo;</a>
+                            <a class="btn btn-linkedin btn-lg" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank">Connect on LinkedIn &raquo;</a>
+                            <a class="btn btn-cv btn-lg" href="Content/RyanBarry_CV.pdf" target="_blank">Download CV &raquo;</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div> </div> <script src="js/bootstrap.bundle.js"></script>
+        </div> 
+    </div> 
+    <script src="js/bootstrap.bundle.js"></script>
 </body>
 </html>
