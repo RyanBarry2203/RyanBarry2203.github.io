@@ -244,6 +244,58 @@
                     </div>
                 </div>
             </div>
+            <!-- UNITY OPTIMIZATION DEMO CARD -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div id="carouselUnity" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="Content/Images/UnityDemo1.png" class="d-block w-100" alt="Unity Optimization Demo">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="Content/Images/UnityDemo2.png" class="d-block w-100" alt="GPU Instancing & Culling">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="Content/Images/UnityDemo3.png" class="d-block w-100" alt="Culling">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="Content/Images/UnityDemo4.png" class="d-block w-100" alt="Winner">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselUnity" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselUnity" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <span class="card-subtitle">Unity WebGL</span>
+                        <h3 class="card-title">Engine Architecture & Optimization</h3>
+                        <div class="mb-3 mt-2">
+                            <span class="badge bg-tech">C#</span>
+                            <span class="badge bg-tech">Memory Pooling</span>
+                            <span class="badge bg-tech">Async Adressables</span>
+                        </div>
+                        <p class="card-text mt-2 flex-grow-1 text-muted">
+                            <strong>Memory Management:</strong> Utilized <strong>Addressables</strong> for asynchronous asset loading and implemented robust <strong>Object Pooling</strong> to eliminate Garbage Collection spikes during high-volume entity spawning.
+                            <br><br>
+                            <strong>Rendering Optimization:</strong> Configured <strong>GPU Instancing</strong> for dynamic objects and baked <strong>Umbra Occlusion Culling</strong> for static environments, drastically reducing draw calls and triangle counts.
+                            <br><br>
+                            <strong>Systems Architecture:</strong> Designed a decoupled, Event-Driven UI using <strong>ScriptableObjects as data channels</strong>, adhering to strict MVC principles to prevent tight coupling between gameplay logic and the UI layer.
+                        </p>
+                        <div class="d-flex gap-2 mt-3 w-100">
+                            <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="UnityDemo/index.html" target="_blank">Play in Browser</a>
+                            <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="https://github.com/YOUR_UNITY_REPO_LINK" target="_blank">View Repository</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END UNITY CARD -->
+
+            
 
             <div class="col-lg-6">
                 <div class="card h-100">
