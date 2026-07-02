@@ -35,15 +35,15 @@
 
         /* HERO SECTION */
         .hero-section {
-            position: relative; /* Crucial for absolute positioning of the video */
-            padding: 120px 0 100px; /* Slightly increased padding for a better hero size */
+            position: relative; 
+            padding: 120px 0 100px; 
             text-align: center;
             border-bottom: 1px solid #333;
             margin-bottom: 50px;
-            overflow: hidden; /* Keeps the iframe contained */
+            overflow: hidden; 
         }
 
-        /* NEW: YouTube Background Container */
+        /* YouTube Background Container */
         .hero-youtube-container {
             position: absolute;
             top: 50%;
@@ -66,7 +66,7 @@
             border: none;
         }
 
-        /* NEW: Dark Overlay for text readability */
+        /* Dark Overlay for text readability */
         .hero-overlay {
             position: absolute;
             top: 0;
@@ -223,8 +223,8 @@
     <div class="hero-section">
         <!-- Autoplaying YouTube Background -->
         <div class="hero-youtube-container">
-            <!-- REPLACE 'YOUR_YOUTUBE_VIDEO_ID' in BOTH places below! -->
-            <iframe src="<iframe width="560" height="315" src="https://www.youtube.com/embed/PDtobaZvCbc?si=U9R4KP1riwjIlxpz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <!-- Perfectly formatted iframe using your extracted video ID -->
+            <iframe src="https://www.youtube.com/embed/PDtobaZvCbc?autoplay=1&mute=1&controls=0&loop=1&playlist=PDtobaZvCbc&playsinline=1&rel=0&showinfo=0&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         
         <!-- Dark Overlay -->
@@ -289,6 +289,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- UNITY OPTIMIZATION DEMO CARD -->
             <div class="col-lg-6">
                 <div class="card h-100">
@@ -369,30 +370,28 @@
                     </div>
                     <div class="card-body d-flex flex-column">
                         <span class="card-subtitle">Unity WebGL</span>
-<h3 class="card-title">Gameplay Systems & AI</h3>
-<div class="mb-3 mt-2">
-    <span class="badge bg-tech">State Machine</span>
-    <span class="badge bg-tech">Factory & Pooling</span>
-    <span class="badge bg-tech">Async / Await</span>
-</div>
-<p class="card-text mt-2 flex-grow-1 text-muted">
-    <strong>AI & Zero-GC Detection:</strong> Engineered a dynamic <strong>Finite State Machine</strong> where enemies react intelligently to the environment—investigating distant light disturbances or becoming stunned by direct hits. Optimized the targeting loop using <code>Physics.OverlapSphereNonAlloc</code> to guarantee zero Garbage Collection spikes.
-    <br><br>
-    <strong>Asynchronous Mechanics:</strong> Developed a camera flash tool that casts rays and calculates distance ratios to spawn fading "Burn Nodes" on geometry. Managed these interactive lights via an <strong>Object Pool</strong> and utilized modern C# <code>async/await</code> for highly performant, non-blocking light decay.
-    <br><br>
-    <strong>Arcade Physics & Combat:</strong> Built a custom rigidbody vehicle controller featuring dynamic drift mechanics using vector dot products and counter-friction. Integrated a <strong>Factory Pattern</strong> to pool and fire car projectiles, relying strictly on Interfaces (<code>IDamageable</code>) for scalable, decoupled hit detection.
-</p>
-<div class="d-flex gap-2 mt-3 w-100">
-    <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="UnityDemo2/index.html" target="_blank">Play in Browser</a>
-    <!-- REMEMBER TO UPDATE THIS REPO LINK -->
-    <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="https://github.com/ITS3D/project-RyanBarry2203.git" target="_blank">View Repository</a>
-</div>
+                        <h3 class="card-title">Gameplay Systems & AI</h3>
+                        <div class="mb-3 mt-2">
+                            <span class="badge bg-tech">State Machine</span>
+                            <span class="badge bg-tech">Factory & Pooling</span>
+                            <span class="badge bg-tech">Async / Await</span>
+                        </div>
+                        <p class="card-text mt-2 flex-grow-1 text-muted">
+                            <strong>AI & Zero-GC Detection:</strong> Engineered a dynamic <strong>Finite State Machine</strong> where enemies react intelligently to the environment—investigating distant light disturbances or becoming stunned by direct hits. Optimized the targeting loop using <code>Physics.OverlapSphereNonAlloc</code> to guarantee zero Garbage Collection spikes.
+                            <br><br>
+                            <strong>Asynchronous Mechanics:</strong> Developed a camera flash tool that casts rays and calculates distance ratios to spawn fading "Burn Nodes" on geometry. Managed these interactive lights via an <strong>Object Pool</strong> and utilized modern C# <code>async/await</code> for highly performant, non-blocking light decay.
+                            <br><br>
+                            <strong>Arcade Physics & Combat:</strong> Built a custom rigidbody vehicle controller featuring dynamic drift mechanics using vector dot products and counter-friction. Integrated a <strong>Factory Pattern</strong> to pool and fire car projectiles, relying strictly on Interfaces (<code>IDamageable</code>) for scalable, decoupled hit detection.
+                        </p>
+                        <div class="d-flex gap-2 mt-3 w-100">
+                            <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="UnityDemo2/index.html" target="_blank">Play in Browser</a>
+                            <!-- REMEMBER TO UPDATE THIS REPO LINK -->
+                            <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="https://github.com/ITS3D/project-RyanBarry2203.git" target="_blank">View Repository</a>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- END UNITY PROJECT 2 -->
-
-            
 
             <div class="col-lg-6">
                 <div class="card h-100">
