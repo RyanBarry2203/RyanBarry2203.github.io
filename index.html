@@ -36,7 +36,7 @@
         /* HERO SECTION */
         .hero-section {
             position: relative; 
-            padding: 120px 0 100px; 
+            padding: 120px 0 60px; /* Reduced bottom padding slightly to pull the video up */
             text-align: center;
             border-bottom: 1px solid #333;
             margin-bottom: 50px;
@@ -54,7 +54,7 @@
             min-width: 177.77vh; /* 16:9 Aspect Ratio */
             transform: translate(-50%, -50%);
             z-index: 0;
-            pointer-events: none; /* Prevents users from clicking/pausing the video */
+            pointer-events: none; /* Prevents users from clicking/pausing the background video */
         }
 
         .hero-youtube-container iframe {
@@ -98,7 +98,7 @@
             background: var(--primary-accent);
             margin: 20px auto;
             border-radius: 2px;
-            opacity: 1; /* Override bootstrap hr opacity */
+            opacity: 1; 
             border: none;
         }
 
@@ -160,7 +160,7 @@
 
         /* IMAGES & CAROUSEL */
         .carousel-item img {
-            height: 250px; /* Fixed height for consistency */
+            height: 250px; 
             object-fit: cover;
             object-position: top center;
         }
@@ -221,20 +221,25 @@
 <body>
 
     <div class="hero-section">
-        <!-- Autoplaying YouTube Background -->
         <div class="hero-youtube-container">
-            <!-- Perfectly formatted iframe using your extracted video ID -->
             <iframe src="https://www.youtube.com/embed/PDtobaZvCbc?autoplay=1&mute=1&controls=0&loop=1&playlist=PDtobaZvCbc&playsinline=1&rel=0&showinfo=0&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         
-        <!-- Dark Overlay -->
         <div class="hero-overlay"></div>
 
-        <!-- Hero Content -->
         <div class="container position-relative" style="z-index: 2;">
             <h1 class="hero-name">Ryan Barry</h1>
             <hr class="hero-divider">
             <p class="hero-subtitle">Game Developer <span style="color:var(--primary-accent)">|</span> MonoGame <span style="color:var(--primary-accent)">|</span> C# <span style="color:var(--primary-accent)">|</span> Unity</p>
+            
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8 col-md-10">
+                    <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                        <iframe src="https://www.youtube.com/embed/PDtobaZvCbc" title="Ryan Barry Game Dev Montage" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -290,7 +295,6 @@
                 </div>
             </div>
 
-            <!-- UNITY OPTIMIZATION DEMO CARD -->
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselUnity" class="carousel slide" data-bs-ride="carousel">
@@ -339,9 +343,6 @@
                     </div>
                 </div>
             </div>
-            <!-- END UNITY CARD -->
-
-            <!-- UNITY PROJECT 2 (NEW) -->
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselUnity2" class="carousel slide" data-bs-ride="carousel">
@@ -385,14 +386,11 @@
                         </p>
                         <div class="d-flex gap-2 mt-3 w-100">
                             <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="UnityDemo2/index.html" target="_blank">Play in Browser</a>
-                            <!-- REMEMBER TO UPDATE THIS REPO LINK -->
                             <a class="btn btn-custom flex-fill" style="margin-top: 0;" href="https://github.com/ITS3D/project-RyanBarry2203.git" target="_blank">View Repository</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END UNITY PROJECT 2 -->
-
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
