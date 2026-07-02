@@ -36,10 +36,10 @@
         /* HERO SECTION */
         .hero-section {
             position: relative; 
-            padding: 120px 0 60px; /* Reduced bottom padding slightly to pull the video up */
+            padding: 120px 0 100px; 
             text-align: center;
             border-bottom: 1px solid #333;
-            margin-bottom: 50px;
+            margin-bottom: 40px; /* Space between hero and the video below */
             overflow: hidden; 
         }
 
@@ -221,29 +221,36 @@
 <body>
 
     <div class="hero-section">
+        <!-- Autoplaying YouTube Background (Muted & Unclickable) -->
         <div class="hero-youtube-container">
             <iframe src="https://www.youtube.com/embed/PDtobaZvCbc?autoplay=1&mute=1&controls=0&loop=1&playlist=PDtobaZvCbc&playsinline=1&rel=0&showinfo=0&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         
+        <!-- Dark Overlay -->
         <div class="hero-overlay"></div>
 
+        <!-- Hero Content -->
         <div class="container position-relative" style="z-index: 2;">
             <h1 class="hero-name">Ryan Barry</h1>
             <hr class="hero-divider">
             <p class="hero-subtitle">Game Developer <span style="color:var(--primary-accent)">|</span> MonoGame <span style="color:var(--primary-accent)">|</span> C# <span style="color:var(--primary-accent)">|</span> Unity</p>
-            
-            <div class="row justify-content-center mt-5">
-                <div class="col-lg-8 col-md-10">
-                    <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                        <iframe src="https://www.youtube.com/embed/PDtobaZvCbc" title="Ryan Barry Game Dev Montage" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
+    <!-- HERO SECTION FULLY CLOSED HERE -->
 
+    <!-- MAIN CONTENT CONTAINER -->
     <div class="container mb-5">
+        
+        <!-- Dedicated Audible Video Player (Now separated from the background video) -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10">
+                <!-- Bootstrap ratio class keeps it perfectly 16:9 -->
+                <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                    <iframe src="https://www.youtube.com/embed/PDtobaZvCbc" title="Ryan Barry Game Dev Montage" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
         <div class="row g-4"> 
             
             <div class="col-lg-6">
@@ -295,6 +302,7 @@
                 </div>
             </div>
 
+            <!-- UNITY OPTIMIZATION DEMO CARD -->
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselUnity" class="carousel slide" data-bs-ride="carousel">
@@ -343,6 +351,9 @@
                     </div>
                 </div>
             </div>
+            <!-- END UNITY CARD -->
+
+            <!-- UNITY PROJECT 2 (NEW) -->
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselUnity2" class="carousel slide" data-bs-ride="carousel">
@@ -391,6 +402,8 @@
                     </div>
                 </div>
             </div>
+            <!-- END UNITY PROJECT 2 -->
+
             <div class="col-lg-6">
                 <div class="card h-100">
                     <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
