@@ -161,6 +161,8 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav gap-3">
                     <li class="nav-item"><a class="nav-link" href="#reel">Showreel</a></li>
+                    <!-- NEW: Added Thesis Section to Navbar -->
+                    <li class="nav-item"><a class="nav-link" href="#thesis">Academic Thesis</a></li>
                     <li class="nav-item"><a class="nav-link" href="#projects">Architecture & Projects</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">Init / About</a></li>
                     <li class="nav-item"><a class="btn btn-tron btn-sm mt-1" href="Content/Ryan_Barry_CV_.pdf" target="_blank" style="padding: 5px 15px;">Download CV</a></li>
@@ -204,18 +206,36 @@
             <h2>ARCHITECTURE & LOGIC</h2>
         </div>
 
-        <!-- PROJECT 0: HYBRID LOD SIMULATION (CROWN JEWEL) -->
+        <!-- ACADEMIC THESIS SECTION -->
+        <div class="section-header project-section" id="thesis" style="margin-top: 3rem;">
+            <h2>ACADEMIC THESIS</h2>
+        </div>
+
         <div class="row align-items-center project-row" style="border-color: var(--tron-cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);">
-            <div class="col-lg-7 mb-4 mb-lg-0">
-                <!-- WebGL Game Embed -->
-                <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 8px; border: 1px solid var(--tron-cyan); overflow: hidden; background: #000;">
-                    <iframe src="Project300/index.html" title="Hybrid LOD Simulation" scrolling="no" style="width: 100%; height: 100%; border: none;"></iframe>
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <!-- Image Carousel -->
+                <div id="carouselProject300" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <!-- Make sure to drop 3 screenshots of your project into your Content/Images folder and name them accordingly! -->
+                            <img src="Content/Images/HybridLOD1.png" class="d-block w-100" alt="Hybrid LOD Simulation">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="Content/Images/HybridLOD2.png" class="d-block w-100" alt="Pure ECS Profiler">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="Content/Images/HybridLOD3.png" class="d-block w-100" alt="Waypoint Sync Tool">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject300" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProject300" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
                 </div>
-                <p class="text-center mt-2 mb-0" style="font-family: 'Rajdhani', sans-serif; color: var(--tron-cyan-dim); font-size: 0.9rem;">
-                    [ INTERACTIVE SANDBOX: Click to interact. Use UI to toggle Architecture. ]
-                </p>
             </div>
-            <div class="col-lg-5 px-lg-4">
+            <div class="col-lg-6 px-lg-4">
                 <span class="project-engine">// UNITY 6 DOTS/ECS</span>
                 <h3 class="project-title">Hybrid LOD Traffic Simulation</h3>
                 <div class="mb-3">
@@ -228,9 +248,13 @@
                     <br><br>
                     <strong>Performance Optimization:</strong> Replaced heavy physics and MonoBehaviours with Burst-compiled kinematic mathematics and contiguous memory arrays. This decoupled, Event-Driven system allows for the simulation of hundreds of vehicles with near-zero CPU overhead on the main thread.
                     <br><br>
-                    <strong>Academic Research:</strong> This interactive sandbox serves as the visual proof for my thesis on AAA engine scalability and Data-Oriented Design.
+                    <strong>Academic Research:</strong> This project serves as the visual proof for my thesis on AAA engine scalability and Data-Oriented Design.
                 </p>
                 <div class="d-flex gap-3 mt-4">
+                    <!-- Execute Build Button (Opens in new tab) -->
+                    <a class="btn btn-tron" href="Project300/index.html" target="_blank">Execute Build</a>
+                    
+                    <!-- Read Paper Button (Opens in new tab) -->
                     <a class="btn btn-tron" href="Content/Ryan_Barry_Project300_Paper.pdf" target="_blank" style="background: rgba(0, 243, 255, 0.15);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf me-2" viewBox="0 0 16 16" style="margin-top:-3px;">
                           <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
