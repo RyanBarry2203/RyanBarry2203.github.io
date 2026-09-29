@@ -203,6 +203,44 @@
         <div class="section-header" id="projects" class="project-section">
             <h2>ARCHITECTURE & LOGIC</h2>
         </div>
+
+        <!-- PROJECT 0: HYBRID LOD SIMULATION (CROWN JEWEL) -->
+        <div class="row align-items-center project-row" style="border-color: var(--tron-cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <!-- WebGL Game Embed -->
+                <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 8px; border: 1px solid var(--tron-cyan); overflow: hidden; background: #000;">
+                    <iframe src="Project300/index.html" title="Hybrid LOD Simulation" scrolling="no" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+                <p class="text-center mt-2 mb-0" style="font-family: 'Rajdhani', sans-serif; color: var(--tron-cyan-dim); font-size: 0.9rem;">
+                    [ INTERACTIVE SANDBOX: Click to interact. Use UI to toggle Architecture. ]
+                </p>
+            </div>
+            <div class="col-lg-5 px-lg-4">
+                <span class="project-engine">// UNITY 6 DOTS/ECS</span>
+                <h3 class="project-title">Hybrid LOD Traffic Simulation</h3>
+                <div class="mb-3">
+                    <span class="badge bg-tech">Data-Oriented Design</span>
+                    <span class="badge bg-tech">Burst Compiler</span>
+                    <span class="badge bg-tech">Academic Paper</span>
+                </div>
+                <p class="text-muted" style="line-height: 1.7;">
+                    <strong>The Architecture:</strong> Engineered a deterministic, bi-directional Hybrid LOD system bridging Managed (OOP) and Unmanaged (ECS) memory. Utilized the "Rosetta Stone" pattern to seamlessly transfer A* pathfinding data between dimensions based on camera proximity.
+                    <br><br>
+                    <strong>Performance Optimization:</strong> Replaced heavy physics and MonoBehaviours with Burst-compiled kinematic mathematics and contiguous memory arrays. This decoupled, Event-Driven system allows for the simulation of hundreds of vehicles with near-zero CPU overhead on the main thread.
+                    <br><br>
+                    <strong>Academic Research:</strong> This interactive sandbox serves as the visual proof for my thesis on AAA engine scalability and Data-Oriented Design.
+                </p>
+                <div class="d-flex gap-3 mt-4">
+                    <a class="btn btn-tron" href="Content/Ryan_Barry_Project300_Paper.pdf" target="_blank" style="background: rgba(0, 243, 255, 0.15);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf me-2" viewBox="0 0 16 16" style="margin-top:-3px;">
+                          <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                          <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .471.242c.089.106.12.245.12.395 0 .402-.12.928-.32 1.51a21.7 21.7 0 0 1-.105.29c-.04.108-.08.216-.12.324.41.81.9 1.536 1.465 2.181.231.264.475.512.73.743.36.327.734.595 1.12.813.41.23.82.35 1.228.35.33 0 .61-.07.808-.252.196-.181.326-.48.326-.816 0-.466-.23-.88-.6-1.162-.37-.282-.85-.43-1.35-.43-.5 0-1.02.148-1.54.43-.52.282-1.04.708-1.54 1.272a19.4 19.4 0 0 0-1.465-2.181c.04-.108.08-.216.12-.324.035-.095.07-.19.105-.29.2-.582.32-1.108.32-1.51 0-.15-.03-.29-.12-.395a.7.7 0 0 0-.471-.242c-.202-.043-.41.0-.602.077-.376.151-.575.469-.65.823-.073.34-.04.736.046 1.136.082.39.224.83.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.68 7.68 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.102.115.228.29.393.438.42z"/>
+                        </svg>
+                        Read Academic Paper
+                    </a>
+                </div>
+            </div>
+        </div>
         
         <!-- PROJECT 1: PALE ROOTS (Media Left, Text Right) -->
         <div class="row align-items-center project-row">
