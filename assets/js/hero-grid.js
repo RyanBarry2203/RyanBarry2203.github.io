@@ -290,19 +290,159 @@ class LightCycle {
     }
 }
 
-export function createHeroGrid(container, { lowPower = false, reducedMotion = false } = {}) {
+// Bright packets of light racing along the grid lines. One InstancedMesh, one draw call;
+// each frame only rewrites the instance matrices through a single reused Object3D.
+function createPulses(count) {
+    const geometry = new THREE.BoxGeometry(0.1, 0.04, 2.6);
+    const material = new THREE.MeshBasicMaterial({ color: new THREE.Color('#bffcff'), transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+    const mesh = new THREE.InstancedMesh(geometry, material, count);
+    mesh.frustumCulled = false;
+    const pulses = Array.from({ length: count }, () => ({ alongZ: true, lane: 0, position: 0, speed: 0 }));
+    const dummy = new THREE.Object3D();
+
+    function respawn(pulse, cameraX, cameraZ, anywhere) {
+        pulse.alongZ = Math.random() < 0.7;
+        pulse.speed = (14 + Math.random() * 26) * (Math.random() < 0.5 ? 1 : -1);
+        const laneStep = CELL * 2;
+        if (pulse.alongZ) {
+            pulse.lane = snap(cameraX + (Math.random() - 0.5) * 120, laneStep);
+            pulse.position = cameraZ - (anywhere ? Math.random() * 90 : 60 + Math.random() * 40);
+        } else {
+            pulse.lane = snap(cameraZ - 10 - Math.random() * 80, laneStep);
+            pulse.position = cameraX + (Math.random() - 0.5) * 120;
+        }
+    }
+
+    return {
+        mesh,
+        reset(cameraX, cameraZ) { pulses.forEach((pulse) => respawn(pulse, cameraX, cameraZ, true)); },
+        shiftZ(amount) { pulses.forEach((pulse) => { if (pulse.alongZ) pulse.position += amount; else pulse.lane += amount; }); },
+        update(dt, cameraX, cameraZ) {
+            pulses.forEach((pulse, i) => {
+                pulse.position += pulse.speed * dt;
+                const z = pulse.alongZ ? pulse.position : pulse.lane;
+                const x = pulse.alongZ ? pulse.lane : pulse.position;
+                if (z > cameraZ + 4 || z < cameraZ - 110 || Math.abs(x - cameraX) > 70) respawn(pulse, cameraX, cameraZ, false);
+                dummy.position.set(pulse.alongZ ? pulse.lane : pulse.position, 0.03, pulse.alongZ ? pulse.position : pulse.lane);
+                dummy.rotation.set(0, pulse.alongZ ? 0 : Math.PI / 2, 0);
+                dummy.updateMatrix();
+                mesh.setMatrixAt(i, dummy.matrix);
+            });
+            mesh.instanceMatrix.needsUpdate = true;
+        },
+        dispose() { geometry.dispose(); material.dispose(); },
+    };
+}
+
+// A wireframe city on the horizon, built once as line segments and parked in front of the camera.
+function createSkyline() {
+    const BUILDINGS = 90;
+    const corners = [[0, 0], [1, 0], [1, 1], [0, 1]];
+    const lines = [];
+    const windows = [];
+    for (let i = 0; i < BUILDINGS; i++) {
+        const x = (Math.random() - 0.5) * 340;
+        const z = -150 - Math.random() * 60;
+        const w = 4 + Math.random() * 9;
+        const d = 4 + Math.random() * 9;
+        const h = 6 + Math.pow(Math.random(), 2) * 44;
+        const box = corners.map(([cx, cz]) => [x + cx * w, z + cz * d]);
+        for (let c = 0; c < 4; c++) {
+            const [ax, az] = box[c];
+            const [bx, bz] = box[(c + 1) % 4];
+            lines.push(ax, 0, az, bx, 0, bz, ax, h, az, bx, h, bz, ax, 0, az, ax, h, az);
+        }
+        for (let n = 0; n < 6; n++) windows.push(x + Math.random() * w, Math.random() * h, z);
+    }
+    const lineGeometry = new THREE.BufferGeometry();
+    lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3));
+    const lineMaterial = new THREE.LineBasicMaterial({ color: new THREE.Color('#00f3ff'), transparent: true, opacity: 0.32 });
+    const windowGeometry = new THREE.BufferGeometry();
+    windowGeometry.setAttribute('position', new THREE.Float32BufferAttribute(windows, 3));
+    const windowMaterial = new THREE.PointsMaterial({ color: new THREE.Color('#ff8c00'), size: 2.2, sizeAttenuation: false, transparent: true, opacity: 0.8 });
+
+    const group = new THREE.Group();
+    group.add(new THREE.LineSegments(lineGeometry, lineMaterial), new THREE.Points(windowGeometry, windowMaterial));
+    group.traverse((object) => { object.frustumCulled = false; });
+    return {
+        group,
+        update(cameraX, cameraZ, time) {
+            group.position.set(cameraX * 0.85, 0, cameraZ);
+            windowMaterial.opacity = 0.6 + Math.sin(time * 2.1) * 0.2;
+        },
+        dispose() { lineGeometry.dispose(); lineMaterial.dispose(); windowGeometry.dispose(); windowMaterial.dispose(); },
+    };
+}
+
+// Dust motes drifting through the air; they wrap ahead of the camera instead of being recreated.
+function createMotes(count) {
+    const positions = new Float32Array(count * 3);
+    const geometry = new THREE.BufferGeometry();
+    const attribute = new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage);
+    geometry.setAttribute('position', attribute);
+    const material = new THREE.PointsMaterial({ color: new THREE.Color('#9ff8ff'), size: 1.6, sizeAttenuation: false, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+    const points = new THREE.Points(geometry, material);
+    points.frustumCulled = false;
+
+    const place = (i, cameraX, cameraZ, ahead) => {
+        positions[i * 3] = cameraX + (Math.random() - 0.5) * 80;
+        positions[i * 3 + 1] = 0.3 + Math.random() * 12;
+        positions[i * 3 + 2] = cameraZ - (ahead ? 80 + Math.random() * 10 : Math.random() * 90);
+    };
+
+    return {
+        points,
+        reset(cameraX, cameraZ) { for (let i = 0; i < count; i++) place(i, cameraX, cameraZ, false); attribute.needsUpdate = true; },
+        shiftZ(amount) { for (let i = 0; i < count; i++) positions[i * 3 + 2] += amount; },
+        update(dt, cameraX, cameraZ) {
+            for (let i = 0; i < count; i++) {
+                positions[i * 3 + 1] += dt * 0.4;
+                if (positions[i * 3 + 2] > cameraZ + 2 || positions[i * 3 + 1] > 13) place(i, cameraX, cameraZ, true);
+            }
+            attribute.needsUpdate = true;
+        },
+        dispose() { geometry.dispose(); material.dispose(); },
+    };
+}
+
+const RIDER_SETUP = [
+    { color: CYAN, lane: 2, start: -26, wander: 7 },
+    { color: ORANGE, lane: 6, start: -34, wander: 12 },
+    { color: CYAN, lane: -2, start: -42, wander: 2 },
+    { color: new THREE.Color('#ff4d5e'), lane: 10, start: -50, wander: 18 },
+    { color: new THREE.Color('#9d7bff'), lane: -6, start: -58, wander: -4 },
+];
+
+export function createHeroGrid(container, { lowPower = false, reducedMotion = false, hud = null } = {}) {
     const renderer = new THREE.WebGLRenderer({ antialias: !lowPower, alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, VIEW_DISTANCE + 20);
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 260);
     const grid = createGrid();
     scene.add(grid.mesh);
 
-    const cycles = [new LightCycle(scene, CYAN.clone(), 2 * CELL, -26, 0)];
-    if (!lowPower) cycles.push(new LightCycle(scene, ORANGE.clone(), 6 * CELL, -34, 1));
+    const cycles = RIDER_SETUP.slice(0, lowPower ? 2 : RIDER_SETUP.length)
+        .map((rider, i) => {
+            const cycle = new LightCycle(scene, rider.color.clone(), rider.lane * CELL, rider.start, i);
+            cycle.wanderOffset = rider.wander;
+            return cycle;
+        });
+
+    const pulses = createPulses(lowPower ? 14 : 40);
+    const skyline = createSkyline();
+    const motes = createMotes(lowPower ? 150 : 500);
+    scene.add(pulses.mesh, skyline.group, motes.points);
+    pulses.reset(0, 0);
+    motes.reset(0, 0);
+
+    const hudRiders = hud?.querySelector('[data-hud="riders"]');
+    const hudFps = hud?.querySelector('[data-hud="fps"]');
+    if (hudRiders) hudRiders.textContent = String(cycles.length).padStart(2, '0');
+    let fpsFrames = 0;
+    let fpsTime = 0;
 
     const raycaster = new THREE.Raycaster();
     const floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -331,13 +471,14 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         camera.updateProjectionMatrix();
     }
 
+    // The first two riders chase the cursor's point on the floor; the rest keep their own lanes.
     function steerTargetFor(cycle) {
-        if (state.pointerActive) {
+        if (state.pointerActive && cycle.seed < 2) {
             pointerNdc.set(state.pointerX, -state.pointerY);
             raycaster.setFromCamera(pointerNdc, camera);
-            if (raycaster.ray.intersectPlane(floor, pointerHit)) return pointerHit.x;
+            if (raycaster.ray.intersectPlane(floor, pointerHit)) return pointerHit.x + (cycle.seed === 1 ? 4 : 0);
         }
-        return state.cameraX + 7 + Math.sin(state.time * 0.25 + cycle.seed * 2.4) * 7;
+        return state.cameraX + cycle.wanderOffset + Math.sin(state.time * 0.25 + cycle.seed * 2.4) * 7;
     }
 
     function step(dt) {
@@ -352,6 +493,8 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         if (state.cameraZ < -REBASE_DISTANCE) {
             state.cameraZ += REBASE_DISTANCE;
             cycles.forEach((cycle) => cycle.shiftZ(REBASE_DISTANCE));
+            pulses.shiftZ(REBASE_DISTANCE);
+            motes.shiftZ(REBASE_DISTANCE);
         }
 
         // Scrolling lowers the camera toward the floor and tips it down, as if the page sinks into the grid.
@@ -368,6 +511,17 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         grid.material.uniforms.uCamera.value.copy(camera.position);
 
         cycles.forEach((cycle) => cycle.update(dt, state.cameraZ, speed, steerTargetFor(cycle)));
+        pulses.update(dt, state.cameraX, state.cameraZ);
+        skyline.update(state.cameraX, state.cameraZ, state.time);
+        motes.update(dt, state.cameraX, state.cameraZ);
+
+        fpsFrames++;
+        fpsTime += dt;
+        if (hudFps && fpsTime >= 0.5) {
+            hudFps.textContent = String(Math.round(fpsFrames / fpsTime));
+            fpsFrames = 0;
+            fpsTime = 0;
+        }
     }
 
     let last = performance.now();
@@ -444,6 +598,9 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
             visibilityObserver.disconnect();
             document.removeEventListener('visibilitychange', updateLoop);
             cycles.forEach((cycle) => cycle.dispose());
+            pulses.dispose();
+            skyline.dispose();
+            motes.dispose();
             grid.geometry.dispose();
             grid.material.dispose();
             renderer.dispose();
