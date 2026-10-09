@@ -223,6 +223,12 @@ code {
         linear-gradient(0deg, var(--void) 0%, transparent 25%);
 }
 
+@media (max-width: 768px) {
+    .hero__stage::after {
+        background: linear-gradient(180deg, rgba(4, 7, 11, 0.2) 0%, rgba(4, 7, 11, 0.6) 30%, rgba(4, 7, 11, 0.6) 75%, var(--void) 100%);
+    }
+}
+
 .hero__floor {
     position: absolute;
     left: -50%;
@@ -418,6 +424,7 @@ code {
         align-items: start;
     }
     .feature__media { top: calc(var(--nav-h) + (100vh - var(--nav-h)) / 2); transform: translateY(-50%); }
+    .feature--flip .feature__body { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
     .feature--flip .feature__media { order: 2; }
     .feature--flip .feature__steps { order: 1; }
     .step { min-height: 80vh; }
@@ -442,7 +449,7 @@ code {
     flex-direction: column;
     border: 1px solid var(--line);
     background: var(--panel);
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s var(--ease-out);
+    transition: border-color 0.3s, box-shadow 0.3s;
     min-width: 0;
 }
 .card:hover { border-color: rgba(0, 243, 255, 0.6); box-shadow: 0 0 30px rgba(0, 243, 255, 0.12); }
@@ -579,10 +586,8 @@ code {
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        animation: none !important;
+        transition: none !important;
     }
-    .hero__floor { animation: none; }
     .btn, .card__media img { transform: none !important; }
 }
