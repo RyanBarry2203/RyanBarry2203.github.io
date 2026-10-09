@@ -1,9 +1,17 @@
 const root = document.documentElement;
 root.classList.remove('no-js');
 
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Motion follows the OS "reduce motion" setting unless the visitor has chosen otherwise with the
+// FX switch in the nav. Many Windows machines have animation effects off without the owner knowing.
+const MOTION_KEY = 'rb-motion';
+function readMotionChoice() {
+    try { return localStorage.getItem(MOTION_KEY); } catch { return null; }
+}
+const motionChoice = readMotionChoice();
+const osPrefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reducedMotion = motionChoice ? motionChoice === 'off' : osPrefersReduced;
 const finePointer = matchMedia('(pointer: fine)').matches;
-if (reducedMotion) root.classList.add('reduced');
+root.classList.add(reducedMotion ? 'reduced' : 'motion-on');
 
 const navHeight = () => parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 64;
 
@@ -108,6 +116,20 @@ function setUpMagneticButtons(gsap) {
 }
 
 // ---------- Navigation: anchors, mobile menu, scroll-spy and progress bar ----------
+
+// FX switch: stores the visitor's choice and reloads so every system starts in the right mode.
+function setUpFxToggle() {
+    const button = document.querySelector('[data-fx-toggle]');
+    if (!button) return;
+    const label = button.querySelector('[data-fx-state]');
+    button.setAttribute('aria-pressed', String(!reducedMotion));
+    if (label) label.textContent = reducedMotion ? 'OFF' : 'ON';
+    button.title = reducedMotion ? 'Turn on animations and live demos' : 'Turn off animations';
+    button.addEventListener('click', () => {
+        try { localStorage.setItem(MOTION_KEY, reducedMotion ? 'on' : 'off'); } catch { /* storage blocked: the reload still applies the OS default */ }
+        location.reload();
+    });
+}
 
 function setUpNavigation(motion) {
     const toggle = document.querySelector('[data-nav-toggle]');
@@ -257,10 +279,30 @@ function setUpDemoHost(container, slotSelector) {
     let visible = false;
     let loaded = false;
 
+    // With reduced motion, a demo shows a still preview until the visitor presses Run.
+    const userStarted = (slot) => !reducedMotion || slot.dataset.userRun === 'true';
     const sync = () => {
-        demos.forEach((demo, slot) => demo?.setActive(visible && slot.classList.contains('is-active')));
+        demos.forEach((demo, slot) => demo?.setActive(visible && slot.classList.contains('is-active') && userStarted(slot)));
         syncSlideshows();
     };
+
+    if (reducedMotion) {
+        slots.forEach((slot) => {
+            const target = slot.querySelector('canvas[data-demo]');
+            if (!target) return;
+            const run = document.createElement('button');
+            run.type = 'button';
+            run.className = 'demo-run';
+            run.innerHTML = '<span aria-hidden="true">&#9654;</span> Run sim';
+            run.addEventListener('click', () => {
+                slot.dataset.userRun = 'true';
+                run.remove();
+                target.focus({ preventScroll: true });
+                sync();
+            });
+            slot.append(run);
+        });
+    }
 
     new IntersectionObserver(([entry]) => {
         visible = entry.isIntersecting;
@@ -272,7 +314,7 @@ function setUpDemoHost(container, slotSelector) {
                 demos.set(slot, null);
                 DEMO_LOADERS[target.dataset.demo]?.()
                     .then((create) => {
-                        demos.set(slot, create(target, { reducedMotion, controls: slot }));
+                        demos.set(slot, create(target, { reducedMotion: false, controls: slot }));
                         sync();
                     })
                     .catch((error) => console.warn(`Demo "${target.dataset.demo}" failed to load`, error));
@@ -462,6 +504,7 @@ async function startRider() {
 // ---------- Boot ----------
 
 const motion = setUpMotion();
+setUpFxToggle();
 setUpNavigation(motion);
 setUpMagneticButtons(motion?.gsap);
 setUpSlideshows(setUpLightbox(motion?.lenis));

@@ -894,10 +894,57 @@ main, .site-footer { position: relative; z-index: 1; }
 
 .motion [data-reveal] { will-change: transform, opacity; }
 
+/* FX switch in the nav */
+.fx-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid rgba(0, 243, 255, 0.35);
+    background: transparent;
+    color: var(--muted);
+    font: 600 0.7rem/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    cursor: pointer;
+}
+.fx-toggle:hover { border-color: var(--cyan); color: var(--cyan); }
+.fx-toggle [data-fx-state] { color: var(--cyan); }
+.fx-toggle__led { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.fx-toggle[aria-pressed="false"] [data-fx-state] { color: var(--orange); }
+.fx-toggle[aria-pressed="false"] .fx-toggle__led { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+/* Run button shown over demos when animations are off */
+.demo-run {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border: 1px solid var(--orange);
+    background: rgba(4, 7, 11, 0.88);
+    color: var(--orange);
+    font: 700 1.05rem/1 var(--font-display);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.3);
+}
+.demo-run:hover { background: var(--orange); color: #000; }
+
+/* Motion off: the visitor's FX choice, or the OS setting when no choice has been made. */
+.reduced *, .reduced *::before, .reduced *::after {
+    animation: none !important;
+    transition: none !important;
+}
+.reduced .btn, .reduced .slideshow img { transform: none !important; }
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    html:not(.motion-on) *, html:not(.motion-on) *::before, html:not(.motion-on) *::after {
         animation: none !important;
         transition: none !important;
     }
-    .btn, .slideshow img { transform: none !important; }
 }
