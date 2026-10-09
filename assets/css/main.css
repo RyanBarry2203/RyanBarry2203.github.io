@@ -357,7 +357,6 @@ code {
 .media-layer.is-active { opacity: 1; visibility: visible; transition: opacity 0.5s var(--ease-out), visibility 0s; }
 .media-layer img, .media-layer canvas { width: 100%; height: 100%; object-fit: cover; }
 .demo-canvas { touch-action: pan-y; }
-
 .demo-ui {
     position: absolute;
     left: 10px;

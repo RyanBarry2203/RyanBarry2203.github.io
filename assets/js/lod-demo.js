@@ -1,6 +1,6 @@
 // The Hybrid LOD idea in 2D. Cars drive a road graph; near the camera they "hydrate" into full
-// GameObjects, far away they "dehydrate" into ECS data. The two radii differ (1:2, as in the Unity
-// project's 100 / 200), so a car sitting on the boundary doesn't flip state every frame.
+// GameObjects, far away they "dehydrate" into ECS data. The two radii differ (3:4, as in the Unity
+// project's 150 / 200), so a car sitting on the boundary doesn't flip state every frame.
 
 import { fitCanvas, runWhileActive } from './canvas-loop.js';
 
@@ -13,8 +13,8 @@ const SPACING_Y = 92;
 const ORIGIN_X = 50;
 const ORIGIN_Y = 41;
 const CAR_COUNT = 46;
-const HYDRATE_RADIUS = 85;
-const DEHYDRATE_RADIUS = 170;
+const HYDRATE_RADIUS = 120;
+const DEHYDRATE_RADIUS = 160;
 
 const nodes = [];
 for (let row = 0; row < ROWS; row++) {

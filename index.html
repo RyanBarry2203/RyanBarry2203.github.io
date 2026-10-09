@@ -70,7 +70,7 @@
                 <header class="feature__head">
                     <p class="feature__meta"><span class="tag tag--award">EA Best Use of AI &middot; Games Fleadh 2026</span></p>
                     <h3 class="feature__title" id="pr-title" data-reveal>Pale Roots</h3>
-                    <p class="feature__pitch">A sci-fi roguelike on a custom 2D engine, where you use the power of dead enemies to grow stronger.</p>
+                    <p class="feature__pitch">A sci-fi roguelike on my own MonoGame engine, where the enemies you kill make you stronger. Winner of EA's Best Use of AI award at Games Fleadh 2026.</p>
                     <dl class="facts">
                         <div><dt>Role</dt><dd>Solo developer</dd></div>
                         <div><dt>Tech</dt><dd>C#, MonoGame</dd></div>
@@ -98,15 +98,15 @@
                     <ol class="feature__steps">
                         <li class="step is-active" data-step="0">
                             <h4>Award-winning enemy AI</h4>
-                            <p>Pale Roots won the EA-sponsored Best Use of AI award at Games Fleadh 2026. I built the whole game solo in MonoGame, with no commercial engine underneath.</p>
+                            <p>Pale Roots won the EA-sponsored Best Use of AI award at Games Fleadh 2026. I wrote the engine and the game solo: about 6,700 lines of C# across 56 files, with no commercial engine underneath.</p>
                         </li>
                         <li class="step" data-step="1">
                             <h4>Armies that spread out instead of swarming</h4>
-                            <p>Every unit runs a small state machine (Wander, Chase, Combat, Hurt) behind an <code>IAIState</code> interface. Targeting is centralised: every 500&nbsp;ms, units without a valid target pick the nearest enemy that has fewer than two attackers already, so fights break into duels rather than one big pile.</p>
+                            <p>Each unit takes at most 2 attackers, and targets are re-scanned every 500&nbsp;ms instead of every frame, so armies of 15+ units split into readable duels instead of collapsing into one pile. Behaviour runs on a small state machine (Wander, Chase, Combat, Hurt) behind an <code>IAIState</code> interface.</p>
                         </li>
                         <li class="step" data-step="2">
                             <h4>An engine built from scratch</h4>
-                            <p>A pushdown stack of game states handles menus, cutscenes and level-ups. Combat broadcasts C# <code>Action</code> events, so the UI and audio listen without the combat code knowing they exist. Arenas are 60&times;34-tile maps, filled procedurally from data.</p>
+                            <p>Combat raises C# events for damage, kills and new targets. UI, audio and level-ups subscribe to them, and combat never references any of them. A pushdown stack of game states handles menus, cutscenes and level-ups, and arenas are 60&times;34-tile maps filled procedurally from data.</p>
                         </li>
                     </ol>
                 </div>
@@ -121,10 +121,10 @@
                 <header class="feature__head">
                     <p class="feature__meta"><span class="tag">Research &middot; with paper</span></p>
                     <h3 class="feature__title" id="lod-title" data-reveal>Hybrid LOD Traffic Simulation</h3>
-                    <p class="feature__pitch">City traffic that runs as full Unity GameObjects near the camera and as Burst-compiled ECS data everywhere else, handing each car back and forth without a seam.</p>
+                    <p class="feature__pitch">Open-world traffic that runs as full Unity GameObjects near the player and as Burst-compiled ECS data everywhere else, swapping each car between the two without a visible seam.</p>
                     <dl class="facts">
-                        <div><dt>Role</dt><dd>Solo, self-directed</dd></div>
-                        <div><dt>Tech</dt><dd>Unity 6, DOTS / ECS, Burst, C#</dd></div>
+                        <div><dt>Role</dt><dd>Solo research, outside the curriculum</dd></div>
+                        <div><dt>Tech</dt><dd>Unity 6, DOTS / ECS, Burst, editor tooling</dd></div>
                         <div><dt>Output</dt><dd>Playable build and paper</dd></div>
                     </dl>
                 </header>
@@ -142,22 +142,23 @@
                             </div>
                         </figure>
                         <figure class="media-layer" data-media="2">
-                            <img src="assets/img/hybrid-lod-1-1280.jpg" srcset="assets/img/hybrid-lod-1-640.jpg 640w, assets/img/hybrid-lod-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity profiler capture of the hybrid system, with ECS entities and pooled GameObject cars driving the same road graph">
+                            <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity editor running the Hybrid LOD mode with 100 cars: the road graph, the LOD manager settings (hydrate 150, dehydrate 200, pool of 150) and the profiler">
                         </figure>
                     </div>
 
                     <ol class="feature__steps">
                         <li class="step is-active" data-step="0">
                             <h4>The problem</h4>
-                            <p>A hundred cars with rigidbodies, raycasts and Update loops chokes the main thread and spikes the garbage collector. Most of those cars are too far away for the player to see.</p>
+                            <p>A hundred cars with rigidbodies, raycasts and Update loops loads the main thread and allocates garbage every frame. Most of those cars are too far away for the player to ever see.</p>
                         </li>
                         <li class="step" data-step="1">
                             <h4>Hydrate near, dehydrate far</h4>
-                            <p>Inside the hydration radius, a car is a pooled GameObject with sensor and decision modules. Past the larger dehydration radius, it becomes an ECS entity with three components, moved kinematically by a Burst job. Each road node has the same integer ID in both worlds, so a hand-off is just "where am I, where am I going, what's left of my A* path".</p>
+                            <p>Cars become full GameObjects inside 150&nbsp;m and turn back into three-component ECS entities past 200&nbsp;m, moved by a Burst job. Both worlds share integer node IDs, so a car crosses over carrying only its position, destination and remaining A* path. 150 pre-warmed pooled cars mean a hand-off never instantiates.</p>
                         </li>
                         <li class="step" data-step="2">
-                            <h4>Tools and write-up</h4>
-                            <p>I wrote a Waypoint Sync editor tool that mirrors the GameObject road network into the DOTS subscene, plus a one-click "make roads two-way" tool. The paper compares pure OOP, pure ECS and the hybrid in the Unity Profiler.</p>
+                            <h4>Measured, then written up</h4>
+                            <p>With 100 cars in the Unity Profiler, pure GameObjects allocate garbage every frame, while pure ECS and the hybrid show no steady per-frame allocation. Editor tools mirror the road graph into the DOTS subscene, so designers edit one road network instead of two. The paper walks through all three modes.</p>
+                            <p><button class="chip-btn" type="button" data-gallery="profiler">Compare all three profiler runs</button></p>
                         </li>
                     </ol>
                 </div>
@@ -202,11 +203,11 @@
                     <div class="card__body">
                         <p class="card__engine">Unity &middot; WebGL</p>
                         <h3 class="card__title">Engine Architecture &amp; Optimisation</h3>
-                        <p class="card__pitch">A stress-test sandbox for spawning hundreds of enemies without garbage-collection spikes.</p>
+                        <p class="card__pitch">A stress-test sandbox for finding how many enemies pooling and async loading can handle.</p>
                         <ul class="card__points">
-                            <li>Addressables load prefabs asynchronously into Unity's <code>ObjectPool</code>.</li>
-                            <li>GPU instancing for dynamic objects and baked occlusion culling for static geometry.</li>
-                            <li>A live overlay reads spawner stats from ScriptableObjects, so the UI never references gameplay code.</li>
+                            <li>Ran 500 active pooled enemies at 84 FPS in the editor, with a live counter on screen.</li>
+                            <li>Prefabs load through Addressables straight into Unity's <code>ObjectPool</code>, so nothing is instantiated during play.</li>
+                            <li>The stats overlay reads from ScriptableObjects and refreshes 5 times a second, so it costs almost nothing and never touches gameplay code.</li>
                         </ul>
                         <div class="card__links">
                             <a class="btn btn--small btn--accent" href="UnityDemo/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
@@ -241,11 +242,10 @@
                     <div class="card__body">
                         <p class="card__engine">C# &middot; WPF &middot; SQLite</p>
                         <h3 class="card__title">Dying Fire</h3>
-                        <p class="card__pitch">A horror visual novel and RPG engine built on a desktop UI framework.</p>
+                        <p class="card__pitch">A horror visual novel and RPG running on WPF, a framework built for business apps rather than games.</p>
                         <ul class="card__points">
-                            <li>WPF bent into a game loop, with MVVM and the State pattern for scenes.</li>
-                            <li>World, items and interactables built by a factory from a SQLite database.</li>
-                            <li>Polymorphism and interfaces keep game entities out of the UI layer.</li>
+                            <li>About 1,750 lines of C#, using MVVM and a State-pattern scene manager.</li>
+                            <li>The whole world (rooms, items, interactables) loads from SQLite through a factory, so new content needs no code changes.</li>
                         </ul>
                         <div class="card__links">
                             <a class="btn btn--small" href="https://github.com/RyanBarry2203/DyingFire" target="_blank" rel="noopener">Source</a>
@@ -260,10 +260,10 @@
                     <div class="card__body">
                         <p class="card__engine">C# &middot; Console</p>
                         <h3 class="card__title">House of History</h3>
-                        <p class="card__pitch">A text-only horror escape room, built to practise pure object-oriented design.</p>
+                        <p class="card__pitch">A text-based horror escape room, built to get object-oriented design right with no engine.</p>
                         <ul class="card__points">
-                            <li>Room, item and enemy class hierarchy with no engine underneath.</li>
-                            <li>Health, light and sanity state drive branching, non-linear room events.</li>
+                            <li>14 classes and about 1,100 lines of C#.</li>
+                            <li>Health, light and sanity drive branching room events.</li>
                         </ul>
                         <div class="card__links">
                             <a class="btn btn--small" href="https://github.com/RyanBarry2203/Escape-Room-Personal" target="_blank" rel="noopener">Source</a>

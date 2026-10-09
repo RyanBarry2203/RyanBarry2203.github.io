@@ -6,6 +6,11 @@ const finePointer = matchMedia('(pointer: fine)').matches;
 const navHeight = () => parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 60;
 
 const GALLERIES = {
+    profiler: [
+        ['profiler-oop', 'Pure OOP, 100 cars: GC Allocated In Frame (bottom graph) shows allocation on every frame'],
+        ['profiler-ecs', 'Pure ECS, 100 cars: the GC allocation line stays flat'],
+        ['profiler-hybrid', 'Hybrid LOD, 100 cars: mostly flat GC line with occasional spikes'],
+    ],
     paranormal: [
         ['paranormal-1', 'First-person view with the Spirit Box switched on'],
         ['paranormal-2', 'Ghost NavMesh agent and the ScriptableObject data assets'],
@@ -278,7 +283,7 @@ function setUpVideoFacades() {
 
 // ---------- Screenshot lightbox ----------
 
-function setUpLightbox() {
+function setUpLightbox(lenis) {
     const dialog = document.querySelector('[data-lightbox]');
     if (!dialog || typeof dialog.showModal !== 'function') return;
     const image = dialog.querySelector('[data-lightbox-img]');
@@ -302,12 +307,14 @@ function setUpLightbox() {
             if (!items.length) return;
             show(0);
             dialog.showModal();
+            lenis?.stop();
         });
     });
 
     dialog.querySelector('[data-lightbox-prev]').addEventListener('click', () => show(index - 1));
     dialog.querySelector('[data-lightbox-next]').addEventListener('click', () => show(index + 1));
     dialog.querySelector('[data-lightbox-close]').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => lenis?.start());
     dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
     dialog.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') show(index - 1);
@@ -322,5 +329,5 @@ setUpAnchorLinks(motion);
 setUpMagneticButtons(motion?.gsap);
 setUpFeatures();
 setUpVideoFacades();
-setUpLightbox();
+setUpLightbox(motion?.lenis);
 whenLoaded(() => onIdle(() => startHero(motion)));
