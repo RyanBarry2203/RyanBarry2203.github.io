@@ -26,17 +26,22 @@
     <script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
-    <a class="skip-link" href="#work">Skip to the work</a>
+    <a class="skip-link" href="#featured">Skip to the work</a>
+    <canvas class="rider-canvas" data-rider aria-hidden="true"></canvas>
 
     <header class="site-nav">
-        <a class="site-nav__brand" href="#top">Ryan Barry</a>
-        <nav aria-label="Main">
+        <a class="site-nav__brand" href="#top"><span class="site-nav__prompt">&gt;</span>RYAN_BARRY<span class="site-nav__cursor" aria-hidden="true"></span></a>
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-nav-toggle>
+            <span class="visually-hidden">Menu</span><span aria-hidden="true"></span>
+        </button>
+        <nav class="site-nav__menu" id="site-menu" aria-label="Main">
             <ul class="site-nav__links">
-                <li><a href="#work">Work</a></li>
-                <li><a href="#hybrid-lod">Research</a></li>
-                <li><a href="#reel">Reel</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a class="btn btn--small" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">CV</a></li>
+                <li><a href="#featured" data-nav-link><span>01</span>Featured</a></li>
+                <li><a href="#projects" data-nav-link><span>02</span>Projects</a></li>
+                <li><a href="#hybrid-lod" data-nav-link-alias="featured"><span>03</span>Research</a></li>
+                <li><a href="#reel" data-nav-link><span>04</span>Reel</a></li>
+                <li><a href="#init" data-nav-link><span>05</span>Init</a></li>
+                <li><a class="btn btn--small" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">CV.pdf</a></li>
             </ul>
         </nav>
     </header>
@@ -47,66 +52,98 @@
                 <div class="hero__floor"></div>
             </div>
             <div class="hero__content">
-                <p class="eyebrow">Games Development, ATU Sligo &middot; Ireland</p>
+                <p class="eyebrow"><span class="eyebrow__prompt">&gt; INIT</span> Games Development, ATU Sligo &middot; Ireland</p>
                 <h1 class="hero__title" id="hero-title">Ryan Barry</h1>
                 <p class="hero__role">Gameplay &amp; AI Programmer</p>
                 <p class="hero__lede">I build game AI and engine systems in C#, from a custom MonoGame engine to Unity DOTS. My solo game Pale Roots won EA's <strong>Best Use of AI</strong> award at Games Fleadh 2026.</p>
                 <div class="hero__actions">
                     <a class="btn btn--accent" data-magnetic href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">Play Pale Roots</a>
-                    <a class="btn" data-magnetic href="#work">See the work</a>
+                    <a class="btn" data-magnetic href="#featured">Enter the grid</a>
                     <a class="btn btn--ghost" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
                 </div>
             </div>
-            <a class="hero__scroll" href="#work" aria-label="Scroll to featured work"><span></span></a>
+            <dl class="hero__hud" aria-hidden="true">
+                <div><dt>SYS</dt><dd data-hud="status">ONLINE</dd></div>
+                <div><dt>RIDERS</dt><dd data-hud="riders">--</dd></div>
+                <div><dt>FPS</dt><dd data-hud="fps">--</dd></div>
+            </dl>
+            <p class="hero__dock" aria-hidden="true">SCROLL TO RIDE</p>
         </section>
 
-        <section class="section" id="work" aria-labelledby="work-title">
-            <div class="section__head">
-                <p class="eyebrow">Featured work</p>
-                <h2 id="work-title" data-reveal>Two systems I'd talk about in an interview</h2>
-            </div>
+        <section class="section" id="featured" aria-labelledby="featured-title">
+            <header class="sector-head" data-rider-stop>
+                <p class="sector-head__id">// SECTOR_01</p>
+                <h2 id="featured-title" data-scramble>Featured_Work</h2>
+                <p class="sector-head__sub">An award-winning game on my own engine, and a traffic system that moves cars between two worlds.</p>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
 
-            <article class="feature" id="pale-roots" aria-labelledby="pr-title" data-feature>
+            <article class="feature" id="pale-roots" aria-labelledby="pr-title" data-feature data-rider-stop>
                 <header class="feature__head">
-                    <p class="feature__meta"><span class="tag tag--award">EA Best Use of AI &middot; Games Fleadh 2026</span></p>
-                    <h3 class="feature__title" id="pr-title" data-reveal>Pale Roots</h3>
+                    <p class="feature__meta"><span class="tag tag--award">EA Best Use of AI &middot; Games Fleadh 2026</span><span class="tag">MonoGame &middot; C#</span></p>
+                    <h3 class="feature__title" id="pr-title" data-scramble>Pale Roots</h3>
                     <p class="feature__pitch">A sci-fi roguelike on my own MonoGame engine, where the enemies you kill make you stronger. Winner of EA's Best Use of AI award at Games Fleadh 2026.</p>
                     <dl class="facts">
                         <div><dt>Role</dt><dd>Solo developer</dd></div>
-                        <div><dt>Tech</dt><dd>C#, MonoGame</dd></div>
+                        <div><dt>Tech</dt><dd>C#, MonoGame, custom engine</dd></div>
                         <div><dt>When</dt><dd>Dec 2025 to Mar 2026</dd></div>
                     </dl>
                 </header>
 
                 <div class="feature__body">
-                    <div class="feature__media" data-feature-media>
-                        <figure class="media-layer is-active" data-media="0">
-                            <img src="assets/img/pale-roots-stage-1280.jpg" srcset="assets/img/pale-roots-stage-640.jpg 640w, assets/img/pale-roots-stage-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="714" loading="lazy" decoding="async" alt="Ryan Barry holding the EA Best Use of AI award at Games Fleadh 2026, in front of EA and Games Fleadh banners">
-                        </figure>
-                        <figure class="media-layer" data-media="1">
-                            <canvas class="demo-canvas" data-demo="targeting" aria-label="Live demo: two armies picking targets. Each target accepts at most two attackers, so fights spread out instead of everyone piling onto one unit."></canvas>
-                            <div class="demo-ui">
-                                <button class="chip-btn" type="button" data-targeting-toggle aria-pressed="true">Attacker cap: 2</button>
-                                <span class="demo-ui__note">Re-scan every 500 ms</span>
-                            </div>
-                        </figure>
-                        <figure class="media-layer" data-media="2">
-                            <img src="assets/img/pale-roots-boss-1280.jpg" srcset="assets/img/pale-roots-boss-640.jpg 640w, assets/img/pale-roots-boss-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="Pale Roots gameplay: the player's allies and an orc army clash in a bone-strewn arena under a giant skeleton boss">
-                        </figure>
+                    <div class="feature__media hud" data-feature-media>
+                        <div class="hud__bar"><span class="hud__label"><i class="hud__rec"></i>FEED // PALE_ROOTS</span><span class="hud__label" data-media-caption>AWARD</span></div>
+                        <div class="hud__view">
+                            <figure class="media-layer is-active" data-media="0" data-caption="AWARD">
+                                <div class="slideshow" data-slideshow>
+                                    <img src="assets/img/pale-roots-stage-1280.jpg" srcset="assets/img/pale-roots-stage-640.jpg 640w, assets/img/pale-roots-stage-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="714" loading="lazy" decoding="async" alt="Ryan Barry holding the EA Best Use of AI award at Games Fleadh 2026, in front of EA and Games Fleadh banners">
+                                    <img src="assets/img/pale-roots-fleadh-1280.jpg" srcset="assets/img/pale-roots-fleadh-640.jpg 640w, assets/img/pale-roots-fleadh-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="714" loading="lazy" decoding="async" alt="Ryan at the Pale Roots table at Games Fleadh, holding a #GamesFleadh sign">
+                                    <img src="assets/img/pale-roots-award-1280.jpg" srcset="assets/img/pale-roots-award-640.jpg 640w, assets/img/pale-roots-award-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="716" loading="lazy" decoding="async" alt="A judge plays Pale Roots at the Games Fleadh stand while others watch">
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="1" data-caption="SIM // TARGETING">
+                                <canvas class="demo-canvas" data-demo="targeting" aria-label="Live demo: two armies picking targets. Each target accepts at most two attackers, so fights spread out instead of everyone piling onto one unit."></canvas>
+                                <div class="demo-ui">
+                                    <button class="chip-btn" type="button" data-targeting-toggle aria-pressed="true">Attacker cap: 2</button>
+                                    <span class="demo-ui__note">Re-scan every 500 ms</span>
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="2" data-caption="SIM // GRAVITY_BOSS">
+                                <canvas class="demo-canvas" data-demo="gravity" tabindex="0" aria-label="Playable demo of the Black Hole boss. Move the pointer to steer the player and click to attack. The boss pulls you in on a cooldown and blasts you away after taking 200 damage."></canvas>
+                                <div class="demo-ui"><span class="demo-ui__note">Steer with the pointer &middot; click to hit the boss</span></div>
+                            </figure>
+                            <figure class="media-layer" data-media="3" data-caption="ENGINE // GAMEPLAY">
+                                <div class="slideshow" data-slideshow>
+                                    <img src="assets/img/pale-roots-boss-1280.jpg" srcset="assets/img/pale-roots-boss-640.jpg 640w, assets/img/pale-roots-boss-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="Allies and an orc army clash in a bone-strewn arena under a giant skeleton">
+                                    <img src="assets/img/pale-roots-title-1280.jpg" srcset="assets/img/pale-roots-title-640.jpg 640w, assets/img/pale-roots-title-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="687" loading="lazy" decoding="async" alt="A procedurally dressed 60 by 34 tile arena with two armies at either side">
+                                    <img src="assets/img/pale-roots-arena-1280.jpg" srcset="assets/img/pale-roots-arena-640.jpg 640w, assets/img/pale-roots-arena-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="The Space Tear Golem boss alone in a circular arena">
+                                    <img src="assets/img/pale-roots-combat-1280.jpg" srcset="assets/img/pale-roots-combat-640.jpg 640w, assets/img/pale-roots-combat-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="686" loading="lazy" decoding="async" alt="How-to-play screen listing the unlockable abilities: Heavy Attack, Dash, Smite, Holy Nova and more">
+                                    <img src="assets/img/pale-roots-3-1280.jpg" srcset="assets/img/pale-roots-3-640.jpg 640w, assets/img/pale-roots-3-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="655" loading="lazy" decoding="async" alt="The CombatSystem class in Visual Studio, with its damage, kill and target events">
+                                </div>
+                            </figure>
+                        </div>
                     </div>
 
                     <ol class="feature__steps">
                         <li class="step is-active" data-step="0">
+                            <span class="step__index">01 / 04</span>
                             <h4>Award-winning enemy AI</h4>
-                            <p>Pale Roots won the EA-sponsored Best Use of AI award at Games Fleadh 2026. I wrote the engine and the game solo: about 6,700 lines of C# across 56 files, with no commercial engine underneath.</p>
+                            <p>Pale Roots took the EA-sponsored Best Use of AI award at Games Fleadh 2026. It runs on an engine I wrote myself in MonoGame: game loop, camera, collision, animation, rendering and state management, with no commercial engine underneath.</p>
                         </li>
                         <li class="step" data-step="1">
+                            <span class="step__index">02 / 04</span>
                             <h4>Armies that spread out instead of swarming</h4>
                             <p>Each unit takes at most 2 attackers, and targets are re-scanned every 500&nbsp;ms instead of every frame, so armies of 15+ units split into readable duels instead of collapsing into one pile. Behaviour runs on a small state machine (Wander, Chase, Combat, Hurt) behind an <code>IAIState</code> interface.</p>
                         </li>
                         <li class="step" data-step="2">
-                            <h4>An engine built from scratch</h4>
-                            <p>Combat raises C# events for damage, kills and new targets. UI, audio and level-ups subscribe to them, and combat never references any of them. A pushdown stack of game states handles menus, cutscenes and level-ups, and arenas are 60&times;34-tile maps filled procedurally from data.</p>
+                            <span class="step__index">03 / 04</span>
+                            <h4>A boss that bends gravity</h4>
+                            <p>The Black Hole boss pulls the player in on a 6-second cooldown, and answers burst damage with a repel blast once it has taken 200 damage. The fight is its own state pushed onto the game-state stack: its arena, engine and entities are built on entry and thrown away on exit.</p>
+                        </li>
+                        <li class="step" data-step="3">
+                            <span class="step__index">04 / 04</span>
+                            <h4>The engine underneath</h4>
+                            <p>Sprites are depth-sorted by their bottom edge, so characters pass in front of and behind scenery. The camera follows, clamps to the map and hands a transform matrix straight to SpriteBatch. Combat raises C# events for damage, kills and new targets, and upgrade cards carry their effect as an <code>Action</code> delegate.</p>
                         </li>
                     </ol>
                 </div>
@@ -117,10 +154,10 @@
                 </div>
             </article>
 
-            <article class="feature feature--flip" id="hybrid-lod" aria-labelledby="lod-title" data-feature>
+            <article class="feature feature--flip" id="hybrid-lod" aria-labelledby="lod-title" data-feature data-rider-stop>
                 <header class="feature__head">
-                    <p class="feature__meta"><span class="tag">Research &middot; with paper</span></p>
-                    <h3 class="feature__title" id="lod-title" data-reveal>Hybrid LOD Traffic Simulation</h3>
+                    <p class="feature__meta"><span class="tag">Research &middot; with paper</span><span class="tag">Unity 6 &middot; DOTS</span></p>
+                    <h3 class="feature__title" id="lod-title" data-scramble>Hybrid LOD Traffic</h3>
                     <p class="feature__pitch">Open-world traffic that runs as full Unity GameObjects near the player and as Burst-compiled ECS data everywhere else, swapping each car between the two without a visible seam.</p>
                     <dl class="facts">
                         <div><dt>Role</dt><dd>Solo research, outside the curriculum</dd></div>
@@ -130,35 +167,48 @@
                 </header>
 
                 <div class="feature__body">
-                    <div class="feature__media" data-feature-media>
-                        <figure class="media-layer is-active" data-media="0">
-                            <img src="assets/img/hybrid-lod-3-1280.jpg" srcset="assets/img/hybrid-lod-3-640.jpg 640w, assets/img/hybrid-lod-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity editor showing the waypoint road network and the profiler during a pure ECS run">
-                        </figure>
-                        <figure class="media-layer" data-media="1">
-                            <canvas class="demo-canvas" data-demo="lod" aria-label="Live demo: cars near the camera circle are full GameObjects, cars further out collapse into lightweight ECS data points. Move the pointer over the demo to move the camera."></canvas>
-                            <div class="demo-ui">
-                                <span class="demo-ui__legend"><i class="dot dot--oop"></i>GameObject</span>
-                                <span class="demo-ui__legend"><i class="dot dot--ecs"></i>ECS entity</span>
-                            </div>
-                        </figure>
-                        <figure class="media-layer" data-media="2">
-                            <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity editor running the Hybrid LOD mode with 100 cars: the road graph, the LOD manager settings (hydrate 150, dehydrate 200, pool of 150) and the profiler">
-                        </figure>
+                    <div class="feature__media hud" data-feature-media>
+                        <div class="hud__bar"><span class="hud__label"><i class="hud__rec"></i>FEED // HYBRID_LOD</span><span class="hud__label" data-media-caption>EDITOR</span></div>
+                        <div class="hud__view">
+                            <figure class="media-layer is-active" data-media="0" data-caption="EDITOR">
+                                <div class="slideshow" data-slideshow>
+                                    <img src="assets/img/hybrid-lod-3-1280.jpg" srcset="assets/img/hybrid-lod-3-640.jpg 640w, assets/img/hybrid-lod-3-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity editor showing the waypoint road network and the profiler during a pure ECS run">
+                                    <img src="assets/img/hybrid-lod-1-1280.jpg" srcset="assets/img/hybrid-lod-1-640.jpg 640w, assets/img/hybrid-lod-1-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="A hundred GameObject cars with their sensor rays crowding the road graph">
+                                    <img src="assets/img/hybrid-lod-2-1280.jpg" srcset="assets/img/hybrid-lod-2-640.jpg 640w, assets/img/hybrid-lod-2-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Close-up of the waypoint graph and an AI car being routed">
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="1" data-caption="SIM // HYDRATION">
+                                <canvas class="demo-canvas" data-demo="lod" aria-label="Live demo: cars near the camera circle are full GameObjects, cars further out collapse into lightweight ECS data points. Move the pointer over the demo to move the camera."></canvas>
+                                <div class="demo-ui">
+                                    <span class="demo-ui__legend"><i class="dot dot--oop"></i>GameObject</span>
+                                    <span class="demo-ui__legend"><i class="dot dot--ecs"></i>ECS entity</span>
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="2" data-caption="PROFILER // 100 CARS">
+                                <div class="slideshow" data-slideshow>
+                                    <img src="assets/img/profiler-oop-1280.jpg" srcset="assets/img/profiler-oop-640.jpg 640w, assets/img/profiler-oop-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Pure OOP, 100 cars: the GC Allocated In Frame graph shows allocation on every frame" data-label="PURE OOP">
+                                    <img src="assets/img/profiler-ecs-1280.jpg" srcset="assets/img/profiler-ecs-640.jpg 640w, assets/img/profiler-ecs-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Pure ECS, 100 cars: the GC allocation line stays flat" data-label="PURE ECS">
+                                    <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Hybrid LOD, 100 cars: a mostly flat GC line with occasional spikes" data-label="HYBRID LOD">
+                                </div>
+                            </figure>
+                        </div>
                     </div>
 
                     <ol class="feature__steps">
                         <li class="step is-active" data-step="0">
+                            <span class="step__index">01 / 03</span>
                             <h4>The problem</h4>
                             <p>A hundred cars with rigidbodies, raycasts and Update loops loads the main thread and allocates garbage every frame. Most of those cars are too far away for the player to ever see.</p>
                         </li>
                         <li class="step" data-step="1">
+                            <span class="step__index">02 / 03</span>
                             <h4>Hydrate near, dehydrate far</h4>
                             <p>Cars become full GameObjects inside 150&nbsp;m and turn back into three-component ECS entities past 200&nbsp;m, moved by a Burst job. Both worlds share integer node IDs, so a car crosses over carrying only its position, destination and remaining A* path. 150 pre-warmed pooled cars mean a hand-off never instantiates.</p>
                         </li>
                         <li class="step" data-step="2">
+                            <span class="step__index">03 / 03</span>
                             <h4>Measured, then written up</h4>
                             <p>With 100 cars in the Unity Profiler, pure GameObjects allocate garbage every frame, while pure ECS and the hybrid show no steady per-frame allocation. Editor tools mirror the road graph into the DOTS subscene, so designers edit one road network instead of two. The paper walks through all three modes.</p>
-                            <p><button class="chip-btn" type="button" data-gallery="profiler">Compare all three profiler runs</button></p>
                         </li>
                     </ol>
                 </div>
@@ -170,134 +220,269 @@
             </article>
         </section>
 
-        <section class="section" id="more" aria-labelledby="more-title">
-            <div class="section__head">
-                <p class="eyebrow">More projects</p>
-                <h2 id="more-title" data-reveal>Systems, engines and experiments</h2>
-            </div>
+        <section class="section" id="projects" aria-labelledby="projects-title">
+            <header class="sector-head" data-rider-stop>
+                <p class="sector-head__id">// SECTOR_02</p>
+                <h2 id="projects-title" data-scramble>Project_Archive</h2>
+                <p class="sector-head__sub">Every project below has a live simulation of the system I built. Most of them are playable.</p>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
 
-            <ul class="cards">
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="split-shift" aria-label="Open Split_Shift screenshots">
-                        <img src="assets/img/hybrid-lod-2-640.jpg" srcset="assets/img/hybrid-lod-2-640.jpg 640w, assets/img/hybrid-lod-2-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="Split_Shift's AI test scene in the Unity editor: the waypoint road graph with an AI car and its sensor rays">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">Unity 6 &middot; Team of 3 &middot; Tech lead</p>
-                        <h3 class="card__title">Split_Shift</h3>
-                        <p class="card__pitch">An open-world street racing game set in a neon city. I'm tech lead on a team of three and own the AI, traffic, police and city generation.</p>
-                        <ul class="card__points">
-                            <li>Police pursuits: a reported crime recruits the 3 nearest units within 220&nbsp;m and re-routes them to the suspect every second. Stay clear for 10&nbsp;s and you escape.</li>
-                            <li>Cars steer with pure-pursuit path tracking and swap between traffic, racing and police behaviour through one strategy interface.</li>
-                            <li>47 automated tests, including tests that fail if the steering or speed planning allocates any garbage.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small btn--accent" href="Project300/index.html" target="_blank" rel="noopener">Play AI sandbox <span class="btn__note">~21&nbsp;MB</span></a>
+            <article class="bay" id="split-shift" aria-labelledby="ss-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>SIM // POLICE_PURSUIT</span>
+                        <div class="hud__tabs" role="tablist" aria-label="Split_Shift view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
                         </div>
                     </div>
-                </li>
-
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="paranormal" aria-label="Open Paranormal Investigation screenshots">
-                        <img src="assets/img/paranormal-1-640.jpg" srcset="assets/img/paranormal-1-640.jpg 640w, assets/img/paranormal-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="First-person view of a dark house with the Spirit Box active">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">Unity &middot; WebGL</p>
-                        <h3 class="card__title">Paranormal Investigation</h3>
-                        <p class="card__pitch">A ghost-hunting game whose ghost reacts to light, noise and the player's sanity.</p>
-                        <ul class="card__points">
-                            <li>Ghost AI as a finite state machine: wander, investigate light, spook, hunt on line of sight.</li>
-                            <li>EMF scanning, Spirit Box and light decay run on <code>Awaitable</code>/<code>async</code> instead of coroutines.</li>
-                            <li>ScriptableObject event channels keep UI, audio and gameplay decoupled.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small btn--accent" href="UnityDemo3.1/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <canvas class="demo-canvas" data-demo="pursuit" tabindex="0" aria-label="Playable pursuit demo. Drive with the arrow keys or WASD, or hold the pointer where you want to go. Press R or the button to report a crime and the nearest police respond."></canvas>
+                            <div class="demo-ui"><button class="chip-btn" type="button" data-pursuit-crime>Report crime</button></div>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/hybrid-lod-2-1280.jpg" srcset="assets/img/hybrid-lod-2-640.jpg 640w, assets/img/hybrid-lod-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Split_Shift's AI test scene in the Unity editor: the waypoint road graph with an AI car and its sensor rays">
+                                <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Hybrid LOD traffic running inside the Split_Shift project">
+                            </div>
                         </div>
                     </div>
-                </li>
+                    <p class="hud__hint">Arrows / WASD or hold the pointer to drive &middot; R reports a crime</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_01 // Unity 6 &middot; Team of 3 &middot; Tech lead</p>
+                    <h3 class="bay__title" id="ss-title" data-scramble>Split_Shift</h3>
+                    <p class="bay__pitch">An open-world street racing game set in a neon city. I'm tech lead on a team of three and own the AI, traffic, police and city generation.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>Pursuit coordinator.</b> A reported crime recruits the 3 nearest units within 220&nbsp;m and re-routes them to the node nearest the suspect every second. Keep every unit beyond 120&nbsp;m for 10&nbsp;s and you escape.</li>
+                        <li><b>Pure-pursuit steering.</b> Each car aims at a lookahead point on its route and turns that into a steering angle from its wheelbase, the same geometry used for path tracking in autonomous vehicles.</li>
+                        <li><b>Swappable driving strategies.</b> Traffic, racing and police behaviour sit behind one <code>IAIDrivingStrategy</code> interface; police fall back to traffic driving when they have no target.</li>
+                        <li><b>Tested.</b> 47 automated tests, including allocation tests that fail if steering or speed planning allocates any garbage.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small btn--accent" href="Project300/index.html" target="_blank" rel="noopener">Play AI sandbox <span class="btn__note">~21&nbsp;MB</span></a>
+                    </div>
+                </div>
+            </article>
 
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="engine-opt" aria-label="Open Engine Architecture and Optimisation screenshots">
-                        <img src="assets/img/engine-opt-1-640.jpg" srcset="assets/img/engine-opt-1-640.jpg 640w, assets/img/engine-opt-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="344" loading="lazy" decoding="async" alt="Stress test with a live overlay showing 500 active pooled enemies at 84 FPS">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">Unity &middot; WebGL</p>
-                        <h3 class="card__title">Engine Architecture &amp; Optimisation</h3>
-                        <p class="card__pitch">A stress-test sandbox for finding how many enemies pooling and async loading can handle.</p>
-                        <ul class="card__points">
-                            <li>Ran 500 active pooled enemies at 84 FPS in the editor, with a live counter on screen.</li>
-                            <li>Prefabs load through Addressables straight into Unity's <code>ObjectPool</code>, so nothing is instantiated during play.</li>
-                            <li>The stats overlay reads from ScriptableObjects and refreshes 5 times a second, so it costs almost nothing and never touches gameplay code.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small btn--accent" href="UnityDemo/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
-                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/3DGamesUnity2" target="_blank" rel="noopener">Source</a>
+            <article class="bay bay--flip" id="paranormal" aria-labelledby="pi-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>SIM // GHOST_FSM</span>
+                        <div class="hud__tabs" role="tablist" aria-label="Paranormal Investigation view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
                         </div>
                     </div>
-                </li>
-
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="gameplay-ai" aria-label="Open Gameplay Systems and AI screenshots">
-                        <img src="assets/img/gameplay-ai-1-640.jpg" srcset="assets/img/gameplay-ai-1-640.jpg 640w, assets/img/gameplay-ai-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="Unity editor with the baked NavMesh for the enemy AI">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">Unity &middot; WebGL</p>
-                        <h3 class="card__title">Gameplay Systems &amp; AI</h3>
-                        <p class="card__pitch">Enemy AI, a drifting vehicle and a camera-flash weapon in one sandbox.</p>
-                        <ul class="card__points">
-                            <li>Enemy state machine that investigates light and gets stunned by hits, using allocation-free <code>OverlapSphereNonAlloc</code> detection.</li>
-                            <li>Camera-flash tool spawns pooled, fading "burn nodes" where its rays hit geometry.</li>
-                            <li>Rigidbody car with drift built from dot products and counter-friction.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small btn--accent" href="UnityDemo2/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <canvas class="demo-canvas" data-demo="ghost" tabindex="0" aria-label="Playable ghost demo. Move the pointer to walk and aim your torch, click a room to flick its light. The ghost wanders, investigates light, spooks you as sanity drops, and hunts on line of sight."></canvas>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/paranormal-1-1280.jpg" srcset="assets/img/paranormal-1-640.jpg 640w, assets/img/paranormal-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="689" loading="lazy" decoding="async" alt="First-person view of a dark house with the Spirit Box switched on">
+                                <img src="assets/img/paranormal-2-1280.jpg" srcset="assets/img/paranormal-2-640.jpg 640w, assets/img/paranormal-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="689" loading="lazy" decoding="async" alt="Ghost NavMesh agent and the ScriptableObject data assets in the editor">
+                                <img src="assets/img/paranormal-4-1280.jpg" srcset="assets/img/paranormal-4-640.jpg 640w, assets/img/paranormal-4-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Blockout of the haunted house">
+                            </div>
                         </div>
                     </div>
-                </li>
+                    <p class="hud__hint">Pointer moves you and your torch &middot; click a room to flick its light</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_02 // Unity &middot; WebGL</p>
+                    <h3 class="bay__title" id="pi-title" data-scramble>Paranormal Investigation</h3>
+                    <p class="bay__pitch">A first-person ghost hunt where the ghost reacts to your light, your noise and your sanity.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>Seven-state ghost.</b> Wander, Investigate, Spook, Chase, Hunt, Stunned and Dead. Falling sanity tips it from wandering into spooking you, and a hunt confirms line of sight with a raycast before it commits.</li>
+                        <li><b>Allocation-free senses.</b> Detection runs on <code>OverlapSphereNonAlloc</code> with a reused buffer, so the ghost checks for the player every frame without creating garbage.</li>
+                        <li><b>Event channels.</b> Sanity only drains once the ghost phase starts, signalled through ScriptableObject event channels that also drive the UI, so neither side references the other.</li>
+                        <li><b>Shared equipment base.</b> EMF reader, Spirit Box, parabolic mic, thermometer, crucifix and photo camera all extend one equipment behaviour.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small btn--accent" href="UnityDemo3.1/index.html" target="_blank" rel="noopener">Play build</a>
+                    </div>
+                </div>
+            </article>
 
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="dying-fire" aria-label="Open Dying Fire screenshots">
-                        <img src="assets/img/dying-fire-1-640.jpg" srcset="assets/img/dying-fire-1-640.jpg 640w, assets/img/dying-fire-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="Dying Fire running as a WPF window: a dark bedroom scene with navigation arrows">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">C# &middot; WPF &middot; SQLite</p>
-                        <h3 class="card__title">Dying Fire</h3>
-                        <p class="card__pitch">A horror visual novel and RPG running on WPF, a framework built for business apps rather than games.</p>
-                        <ul class="card__points">
-                            <li>About 1,750 lines of C#, using MVVM and a State-pattern scene manager.</li>
-                            <li>The whole world (rooms, items, interactables) loads from SQLite through a factory, so new content needs no code changes.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/DyingFire" target="_blank" rel="noopener">Source</a>
+            <article class="bay" id="gameplay-ai" aria-labelledby="ga-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>SIM // DRIFT_+_FLASH</span>
+                        <div class="hud__tabs" role="tablist" aria-label="Gameplay Systems and AI view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
                         </div>
                     </div>
-                </li>
-
-                <li class="card" data-reveal>
-                    <button class="card__media" type="button" data-gallery="house-of-history" aria-label="Open House of History screenshots">
-                        <img src="assets/img/house-of-history-1-640.jpg" srcset="assets/img/house-of-history-1-640.jpg 640w, assets/img/house-of-history-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="316" loading="lazy" decoding="async" alt="House of History in a console window: the kitchen room with health, light and sanity readouts">
-                    </button>
-                    <div class="card__body">
-                        <p class="card__engine">C# &middot; Console</p>
-                        <h3 class="card__title">House of History</h3>
-                        <p class="card__pitch">A text-based horror escape room, built to get object-oriented design right with no engine.</p>
-                        <ul class="card__points">
-                            <li>14 classes and about 1,100 lines of C#.</li>
-                            <li>Health, light and sanity drive branching room events.</li>
-                        </ul>
-                        <div class="card__links">
-                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/Escape-Room-Personal" target="_blank" rel="noopener">Source</a>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <canvas class="demo-canvas" data-demo="drift" tabindex="0" aria-label="Playable drift demo. Arrow keys or WASD to drive, steer hard at speed to drift, F to fire the camera flash, which leaves fading burn marks and stuns nearby enemies. Or hold the pointer to drive towards it."></canvas>
+                            <div class="demo-ui"><button class="chip-btn" type="button" data-drift-flash>Camera flash</button></div>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/gameplay-ai-1-1280.jpg" srcset="assets/img/gameplay-ai-1-640.jpg 640w, assets/img/gameplay-ai-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="689" loading="lazy" decoding="async" alt="Baked NavMesh for the enemy AI in the Unity editor">
+                                <img src="assets/img/gameplay-ai-2-1280.jpg" srcset="assets/img/gameplay-ai-2-640.jpg 640w, assets/img/gameplay-ai-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Enemy state machine in action">
+                                <img src="assets/img/gameplay-ai-3-1280.jpg" srcset="assets/img/gameplay-ai-3-640.jpg 640w, assets/img/gameplay-ai-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="The drifting vehicle in the test level">
+                            </div>
                         </div>
                     </div>
-                </li>
-            </ul>
+                    <p class="hud__hint">Arrows / WASD to drive &middot; steer hard at speed to drift &middot; F for the flash</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_03 // Unity &middot; WebGL</p>
+                    <h3 class="bay__title" id="ga-title" data-scramble>Gameplay Systems &amp; AI</h3>
+                    <p class="bay__pitch">A drifting car, a camera-flash weapon and enemies that react to both, in one sandbox.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>Arcade drift.</b> Velocity is split into forward and sideways parts with dot products. Above 40% of top speed with hard steering, grip drops to a drift factor and a counter-force eats the sideways slide.</li>
+                        <li><b>Camera flash.</b> A raycast from the lens pulls a light "burn node" from an <code>ObjectPool</code> at the hit point and stuns every enemy in a 15&nbsp;m sphere around it.</li>
+                        <li><b>Async, cancellable fades.</b> Burn nodes fade with <code>Awaitable</code> loops and cancellation tokens, then release themselves back to the pool.</li>
+                        <li><b>Factories and interfaces.</b> Projectiles come from an Addressables-backed factory that loads asynchronously, and anything that takes damage goes through <code>IDamageable</code>.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small btn--accent" href="UnityDemo2/index.html" target="_blank" rel="noopener">Play build</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bay bay--flip" id="engine-opt" aria-labelledby="eo-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>SIM // POOL_VS_INSTANTIATE</span>
+                        <div class="hud__tabs" role="tablist" aria-label="Engine Optimisation view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
+                        </div>
+                    </div>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <canvas class="demo-canvas" data-demo="pooling" aria-label="Model of spawning enemies with Instantiate versus an object pool. In Instantiate mode the heap fills and the garbage collector causes frame spikes; in pooled mode memory stays flat."></canvas>
+                            <div class="demo-ui">
+                                <button class="chip-btn" type="button" data-pool-toggle aria-pressed="true">Mode: Pooled</button>
+                                <span class="demo-ui__note">Illustrative model</span>
+                            </div>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/engine-opt-1-1280.jpg" srcset="assets/img/engine-opt-1-640.jpg 640w, assets/img/engine-opt-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="Stress test overlay: 500 active pooled enemies at 84 FPS">
+                                <img src="assets/img/engine-opt-2-1280.jpg" srcset="assets/img/engine-opt-2-640.jpg 640w, assets/img/engine-opt-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="687" loading="lazy" decoding="async" alt="GPU instancing and culling setup">
+                                <img src="assets/img/engine-opt-3-1280.jpg" srcset="assets/img/engine-opt-3-640.jpg 640w, assets/img/engine-opt-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="687" loading="lazy" decoding="async" alt="Occlusion culling in the scene view">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="hud__hint">Switch modes and watch the heap and frame-time graphs</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_04 // Unity &middot; WebGL</p>
+                    <h3 class="bay__title" id="eo-title" data-scramble>Engine Architecture &amp; Optimisation</h3>
+                    <p class="bay__pitch">A stress-test sandbox for finding how many enemies pooling and async loading can handle.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>500 enemies at 84 FPS.</b> Ran 500 active pooled enemies in the editor, with a live counter on screen.</li>
+                        <li><b>Async pooling.</b> Prefabs load through Addressables with async/await straight into Unity's <code>ObjectPool</code>, so nothing is instantiated during play.</li>
+                        <li><b>Decoupled stats overlay.</b> The overlay reads from ScriptableObjects and refreshes 5 times a second, so it costs almost nothing and never touches gameplay code.</li>
+                        <li><b>Rendering.</b> GPU instancing for dynamic objects and baked occlusion culling for static geometry.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small btn--accent" href="UnityDemo/index.html" target="_blank" rel="noopener">Play build</a>
+                        <a class="btn btn--small" href="https://github.com/RyanBarry2203/3DGamesUnity2" target="_blank" rel="noopener">Source</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bay" id="dying-fire" aria-labelledby="df-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>SIM // MONSTER_SERVICE</span>
+                        <div class="hud__tabs" role="tablist" aria-label="Dying Fire view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
+                        </div>
+                    </div>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <canvas class="demo-canvas" data-demo="monster" tabindex="0" aria-label="Playable demo of Dying Fire's monster. Click a neighbouring room to move, or click Hide. The monster moves every tick; if it walks into your room while you are not hidden, you lose."></canvas>
+                            <div class="demo-ui"><button class="chip-btn" type="button" data-monster-hide aria-pressed="false">Hide</button></div>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/dying-fire-1-1280.jpg" srcset="assets/img/dying-fire-1-640.jpg 640w, assets/img/dying-fire-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Exploring a room in the WPF game window">
+                                <img src="assets/img/dying-fire-2-1280.jpg" srcset="assets/img/dying-fire-2-640.jpg 640w, assets/img/dying-fire-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="622" loading="lazy" decoding="async" alt="Dying Fire inventory screen">
+                                <img src="assets/img/dying-fire-3-1280.jpg" srcset="assets/img/dying-fire-3-640.jpg 640w, assets/img/dying-fire-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="637" loading="lazy" decoding="async" alt="Dying Fire code and data layer">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="hud__hint">Click a connected room to move &middot; hide when the monster gets close</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_05 // C# &middot; WPF &middot; SQLite</p>
+                    <h3 class="bay__title" id="df-title" data-scramble>Dying Fire</h3>
+                    <p class="bay__pitch">A horror visual novel and RPG running on WPF, a framework built for business apps rather than games.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>Chain of responsibility.</b> Clicking an object walks a chain of interaction handlers (hide spot, locked door, pickup and so on) and the first one that can handle it does.</li>
+                        <li><b>Strategy-pattern items.</b> Consumables restore sanity and clues reveal lore, without the inventory knowing which is which.</li>
+                        <li><b>An event-driven monster.</b> A monster service roams the house on a 3-second game-loop tick and raises events; the loop turns its distance into audio cues and the jumpscare.</li>
+                        <li><b>States and data.</b> Hiding pushes a <code>HidingState</code> onto a state stack, and the whole world loads from SQLite asynchronously so the UI never freezes.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small" href="https://github.com/RyanBarry2203/DyingFire" target="_blank" rel="noopener">Source</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bay bay--flip" id="house-of-history" aria-labelledby="hoh-title" data-bay data-rider-stop>
+                <div class="bay__screen hud">
+                    <div class="hud__bar">
+                        <span class="hud__label"><i class="hud__rec"></i>TERMINAL // HORROR_ESCAPE</span>
+                        <div class="hud__tabs" role="tablist" aria-label="House of History view">
+                            <button type="button" role="tab" aria-selected="true" data-tab="demo">Play</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
+                        </div>
+                    </div>
+                    <div class="hud__view">
+                        <div class="hud__panel is-active" data-panel="demo">
+                            <div class="terminal" data-demo="terminal" aria-label="Playable text adventure adapted from House of History"></div>
+                        </div>
+                        <div class="hud__panel" data-panel="screens">
+                            <div class="slideshow" data-slideshow>
+                                <img src="assets/img/house-of-history-1-1280.jpg" srcset="assets/img/house-of-history-1-640.jpg 640w, assets/img/house-of-history-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="632" loading="lazy" decoding="async" alt="House of History in a console window: the kitchen with health, light and sanity readouts">
+                                <img src="assets/img/house-of-history-2-1280.jpg" srcset="assets/img/house-of-history-2-640.jpg 640w, assets/img/house-of-history-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="611" loading="lazy" decoding="async" alt="Room logic and branching choices">
+                                <img src="assets/img/house-of-history-3-1280.jpg" srcset="assets/img/house-of-history-3-640.jpg 640w, assets/img/house-of-history-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="646" loading="lazy" decoding="async" alt="House of History source code">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="hud__hint">Type a number or click an option &middot; find the fuse and the key</p>
+                </div>
+                <div class="bay__info">
+                    <p class="bay__index">PRJ_06 // C# &middot; Console</p>
+                    <h3 class="bay__title" id="hoh-title" data-scramble>House of History</h3>
+                    <p class="bay__pitch">A text-based horror escape room, built to get object-oriented design right with no engine. Try a short version on the left.</p>
+                    <p class="bay__label">&gt; SYSTEMS</p>
+                    <ul class="bay__systems">
+                        <li><b>Polymorphic rooms.</b> Every room extends a base <code>Room</code> class and overrides its own ASCII art and search menu, so the game loop treats all rooms the same.</li>
+                        <li><b>Item factory.</b> Items come from an <code>ItemLibrary</code> keyed by an enum, so rooms never construct items directly.</li>
+                        <li><b>Sanity economy.</b> Sanity drains every turn in the dark, more slowly with a lit candle; pills restore it, and reaching zero ends the run.</li>
+                        <li><b>Enemy library.</b> Demon, Shade, Wraith and others are built from one library with per-type stats.</li>
+                    </ul>
+                    <div class="bay__links">
+                        <a class="btn btn--small" href="https://github.com/RyanBarry2203/Escape-Room-Personal" target="_blank" rel="noopener">Source</a>
+                    </div>
+                </div>
+            </article>
         </section>
 
         <section class="section" id="reel" aria-labelledby="reel-title">
-            <div class="section__head">
-                <p class="eyebrow">Showreel</p>
-                <h2 id="reel-title" data-reveal>The work in motion</h2>
-            </div>
-            <div class="video-facade" data-youtube="PDtobaZvCbc">
+            <header class="sector-head" data-rider-stop>
+                <p class="sector-head__id">// SECTOR_03</p>
+                <h2 id="reel-title" data-scramble>System_Reel.mp4</h2>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
+            <div class="video-facade hud" data-youtube="PDtobaZvCbc">
                 <img src="https://i.ytimg.com/vi/PDtobaZvCbc/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
                 <a class="video-facade__play" href="https://www.youtube.com/watch?v=PDtobaZvCbc" target="_blank" rel="noopener">
                     <span class="video-facade__icon" aria-hidden="true"></span>
@@ -306,27 +491,36 @@
             </div>
         </section>
 
-        <section class="section about" id="about" aria-labelledby="about-title">
-            <div class="about__photo">
-                <img src="assets/img/profile-640.jpg" srcset="assets/img/profile-640.jpg 640w, assets/img/profile-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="480" loading="lazy" decoding="async" alt="Portrait of Ryan Barry">
-            </div>
-            <div class="about__text">
-                <p class="eyebrow">About</p>
-                <h2 id="about-title" data-reveal>Hi, I'm Ryan</h2>
-                <p>I'm a third-year Games Development student at ATU Sligo, on track for a First Class Honours. I like the parts of a game that players never see but always feel: how an enemy picks a target, how a city keeps a thousand cars moving, how a frame stays inside its budget.</p>
-                <p>Right now I'm tech lead on Split_Shift, a team open-world racing game, where I own the racer and police AI. Outside college I've managed a busy cocktail bar for years, so I'm used to leading a team under pressure.</p>
-                <p>I'm looking for a gameplay, AI or engine programming role or internship.</p>
-                <div class="about__links">
-                    <a class="btn btn--accent" data-magnetic href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
-                    <a class="btn" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank" rel="noopener">LinkedIn</a>
-                    <a class="btn" href="https://github.com/RyanBarry2203" target="_blank" rel="noopener">GitHub</a>
+        <section class="section init" id="init" aria-labelledby="init-title" data-rider-stop>
+            <header class="sector-head">
+                <p class="sector-head__id">// SECTOR_04</p>
+                <h2 id="init-title" data-scramble>Init / About_Me</h2>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
+            <div class="init__grid">
+                <div class="init__photo hud">
+                    <img src="assets/img/profile-640.jpg" srcset="assets/img/profile-640.jpg 640w, assets/img/profile-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="480" loading="lazy" decoding="async" alt="Portrait of Ryan Barry">
+                    <p class="init__id">USER: RYAN_BARRY &middot; CLASS: PROGRAMMER &middot; LOC: SLIGO_IE</p>
+                </div>
+                <div class="init__terminal">
+                    <p class="init__line">My obsession with games goes beyond playing; it's about understanding the mechanics that create immersion. From the narrative depth of <em>Red Dead Redemption 2</em> to the punishing precision of <em>Dark Souls</em>, I study how systems combine to create emotional impact.</p>
+                    <h3 class="init__cmd"><span>&gt;</span> AMBITION.EXE</h3>
+                    <p class="init__line">My goal is to become a Game Director who understands every element of the pipeline, from art to UI to core architecture. I believe every morsel of a game must be deliberate.</p>
+                    <h3 class="init__cmd"><span>&gt;</span> WHY_HIRE_ME</h3>
+                    <p class="init__line">I balance my third year (on track for First Class Honours) with managing a high-volume cocktail bar, and I'm tech lead on Split_Shift, our team's open-world racing game. That has forged a work ethic and leadership I bring straight into development. I push myself to build custom engines and complex systems so I'm as technically capable as any graduate.</p>
+                    <p class="init__quote">"I'm looking for a role or internship to prove my value. I just need a foot in the door; I will do the rest."</p>
+                    <div class="init__links">
+                        <a class="btn btn--accent" data-magnetic href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
+                        <a class="btn" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank" rel="noopener">LinkedIn</a>
+                        <a class="btn" href="https://github.com/RyanBarry2203" target="_blank" rel="noopener">GitHub</a>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>Ryan Barry &middot; Sligo, Ireland</p>
+        <p>&gt; END_OF_LINE &middot; Ryan Barry &middot; Sligo, Ireland</p>
         <p><a href="#top">Back to top</a></p>
     </footer>
 
