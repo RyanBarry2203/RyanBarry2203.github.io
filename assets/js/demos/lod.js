@@ -2,7 +2,7 @@
 // GameObjects, far away they "dehydrate" into ECS data. The two radii differ (3:4, as in the Unity
 // project's 150 / 200), so a car sitting on the boundary doesn't flip state every frame.
 
-import { fitCanvas, runWhileActive } from './canvas-loop.js';
+import { fitCanvas, runWhileActive } from '../canvas-loop.js';
 
 const WORLD_W = 800;
 const WORLD_H = 450;

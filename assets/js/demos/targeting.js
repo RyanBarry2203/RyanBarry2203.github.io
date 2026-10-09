@@ -2,7 +2,7 @@
 // Same rule as the game: every 500 ms, units without a valid target pick the nearest enemy
 // that has fewer than MAX_ATTACKERS units already attacking it.
 
-import { fitCanvas, runWhileActive } from './canvas-loop.js';
+import { fitCanvas, runWhileActive } from '../canvas-loop.js';
 
 const WORLD_W = 800;
 const WORLD_H = 450;
