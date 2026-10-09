@@ -11,6 +11,11 @@ const GALLERIES = {
         ['profiler-ecs', 'Pure ECS, 100 cars: the GC allocation line stays flat'],
         ['profiler-hybrid', 'Hybrid LOD, 100 cars: mostly flat GC line with occasional spikes'],
     ],
+    'split-shift': [
+        ['hybrid-lod-2', 'AI test scene: the waypoint road graph with an AI car and its sensor rays'],
+        ['hybrid-lod-3', 'Waypoint network and profiler during a pure ECS traffic run'],
+        ['profiler-hybrid', 'Hybrid LOD traffic running inside the Split_Shift project'],
+    ],
     paranormal: [
         ['paranormal-1', 'First-person view with the Spirit Box switched on'],
         ['paranormal-2', 'Ghost NavMesh agent and the ScriptableObject data assets'],
