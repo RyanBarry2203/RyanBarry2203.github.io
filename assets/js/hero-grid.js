@@ -405,6 +405,121 @@ function createMotes(count) {
     };
 }
 
+// Light cycles racing sideways across the grid ahead of the camera, each building a light wall.
+// They reuse LightWall, so their trails are the same allocation-free ribbons as the main riders.
+function createCrossTraffic(scene, count) {
+    const colours = [ORANGE, CYAN, new THREE.Color('#ff4d5e'), new THREE.Color('#9d7bff'), CYAN, ORANGE];
+    const bodyGeometry = new THREE.BoxGeometry(1.0, 0.34, 0.34);
+    const runners = Array.from({ length: count }, (_, i) => {
+        const colour = colours[i % colours.length].clone();
+        const wall = new LightWall(colour);
+        const body = new THREE.Mesh(bodyGeometry, new THREE.MeshBasicMaterial({ color: colour.clone().lerp(new THREE.Color('#ffffff'), 0.6) }));
+        scene.add(wall.mesh, body);
+        return { wall, body, x: 0, z: 0, startX: 0, direction: 1, speed: 0, cornersX: new Float32Array(1), cornersZ: new Float32Array(1) };
+    });
+
+    function respawn(runner, cameraX, cameraZ, anywhere) {
+        runner.direction = Math.random() < 0.5 ? 1 : -1;
+        runner.speed = 20 + Math.random() * 18;
+        runner.z = snap(cameraZ - (anywhere ? 22 + Math.random() * 60 : 55 + Math.random() * 30), CELL);
+        runner.x = cameraX - runner.direction * (anywhere ? Math.random() * 80 : 70 + Math.random() * 20);
+        runner.startX = runner.x;
+    }
+
+    return {
+        reset(cameraX, cameraZ) { runners.forEach((runner) => respawn(runner, cameraX, cameraZ, true)); },
+        shiftZ(amount) { runners.forEach((runner) => { runner.z += amount; }); },
+        update(dt, cameraX, cameraZ) {
+            runners.forEach((runner) => {
+                runner.x += runner.direction * runner.speed * dt;
+                const passedCamera = runner.z > cameraZ - 8;
+                const offScreen = (runner.x - cameraX) * runner.direction > 95;
+                if (passedCamera || offScreen) respawn(runner, cameraX, cameraZ, false);
+                runner.cornersX[0] = runner.startX;
+                runner.cornersZ[0] = runner.z;
+                runner.wall.update(runner.cornersX, runner.cornersZ, 1, runner.x, runner.z);
+                runner.body.position.set(runner.x, 0.17, runner.z);
+                runner.body.rotation.y = 0;
+            });
+        },
+        dispose() {
+            bodyGeometry.dispose();
+            runners.forEach((runner) => { runner.wall.dispose(); runner.body.material.dispose(); });
+        },
+    };
+}
+
+// Recognizer-style patrol craft: a wide top beam with two legs, drawn as glowing box outlines.
+function createRecognizers(count) {
+    const group = new THREE.Group();
+    const parts = [
+        { w: 9, h: 1.3, d: 2.4, x: 0, y: 0 },
+        { w: 1.4, h: 4.2, d: 2.0, x: -3.8, y: -2.6 },
+        { w: 1.4, h: 4.2, d: 2.0, x: 3.8, y: -2.6 },
+    ];
+    const geometries = parts.map((part) => {
+        const box = new THREE.BoxGeometry(part.w, part.h, part.d);
+        box.translate(part.x, part.y, 0);
+        const edges = new THREE.EdgesGeometry(box);
+        box.dispose();
+        return edges;
+    });
+    const material = new THREE.LineBasicMaterial({ color: new THREE.Color('#ff6a2a'), transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false });
+    const glowMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color('#ff4d1a'), transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
+    const glowGeometry = new THREE.BoxGeometry(9, 1.3, 2.4);
+
+    const craft = Array.from({ length: count }, (_, i) => {
+        const ship = new THREE.Group();
+        geometries.forEach((geometry) => ship.add(new THREE.LineSegments(geometry, material)));
+        ship.add(new THREE.Mesh(glowGeometry, glowMaterial));
+        ship.scale.setScalar(0.7 + Math.random() * 0.5);
+        group.add(ship);
+        return { ship, phase: i * 2.1, speed: 0.05 + Math.random() * 0.05, height: 15 + Math.random() * 9, depth: 70 + i * 22 };
+    });
+    group.traverse((object) => { object.frustumCulled = false; });
+
+    return {
+        group,
+        update(cameraX, cameraZ, time) {
+            craft.forEach((c) => {
+                const t = time * c.speed + c.phase;
+                const x = cameraX + Math.sin(t) * 110;
+                const vx = Math.cos(t);
+                c.ship.position.set(x, c.height + Math.sin(time * 0.7 + c.phase) * 1.2, cameraZ - c.depth);
+                c.ship.rotation.set(0, vx >= 0 ? 0 : Math.PI, vx * 0.12);
+            });
+        },
+        dispose() { geometries.forEach((g) => g.dispose()); glowGeometry.dispose(); material.dispose(); glowMaterial.dispose(); },
+    };
+}
+
+// Searchlight beams sweeping up from the skyline.
+function createSearchlights(count) {
+    const group = new THREE.Group();
+    const geometry = new THREE.ConeGeometry(7, 90, 24, 1, true);
+    geometry.translate(0, -45, 0);
+    geometry.rotateX(Math.PI);
+    const material = new THREE.MeshBasicMaterial({ color: new THREE.Color('#00f3ff'), transparent: true, opacity: 0.05, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    const beams = Array.from({ length: count }, (_, i) => {
+        const beam = new THREE.Mesh(geometry, material);
+        beam.position.set((i - (count - 1) / 2) * 90 + (Math.random() - 0.5) * 30, 0, -160 - Math.random() * 30);
+        group.add(beam);
+        return { beam, phase: i * 1.7, speed: 0.25 + Math.random() * 0.2 };
+    });
+    group.traverse((object) => { object.frustumCulled = false; });
+    return {
+        group,
+        update(cameraX, cameraZ, time) {
+            group.position.set(cameraX * 0.85, 0, cameraZ);
+            beams.forEach((b) => {
+                b.beam.rotation.z = Math.sin(time * b.speed + b.phase) * 0.55;
+                b.beam.rotation.x = -0.25 + Math.cos(time * b.speed * 0.7 + b.phase) * 0.15;
+            });
+        },
+        dispose() { geometry.dispose(); material.dispose(); },
+    };
+}
+
 const RIDER_SETUP = [
     { color: CYAN, lane: 2, start: -26, wander: 7 },
     { color: ORANGE, lane: 6, start: -34, wander: 12 },
@@ -434,9 +549,13 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
     const pulses = createPulses(lowPower ? 14 : 40);
     const skyline = createSkyline();
     const motes = createMotes(lowPower ? 150 : 500);
-    scene.add(pulses.mesh, skyline.group, motes.points);
+    const crossTraffic = createCrossTraffic(scene, lowPower ? 2 : 6);
+    const recognizers = createRecognizers(lowPower ? 1 : 3);
+    const searchlights = createSearchlights(lowPower ? 2 : 4);
+    scene.add(pulses.mesh, skyline.group, motes.points, recognizers.group, searchlights.group);
     pulses.reset(0, 0);
     motes.reset(0, 0);
+    crossTraffic.reset(0, 0);
 
     const hudRiders = hud?.querySelector('[data-hud="riders"]');
     const hudFps = hud?.querySelector('[data-hud="fps"]');
@@ -495,6 +614,7 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
             cycles.forEach((cycle) => cycle.shiftZ(REBASE_DISTANCE));
             pulses.shiftZ(REBASE_DISTANCE);
             motes.shiftZ(REBASE_DISTANCE);
+            crossTraffic.shiftZ(REBASE_DISTANCE);
         }
 
         // Scrolling lowers the camera toward the floor and tips it down, as if the page sinks into the grid.
@@ -514,6 +634,9 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         pulses.update(dt, state.cameraX, state.cameraZ);
         skyline.update(state.cameraX, state.cameraZ, state.time);
         motes.update(dt, state.cameraX, state.cameraZ);
+        crossTraffic.update(dt, state.cameraX, state.cameraZ);
+        recognizers.update(state.cameraX, state.cameraZ, state.time);
+        searchlights.update(state.cameraX, state.cameraZ, state.time);
 
         fpsFrames++;
         fpsTime += dt;
@@ -601,6 +724,9 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
             pulses.dispose();
             skyline.dispose();
             motes.dispose();
+            crossTraffic.dispose();
+            recognizers.dispose();
+            searchlights.dispose();
             grid.geometry.dispose();
             grid.material.dispose();
             renderer.dispose();
