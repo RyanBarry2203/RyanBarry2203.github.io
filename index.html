@@ -1,608 +1,327 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" class="no-js">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Ryan Barry - Game Developer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ryan Barry | Gameplay &amp; AI Programmer</title>
+    <meta name="description" content="Ryan Barry, games programmer from Ireland. Game AI and engine systems in C#, Unity DOTS and MonoGame. Winner of EA's Best Use of AI award at Games Fleadh 2026.">
+    <meta name="theme-color" content="#04070b">
+    <link rel="canonical" href="https://ryanbarry2203.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ryan Barry | Gameplay & AI Programmer">
+    <meta property="og:description" content="Game AI and engine systems in C#, Unity DOTS and MonoGame. EA Best Use of AI, Games Fleadh 2026.">
+    <meta property="og:url" content="https://ryanbarry2203.github.io/">
+    <meta property="og:image" content="https://ryanbarry2203.github.io/assets/img/pale-roots-stage-1280.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
-    
-    <!-- Added Rajdhani for the technical/futuristic Tron look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Rajdhani:wght@600;700&display=swap">
+    <link rel="stylesheet" href="assets/css/main.css">
 
-    <style>
-        :root {
-            --tron-cyan: #00f3ff;
-            --tron-cyan-dim: rgba(0, 243, 255, 0.2);
-            --tron-orange: #ff8c00;
-            --bg-dark: #050508;
-            --panel-bg: rgba(10, 15, 20, 0.85);
-            --text-main: #d1d5db;
-            --text-muted: #9ca3af;
-        }
-
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--tron-cyan-dim); border-radius: 5px; border: 1px solid var(--tron-cyan); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--tron-cyan); }
-
-        body {
-            background-color: var(--bg-dark);
-            /* TRON GRID BACKGROUND GENERATED VIA CSS */
-            background-image: 
-              linear-gradient(var(--tron-cyan-dim) 1px, transparent 1px),
-              linear-gradient(90deg, var(--tron-cyan-dim) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center top;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, .navbar-brand, .nav-link, .project-title {
-            font-family: 'Rajdhani', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-
-        /* NAVBAR */
-        .navbar-tron {
-            background-color: rgba(5, 5, 8, 0.8) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--tron-cyan-dim);
-            box-shadow: 0 4px 30px rgba(0, 243, 255, 0.1);
-        }
-        
-        .navbar-brand { color: var(--tron-cyan) !important; font-size: 1.5rem; text-shadow: 0 0 10px var(--tron-cyan); }
-        .nav-link { color: #fff !important; transition: 0.3s; }
-        .nav-link:hover { color: var(--tron-cyan) !important; text-shadow: 0 0 8px var(--tron-cyan); }
-
-        /* HERO SECTION */
-        .hero-section {
-            position: relative; 
-            padding: 180px 0 140px; 
-            text-align: center;
-            border-bottom: 2px solid var(--tron-cyan);
-            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.1);
-            margin-bottom: 60px;
-            overflow: hidden; 
-        }
-
-        .hero-youtube-container {
-            position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw; min-height: 100%; min-width: 177.77vh; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; 
-        }
-        .hero-youtube-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; opacity: 0.6; }
-
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(5,5,8,0.4) 0%, var(--bg-dark) 100%); z-index: 1; }
-
-        .hero-name {
-            font-size: 5rem;
-            color: #fff;
-            text-shadow: 0 0 15px var(--tron-cyan), 0 0 30px var(--tron-cyan);
-            margin-bottom: 10px;
-        }
-
-        .hero-subtitle { font-size: 1.5rem; color: var(--tron-cyan); font-weight: 500; font-family: 'Rajdhani', sans-serif; letter-spacing: 3px;}
-
-        /* PROJECT ROWS */
-        .project-section { scroll-margin-top: 100px; }
-        
-        .project-row {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--tron-cyan-dim);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 4rem;
-            backdrop-filter: blur(5px);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .project-row:hover { border-color: var(--tron-cyan); box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.05), 0 0 30px rgba(0, 243, 255, 0.15); }
-
-        .project-title { color: #fff; font-size: 2.2rem; margin-bottom: 0.2rem; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-        .project-engine { color: var(--tron-cyan); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700; display: block; margin-bottom: 15px;}
-        
-        strong { color: #fff; font-weight: 600; }
-        code { color: var(--tron-orange); background: rgba(255, 140, 0, 0.1); padding: 2px 6px; border-radius: 4px; }
-
-        /* BADGES */
-        .badge { padding: 0.6em 1em; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; font-weight: 600; border-radius: 4px; font-size: 0.85rem; margin-right: 5px; margin-bottom: 10px; }
-        .bg-tech { background-color: rgba(0, 243, 255, 0.1); color: var(--tron-cyan); border: 1px solid var(--tron-cyan); box-shadow: 0 0 8px rgba(0, 243, 255, 0.2); }
-        .bg-award { background-color: rgba(255, 140, 0, 0.1); color: var(--tron-orange); border: 1px solid var(--tron-orange); box-shadow: 0 0 8px rgba(255, 140, 0, 0.2); }
-
-        /* BUTTONS */
-        .btn-tron {
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid var(--tron-cyan);
-            color: var(--tron-cyan);
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            border-radius: 4px;
-            padding: 10px 24px;
-            transition: all 0.2s ease;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
-        }
-
-        .btn-tron:hover {
-            background: var(--tron-cyan);
-            color: #000;
-            box-shadow: 0 0 20px var(--tron-cyan), inset 0 0 10px #fff;
-        }
-
-        /* CAROUSELS */
-        .carousel { border-radius: 8px; overflow: hidden; border: 1px solid var(--tron-cyan-dim); box-shadow: 0 0 20px rgba(0,0,0,0.8); }
-        .carousel-item img { height: 350px; object-fit: cover; object-position: top center; }
-
-        /* ABOUT ME SECTION */
-        .about-section { scroll-margin-top: 100px; padding: 4rem 2rem; background: linear-gradient(180deg, var(--panel-bg), #000); border-top: 2px solid var(--tron-cyan); margin-top: 5rem; }
-        .profile-img { width: 100%; max-width: 400px; border-radius: 8px; border: 2px solid var(--tron-cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); object-fit: cover; }
-        
-        .section-header { text-align: center; margin-bottom: 3rem; }
-        .section-header h2 { font-size: 3rem; color: #fff; display: inline-block; border-bottom: 3px solid var(--tron-cyan); padding-bottom: 10px; text-shadow: 0 0 15px var(--tron-cyan); }
-    </style>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 </head>
-
 <body>
+    <a class="skip-link" href="#work">Skip to the work</a>
 
-    <!-- STICKY NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-tron fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">RYAN BARRY</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav gap-3">
-                    <li class="nav-item"><a class="nav-link" href="#reel">Showreel</a></li>
-                    <!-- NEW: Added Thesis Section to Navbar -->
-                    <li class="nav-item"><a class="nav-link" href="#thesis">Academic Research</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#projects">Architecture & Projects</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">Init / About</a></li>
-                    <li class="nav-item"><a class="btn btn-tron btn-sm mt-1" href="Content/RyanBarryCV.pdf" target="_blank" style="padding: 5px 15px;">Download CV</a></li>
-                </ul>
+    <header class="site-nav">
+        <a class="site-nav__brand" href="#top">Ryan Barry</a>
+        <nav aria-label="Main">
+            <ul class="site-nav__links">
+                <li><a href="#work">Work</a></li>
+                <li><a href="#hybrid-lod">Research</a></li>
+                <li><a href="#reel">Reel</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a class="btn btn--small" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">CV</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="top" aria-labelledby="hero-title">
+            <div class="hero__stage" data-hero-stage aria-hidden="true">
+                <div class="hero__floor"></div>
             </div>
-        </div>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <div class="hero-section">
-        <!-- Autoplaying YouTube Background -->
-        <div class="hero-youtube-container">
-            <iframe src="https://www.youtube.com/embed/PDtobaZvCbc?autoplay=1&mute=1&controls=0&loop=1&playlist=PDtobaZvCbc&playsinline=1&rel=0&showinfo=0&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-        
-        <div class="hero-overlay"></div>
-
-        <div class="container position-relative" style="z-index: 2;">
-            <h1 class="hero-name">RYAN BARRY</h1>
-            <p class="hero-subtitle">SYSTEMS ENGINEER <span style="color:var(--text-muted)">//</span> GAME DEVELOPER</p>
-            <p style="font-family: 'Rajdhani', sans-serif; color: var(--text-muted); letter-spacing: 2px;">C# | MONOGAME | UNITY</p>
-        </div>
-    </div>
-
-    <!-- MAIN CONTAINER -->
-    <div class="container mb-5">
-        
-        <!-- SHOWREEL -->
-        <div id="reel" class="row justify-content-center mb-5" style="scroll-margin-top: 100px;">
-            <div class="col-lg-10 text-center mb-4">
-                <h3 style="color: var(--tron-cyan);"><span style="color: #fff">></span> SYSTEM_REEL.MP4</h3>
-            </div>
-            <div class="col-lg-10">
-                <div class="ratio ratio-16x9 shadow-lg" style="border-radius: 8px; border: 1px solid var(--tron-cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.15) !important;">
-                    <iframe src="https://www.youtube.com/embed/PDtobaZvCbc" title="Ryan Barry Game Dev Montage" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="hero__content">
+                <p class="eyebrow">Games Development, ATU Sligo &middot; Ireland</p>
+                <h1 class="hero__title" id="hero-title">Ryan Barry</h1>
+                <p class="hero__role">Gameplay &amp; AI Programmer</p>
+                <p class="hero__lede">I build game AI and engine systems in C#, from a custom MonoGame engine to Unity DOTS. My solo game Pale Roots won EA's <strong>Best Use of AI</strong> award at Games Fleadh 2026.</p>
+                <div class="hero__actions">
+                    <a class="btn btn--accent" data-magnetic href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">Play Pale Roots</a>
+                    <a class="btn" data-magnetic href="#work">See the work</a>
+                    <a class="btn btn--ghost" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
                 </div>
             </div>
-        </div>
+            <a class="hero__scroll" href="#work" aria-label="Scroll to featured work"><span></span></a>
+        </section>
 
+        <section class="section" id="work" aria-labelledby="work-title">
+            <div class="section__head">
+                <p class="eyebrow">Featured work</p>
+                <h2 id="work-title" data-reveal>Two systems I'd talk about in an interview</h2>
+            </div>
 
-        <!-- ACADEMIC THESIS SECTION -->
-        <div class="section-header project-section" id="thesis" style="margin-top: 3rem;">
-            <h2>ACADEMIC RESEARCH</h2>
-        </div>
+            <article class="feature" id="pale-roots" aria-labelledby="pr-title" data-feature>
+                <header class="feature__head">
+                    <p class="feature__meta"><span class="tag tag--award">EA Best Use of AI &middot; Games Fleadh 2026</span></p>
+                    <h3 class="feature__title" id="pr-title" data-reveal>Pale Roots</h3>
+                    <p class="feature__pitch">A sci-fi roguelike on a custom 2D engine, where you use the power of dead enemies to grow stronger.</p>
+                    <dl class="facts">
+                        <div><dt>Role</dt><dd>Solo developer</dd></div>
+                        <div><dt>Tech</dt><dd>C#, MonoGame</dd></div>
+                        <div><dt>When</dt><dd>Dec 2025 to Mar 2026</dd></div>
+                    </dl>
+                </header>
 
-        <div class="row align-items-center project-row" style="border-color: var(--tron-cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <!-- Image Carousel -->
-                <div id="carouselProject300" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <!-- Make sure to drop 3 screenshots of your project into your Content/Images folder and name them accordingly! -->
-                            <img src="Content/Images/HybridLOD1.png" class="d-block w-100" alt="Hybrid LOD Simulation">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HybridLOD2.png" class="d-block w-100" alt="Pure ECS Profiler">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HybridLOD3.png" class="d-block w-100" alt="Waypoint Sync Tool">
+                <div class="feature__body">
+                    <div class="feature__media" data-feature-media>
+                        <figure class="media-layer is-active" data-media="0">
+                            <img src="assets/img/pale-roots-stage-1280.jpg" srcset="assets/img/pale-roots-stage-640.jpg 640w, assets/img/pale-roots-stage-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="714" loading="lazy" decoding="async" alt="Ryan Barry holding the EA Best Use of AI award at Games Fleadh 2026, in front of EA and Games Fleadh banners">
+                        </figure>
+                        <figure class="media-layer" data-media="1">
+                            <canvas class="demo-canvas" data-demo="targeting" aria-label="Live demo: two armies picking targets. Each target accepts at most two attackers, so fights spread out instead of everyone piling onto one unit."></canvas>
+                            <div class="demo-ui">
+                                <button class="chip-btn" type="button" data-targeting-toggle aria-pressed="true">Attacker cap: 2</button>
+                                <span class="demo-ui__note">Re-scan every 500 ms</span>
+                            </div>
+                        </figure>
+                        <figure class="media-layer" data-media="2">
+                            <img src="assets/img/pale-roots-boss-1280.jpg" srcset="assets/img/pale-roots-boss-640.jpg 640w, assets/img/pale-roots-boss-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="Pale Roots gameplay: the player's allies and an orc army clash in a bone-strewn arena under a giant skeleton boss">
+                        </figure>
+                    </div>
+
+                    <ol class="feature__steps">
+                        <li class="step is-active" data-step="0">
+                            <h4>Award-winning enemy AI</h4>
+                            <p>Pale Roots won the EA-sponsored Best Use of AI award at Games Fleadh 2026. I built the whole game solo in MonoGame, with no commercial engine underneath.</p>
+                        </li>
+                        <li class="step" data-step="1">
+                            <h4>Armies that spread out instead of swarming</h4>
+                            <p>Every unit runs a small state machine (Wander, Chase, Combat, Hurt) behind an <code>IAIState</code> interface. Targeting is centralised: every 500&nbsp;ms, units without a valid target pick the nearest enemy that has fewer than two attackers already, so fights break into duels rather than one big pile.</p>
+                        </li>
+                        <li class="step" data-step="2">
+                            <h4>An engine built from scratch</h4>
+                            <p>A pushdown stack of game states handles menus, cutscenes and level-ups. Combat broadcasts C# <code>Action</code> events, so the UI and audio listen without the combat code knowing they exist. Arenas are 60&times;34-tile maps, filled procedurally from data.</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="feature__links">
+                    <a class="btn btn--accent" data-magnetic href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">Play on itch.io</a>
+                    <a class="btn" href="https://github.com/RyanBarry2203/Pale-Roots" target="_blank" rel="noopener">Source on GitHub</a>
+                </div>
+            </article>
+
+            <article class="feature feature--flip" id="hybrid-lod" aria-labelledby="lod-title" data-feature>
+                <header class="feature__head">
+                    <p class="feature__meta"><span class="tag">Research &middot; with paper</span></p>
+                    <h3 class="feature__title" id="lod-title" data-reveal>Hybrid LOD Traffic Simulation</h3>
+                    <p class="feature__pitch">City traffic that runs as full Unity GameObjects near the camera and as Burst-compiled ECS data everywhere else, handing each car back and forth without a seam.</p>
+                    <dl class="facts">
+                        <div><dt>Role</dt><dd>Solo, self-directed</dd></div>
+                        <div><dt>Tech</dt><dd>Unity 6, DOTS / ECS, Burst, C#</dd></div>
+                        <div><dt>Output</dt><dd>Playable build and paper</dd></div>
+                    </dl>
+                </header>
+
+                <div class="feature__body">
+                    <div class="feature__media" data-feature-media>
+                        <figure class="media-layer is-active" data-media="0">
+                            <img src="assets/img/hybrid-lod-3-1280.jpg" srcset="assets/img/hybrid-lod-3-640.jpg 640w, assets/img/hybrid-lod-3-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity editor showing the waypoint road network and the profiler during a pure ECS run">
+                        </figure>
+                        <figure class="media-layer" data-media="1">
+                            <canvas class="demo-canvas" data-demo="lod" aria-label="Live demo: cars near the camera circle are full GameObjects, cars further out collapse into lightweight ECS data points. Move the pointer over the demo to move the camera."></canvas>
+                            <div class="demo-ui">
+                                <span class="demo-ui__legend"><i class="dot dot--oop"></i>GameObject</span>
+                                <span class="demo-ui__legend"><i class="dot dot--ecs"></i>ECS entity</span>
+                            </div>
+                        </figure>
+                        <figure class="media-layer" data-media="2">
+                            <img src="assets/img/hybrid-lod-1-1280.jpg" srcset="assets/img/hybrid-lod-1-640.jpg 640w, assets/img/hybrid-lod-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Unity profiler capture of the hybrid system, with ECS entities and pooled GameObject cars driving the same road graph">
+                        </figure>
+                    </div>
+
+                    <ol class="feature__steps">
+                        <li class="step is-active" data-step="0">
+                            <h4>The problem</h4>
+                            <p>A hundred cars with rigidbodies, raycasts and Update loops chokes the main thread and spikes the garbage collector. Most of those cars are too far away for the player to see.</p>
+                        </li>
+                        <li class="step" data-step="1">
+                            <h4>Hydrate near, dehydrate far</h4>
+                            <p>Inside the hydration radius, a car is a pooled GameObject with sensor and decision modules. Past the larger dehydration radius, it becomes an ECS entity with three components, moved kinematically by a Burst job. Each road node has the same integer ID in both worlds, so a hand-off is just "where am I, where am I going, what's left of my A* path".</p>
+                        </li>
+                        <li class="step" data-step="2">
+                            <h4>Tools and write-up</h4>
+                            <p>I wrote a Waypoint Sync editor tool that mirrors the GameObject road network into the DOTS subscene, plus a one-click "make roads two-way" tool. The paper compares pure OOP, pure ECS and the hybrid in the Unity Profiler.</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="feature__links">
+                    <a class="btn btn--accent" data-magnetic href="Project300/index.html" target="_blank" rel="noopener">Play in browser <span class="btn__note">~21&nbsp;MB</span></a>
+                    <a class="btn" href="Content/Ryan_Barry_Project300_Paper.pdf" target="_blank" rel="noopener">Read the paper (PDF)</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="section" id="more" aria-labelledby="more-title">
+            <div class="section__head">
+                <p class="eyebrow">More projects</p>
+                <h2 id="more-title" data-reveal>Systems, engines and experiments</h2>
+            </div>
+
+            <ul class="cards">
+                <li class="card" data-reveal>
+                    <button class="card__media" type="button" data-gallery="paranormal" aria-label="Open Paranormal Investigation screenshots">
+                        <img src="assets/img/paranormal-1-640.jpg" srcset="assets/img/paranormal-1-640.jpg 640w, assets/img/paranormal-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="First-person view of a dark house with the Spirit Box active">
+                    </button>
+                    <div class="card__body">
+                        <p class="card__engine">Unity &middot; WebGL</p>
+                        <h3 class="card__title">Paranormal Investigation</h3>
+                        <p class="card__pitch">A ghost-hunting game whose ghost reacts to light, noise and the player's sanity.</p>
+                        <ul class="card__points">
+                            <li>Ghost AI as a finite state machine: wander, investigate light, spook, hunt on line of sight.</li>
+                            <li>EMF scanning, Spirit Box and light decay run on <code>Awaitable</code>/<code>async</code> instead of coroutines.</li>
+                            <li>ScriptableObject event channels keep UI, audio and gameplay decoupled.</li>
+                        </ul>
+                        <div class="card__links">
+                            <a class="btn btn--small btn--accent" href="UnityDemo3.1/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject300" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </li>
+
+                <li class="card" data-reveal>
+                    <button class="card__media" type="button" data-gallery="engine-opt" aria-label="Open Engine Architecture and Optimisation screenshots">
+                        <img src="assets/img/engine-opt-1-640.jpg" srcset="assets/img/engine-opt-1-640.jpg 640w, assets/img/engine-opt-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="344" loading="lazy" decoding="async" alt="Stress test with a live overlay showing 500 active pooled enemies at 84 FPS">
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProject300" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// UNITY 6 DOTS/ECS</span>
-                <h3 class="project-title">Hybrid LOD Traffic Simulation</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">Data-Oriented Design</span>
-                    <span class="badge bg-tech">Burst Compiler</span>
-                    <span class="badge bg-tech">Academic Paper</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>The Architecture:</strong> Engineered a deterministic, bi-directional Hybrid LOD system bridging Managed (OOP) and Unmanaged (ECS) memory. Utilized the "Rosetta Stone" pattern to seamlessly transfer A* pathfinding data between dimensions based on camera proximity.
-                    <br><br>
-                    <strong>Performance Optimization:</strong> Replaced heavy physics and MonoBehaviours with Burst-compiled kinematic mathematics and contiguous memory arrays. This decoupled, Event-Driven system allows for the simulation of hundreds of vehicles with near-zero CPU overhead on the main thread.
-                    <br><br>
-                    <strong>Academic Research:</strong> This project serves as the visual proof for my paper on AAA engine scalability and Data-Oriented Design.
-                    <br><br>
-                    <strong>Motivation:</strong> I explored this topic on my own time, outside of college, purely for my own academic exploration of complex systems that interest me.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <!-- Execute Build Button (Opens in new tab) -->
-                    <a class="btn btn-tron" href="Project300/index.html" target="_blank">Execute Build</a>
-                    
-                    <!-- Read Paper Button (Opens in new tab) -->
-                    <a class="btn btn-tron" href="Content/Ryan_Barry_Project300_Paper.pdf" target="_blank" style="background: rgba(0, 243, 255, 0.15);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf me-2" viewBox="0 0 16 16" style="margin-top:-3px;">
-                          <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-                          <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .471.242c.089.106.12.245.12.395 0 .402-.12.928-.32 1.51a21.7 21.7 0 0 1-.105.29c-.04.108-.08.216-.12.324.41.81.9 1.536 1.465 2.181.231.264.475.512.73.743.36.327.734.595 1.12.813.41.23.82.35 1.228.35.33 0 .61-.07.808-.252.196-.181.326-.48.326-.816 0-.466-.23-.88-.6-1.162-.37-.282-.85-.43-1.35-.43-.5 0-1.02.148-1.54.43-.52.282-1.04.708-1.54 1.272a19.4 19.4 0 0 0-1.465-2.181c.04-.108.08-.216.12-.324.035-.095.07-.19.105-.29.2-.582.32-1.108.32-1.51 0-.15-.03-.29-.12-.395a.7.7 0 0 0-.471-.242c-.202-.043-.41.0-.602.077-.376.151-.575.469-.65.823-.073.34-.04.736.046 1.136.082.39.224.83.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.68 7.68 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.102.115.228.29.393.438.42z"/>
-                        </svg>
-                        Read Academic Paper
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section-header" id="projects" class="project-section">
-            <h2>ARCHITECTURE & LOGIC</h2>
-        </div>
-        
-        <!-- PROJECT 1: PALE ROOTS (Media Left, Text Right) -->
-        <div class="row align-items-center project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselPR" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/Screenshot%202026-03-09%20122755.png" class="d-block w-100" alt="Games Fleadh EA Award Winner">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Screenshot%202026-03-09%20122511.png" class="d-block w-100" alt="Presenting Pale Roots on stage">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Screenshot%202026-03-02%20215103.png" class="d-block w-100" alt="Pale Roots Combat AI">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Screenshot%202026-03-02%20190423.png" class="d-block w-100" alt="Pale Roots Title Screen">
+                    <div class="card__body">
+                        <p class="card__engine">Unity &middot; WebGL</p>
+                        <h3 class="card__title">Engine Architecture &amp; Optimisation</h3>
+                        <p class="card__pitch">A stress-test sandbox for spawning hundreds of enemies without garbage-collection spikes.</p>
+                        <ul class="card__points">
+                            <li>Addressables load prefabs asynchronously into Unity's <code>ObjectPool</code>.</li>
+                            <li>GPU instancing for dynamic objects and baked occlusion culling for static geometry.</li>
+                            <li>A live overlay reads spawner stats from ScriptableObjects, so the UI never references gameplay code.</li>
+                        </ul>
+                        <div class="card__links">
+                            <a class="btn btn--small btn--accent" href="UnityDemo/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
+                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/3DGamesUnity2" target="_blank" rel="noopener">Source</a>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPR" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPR" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// MONOGAME</span>
-                <h3 class="project-title">Pale Roots</h3>
-                <div class="mb-3">
-                    <span class="badge bg-award">🏆 EA Award: Best AI Algorithms</span>
-                    <span class="badge bg-tech">C#</span>
-                    <span class="badge bg-tech">Engine Design</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>Award-Winning AI:</strong> Engineered a custom Stack-Based Finite State Machine and dynamic targeting algorithms, winning the EA-sponsored "Best Use of AI" at Games Fleadh 2026.
-                    <br><br>
-                    <strong>Engine Architecture:</strong> Built the engine systems from the ground up rather than using a commercial engine, utilizing an Event-Driven architecture to decouple combat logic from UI.
-                    <br><br>
-                    <strong>Systems Design:</strong> Implemented continuous momentum physics and data-driven procedural generation for massive 60x34 tile arenas entirely in C#.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank">Execute Build</a>
-                    <a class="btn btn-tron" href="https://github.com/RyanBarry2203/Pale-Roots.git" target="_blank">Source Code</a>
-                </div>
-            </div>
-        </div>
+                </li>
 
-        <!-- PROJECT 6: GHOST HUNTING GAME (Text Left, Media Right) -->
-        <div class="row align-items-center flex-lg-row-reverse project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselGhost" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/3DProg1.png" class="d-block w-100" alt="Ghost Game Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/3DProg2.png" class="d-block w-100" alt="Ghost Game Equipment">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/3DProg3.png" class="d-block w-100" alt="Ghost Game Car mechanics">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/3DProg4.png" class="d-block w-100" alt="Ghost Game Environment">
+                <li class="card" data-reveal>
+                    <button class="card__media" type="button" data-gallery="gameplay-ai" aria-label="Open Gameplay Systems and AI screenshots">
+                        <img src="assets/img/gameplay-ai-1-640.jpg" srcset="assets/img/gameplay-ai-1-640.jpg 640w, assets/img/gameplay-ai-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="Unity editor with the baked NavMesh for the enemy AI">
+                    </button>
+                    <div class="card__body">
+                        <p class="card__engine">Unity &middot; WebGL</p>
+                        <h3 class="card__title">Gameplay Systems &amp; AI</h3>
+                        <p class="card__pitch">Enemy AI, a drifting vehicle and a camera-flash weapon in one sandbox.</p>
+                        <ul class="card__points">
+                            <li>Enemy state machine that investigates light and gets stunned by hits, using allocation-free <code>OverlapSphereNonAlloc</code> detection.</li>
+                            <li>Camera-flash tool spawns pooled, fading "burn nodes" where its rays hit geometry.</li>
+                            <li>Rigidbody car with drift built from dot products and counter-friction.</li>
+                        </ul>
+                        <div class="card__links">
+                            <a class="btn btn--small btn--accent" href="UnityDemo2/index.html" target="_blank" rel="noopener">Play <span class="btn__note">build</span></a>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselGhost" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselGhost" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// UNITY WEBGL</span>
-                <h3 class="project-title">Paranormal Investigation Systems</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">Async/Await</span>
-                    <span class="badge bg-tech">Addressables</span>
-                    <span class="badge bg-tech">ScriptableObject Architecture</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>Asynchronous Architecture:</strong> Replaced traditional Coroutines with modern C# <code>Awaitable</code> and <code>Task</code> patterns for non-blocking mechanics, such as EMF scanning, Spirit Box audio loops, and dynamic light decay.
-                    <br><br>
-                    <strong>Advanced AI & State Machines:</strong> Engineered a complex Ghost AI using a <strong>Finite State Machine (FSM)</strong>. The entity dynamically transitions between wandering, investigating light disturbances, spooking the player based on Sanity metrics, and initiating line-of-sight hunts.
-                    <br><br>
-                    <strong>Decoupled Systems:</strong> Utilized <strong>ScriptableObject Event Channels</strong> to completely decouple the UI, Audio, and Gameplay logic. Implemented a robust <strong>Object Pooling</strong> system via Addressables for projectiles and dynamic light nodes to ensure zero Garbage Collection spikes during gameplay.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="UnityDemo3.1/index.html" target="_blank">Execute Build</a>
-                </div>
-            </div>
-        </div>
+                </li>
 
-        <!-- PROJECT 2: UNITY OPTIMIZATION (Text Left, Media Right using flex-lg-row-reverse) -->
-        <div class="row align-items-center flex-lg-row-reverse project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselUnity" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/UnityDemo1.png" class="d-block w-100" alt="Unity Optimization Demo">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/UnityDemo2.png" class="d-block w-100" alt="GPU Instancing & Culling">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/UnityDemo3.png" class="d-block w-100" alt="Culling">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/UnityDemo4.png" class="d-block w-100" alt="Winner">
+                <li class="card" data-reveal>
+                    <button class="card__media" type="button" data-gallery="dying-fire" aria-label="Open Dying Fire screenshots">
+                        <img src="assets/img/dying-fire-1-640.jpg" srcset="assets/img/dying-fire-1-640.jpg 640w, assets/img/dying-fire-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="345" loading="lazy" decoding="async" alt="Dying Fire running as a WPF window: a dark bedroom scene with navigation arrows">
+                    </button>
+                    <div class="card__body">
+                        <p class="card__engine">C# &middot; WPF &middot; SQLite</p>
+                        <h3 class="card__title">Dying Fire</h3>
+                        <p class="card__pitch">A horror visual novel and RPG engine built on a desktop UI framework.</p>
+                        <ul class="card__points">
+                            <li>WPF bent into a game loop, with MVVM and the State pattern for scenes.</li>
+                            <li>World, items and interactables built by a factory from a SQLite database.</li>
+                            <li>Polymorphism and interfaces keep game entities out of the UI layer.</li>
+                        </ul>
+                        <div class="card__links">
+                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/DyingFire" target="_blank" rel="noopener">Source</a>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselUnity" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselUnity" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// UNITY WEBGL</span>
-                <h3 class="project-title">Engine Architecture & Optimization</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">C#</span>
-                    <span class="badge bg-tech">Memory Pooling</span>
-                    <span class="badge bg-tech">Async Adressables</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>Memory Management:</strong> Utilized <strong>Addressables</strong> for asynchronous asset loading and implemented robust <strong>Object Pooling</strong> to eliminate Garbage Collection spikes during high-volume entity spawning.
-                    <br><br>
-                    <strong>Rendering Optimization:</strong> Configured <strong>GPU Instancing</strong> for dynamic objects and baked <strong>Umbra Occlusion Culling</strong> for static environments, drastically reducing draw calls and triangle counts.
-                    <br><br>
-                    <strong>Systems Architecture:</strong> Designed a decoupled, Event-Driven UI using <strong>ScriptableObjects as data channels</strong>, adhering to strict MVC principles to prevent tight coupling between gameplay logic and the UI layer.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="UnityDemo/index.html" target="_blank">Execute Build</a>
-                    <a class="btn btn-tron" href="https://github.com/RyanBarry2203/3DGamesUnity2.git" target="_blank">Source Code</a>
-                </div>
-            </div>
-        </div>
+                </li>
 
-        <!-- PROJECT 3: UNITY GAMEPLAY & AI (Media Left, Text Right) -->
-        <div class="row align-items-center project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselUnity2" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/Unity2Demo1.png" class="d-block w-100" alt="Arcade Drifting">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Unity2Demo2.png" class="d-block w-100" alt="AI State Machine">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Unity2Demo3.png" class="d-block w-100" alt="car">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/Unity2Demo4.png" class="d-block w-100" alt="highest kill win?">
+                <li class="card" data-reveal>
+                    <button class="card__media" type="button" data-gallery="house-of-history" aria-label="Open House of History screenshots">
+                        <img src="assets/img/house-of-history-1-640.jpg" srcset="assets/img/house-of-history-1-640.jpg 640w, assets/img/house-of-history-1-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="316" loading="lazy" decoding="async" alt="House of History in a console window: the kitchen room with health, light and sanity readouts">
+                    </button>
+                    <div class="card__body">
+                        <p class="card__engine">C# &middot; Console</p>
+                        <h3 class="card__title">House of History</h3>
+                        <p class="card__pitch">A text-only horror escape room, built to practise pure object-oriented design.</p>
+                        <ul class="card__points">
+                            <li>Room, item and enemy class hierarchy with no engine underneath.</li>
+                            <li>Health, light and sanity state drive branching, non-linear room events.</li>
+                        </ul>
+                        <div class="card__links">
+                            <a class="btn btn--small" href="https://github.com/RyanBarry2203/Escape-Room-Personal" target="_blank" rel="noopener">Source</a>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselUnity2" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselUnity2" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// UNITY WEBGL</span>
-                <h3 class="project-title">Gameplay Systems & AI</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">State Machine</span>
-                    <span class="badge bg-tech">Factory & Pooling</span>
-                    <span class="badge bg-tech">Async / Await</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>AI & Zero-GC Detection:</strong> Engineered a dynamic <strong>Finite State Machine</strong> where enemies react intelligently to the environment—investigating distant light disturbances or becoming stunned by direct hits. Optimized the targeting loop using <code>Physics.OverlapSphereNonAlloc</code>.
-                    <br><br>
-                    <strong>Asynchronous Mechanics:</strong> Developed a camera flash tool that casts rays and calculates distance ratios to spawn fading "Burn Nodes" on geometry. Managed via an <strong>Object Pool</strong> and modern C# <code>async/await</code> for non-blocking light decay.
-                    <br><br>
-                    <strong>Arcade Physics & Combat:</strong> Built a custom rigidbody vehicle controller featuring dynamic drift mechanics using vector dot products and counter-friction. Integrated a <strong>Factory Pattern</strong> relying strictly on Interfaces (<code>IDamageable</code>).
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="UnityDemo2/index.html" target="_blank">Execute Build</a>
-                    <a class="btn btn-tron" href="https://github.com/ITS3D/project-RyanBarry2203.git" target="_blank">Source Code</a>
-                </div>
-            </div>
-        </div>
+                </li>
+            </ul>
+        </section>
 
-        <!-- PROJECT 4: DYING FIRE (Text Left, Media Right) -->
-        <div class="row align-items-center flex-lg-row-reverse project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselDF" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/DF.png" class="d-block w-100" alt="Dying Fire Main">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg1.png" class="d-block w-100" alt="Dying Fire Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg2.png" class="d-block w-100" alt="Dying Fire Inventory">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/DFimg3.png" class="d-block w-100" alt="Dying Fire Code">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDF" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselDF" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
+        <section class="section" id="reel" aria-labelledby="reel-title">
+            <div class="section__head">
+                <p class="eyebrow">Showreel</p>
+                <h2 id="reel-title" data-reveal>Two minutes of the work in motion</h2>
             </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// XAML, WPF</span>
-                <h3 class="project-title">Dying Fire</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">C#</span>
-                    <span class="badge bg-tech">UI Logic & Databases</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>Architecture:</strong> Utilized a robust OOP class hierarchy to manage entities, employing Polymorphism and Inheritance to distinguish between Player, Enemy, and Interactive Objects.
-                    <br><br>
-                    <strong>Inventory System:</strong> Built a dynamic inventory management system using ObservableCollections and LINQ queries for real-time sorting and filtering.
-                    <br><br>
-                    <strong>Data Persistence & Logic:</strong> Implemented JSON parsing for complex dialogue trees and SQL database integration. Developed a Finite State Machine (FSM) to handle transitions between Point-and-Click exploration and Turn-Based Combat.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="https://github.com/RyanBarry2203/DyingFire.git" target="_blank">Source Code</a>
-                </div>
+            <div class="video-facade" data-youtube="PDtobaZvCbc">
+                <img src="https://i.ytimg.com/vi/PDtobaZvCbc/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <a class="video-facade__play" href="https://www.youtube.com/watch?v=PDtobaZvCbc" target="_blank" rel="noopener">
+                    <span class="video-facade__icon" aria-hidden="true"></span>
+                    <span>Play showreel</span>
+                </a>
             </div>
-        </div>
+        </section>
 
-        <!-- PROJECT 5: HOUSE OF HISTORY (Media Left, Text Right) -->
-        <div class="row align-items-center project-row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div id="carouselHOH" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="Content/Images/HOH.png" class="d-block w-100" alt="House of History Main">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg1.png" class="d-block w-100" alt="HOH Gameplay">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg2.png" class="d-block w-100" alt="HOH Logic">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="Content/Images/HOHimg3.png" class="d-block w-100" alt="HOH Code">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHOH" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselHOH" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
+        <section class="section about" id="about" aria-labelledby="about-title">
+            <div class="about__photo">
+                <img src="assets/img/profile-640.jpg" srcset="assets/img/profile-640.jpg 640w, assets/img/profile-1280.jpg 1280w" sizes="(min-width: 960px) 30vw, 100vw" width="640" height="480" loading="lazy" decoding="async" alt="Portrait of Ryan Barry">
+            </div>
+            <div class="about__text">
+                <p class="eyebrow">About</p>
+                <h2 id="about-title" data-reveal>Hi, I'm Ryan</h2>
+                <p>I'm a third-year Games Development student at ATU Sligo, on track for a First Class Honours. I like the parts of a game that players never see but always feel: how an enemy picks a target, how a city keeps a thousand cars moving, how a frame stays inside its budget.</p>
+                <p>Right now I'm tech lead on Split_Shift, a team open-world racing game, where I own the racer and police AI. Outside college I've managed a busy cocktail bar for years, so I'm used to leading a team under pressure.</p>
+                <p>I'm looking for a gameplay, AI or engine programming role or internship.</p>
+                <div class="about__links">
+                    <a class="btn btn--accent" data-magnetic href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
+                    <a class="btn" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a class="btn" href="https://github.com/RyanBarry2203" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
-            <div class="col-lg-6 px-lg-4">
-                <span class="project-engine">// CONSOLE APP</span>
-                <h3 class="project-title">House Of History</h3>
-                <div class="mb-3">
-                    <span class="badge bg-tech">C#</span>
-                    <span class="badge bg-tech">OOP Principles</span>
-                </div>
-                <p class="text-muted" style="line-height: 1.7;">
-                    <strong>Pure Logic & OOP:</strong> Built entirely as a standard Console Application to focus strictly on Object-Oriented Programming principles and core C# syntax without a graphical engine crutch.
-                    <br><br>
-                    <strong>Creative Constraints:</strong> Challenged myself to create atmosphere and tension using only text parsing and pacing, requiring robust input validation and state management.
-                    <br><br>
-                    <strong>Narrative Design:</strong> Structured a non-linear narrative path that reacts dynamically to user input within the command line interface.
-                </p>
-                <div class="d-flex gap-3 mt-4">
-                    <a class="btn btn-tron" href="https://github.com/RyanBarry2203/Escape-Room-Personal.git" target="_blank">Source Code</a>
-                </div>
-            </div>
-        </div>
+        </section>
+    </main>
 
-    </div> 
+    <footer class="site-footer">
+        <p>Ryan Barry &middot; Sligo, Ireland</p>
+        <p><a href="#top">Back to top</a></p>
+    </footer>
 
-    <!-- FULL WIDTH ABOUT SECTION -->
-    <div id="about" class="about-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-5 text-center mb-5 mb-lg-0">
-                    <img src="Content/Images/Profile.jpg" class="profile-img" alt="Ryan Barry Profile">
-                </div>
-                <div class="col-lg-7 px-lg-5">
-                    <h2 class="project-title" style="font-size: 3rem; color: var(--tron-cyan);">INIT / ABOUT_ME</h2>
-                    <hr style="border-color: var(--tron-cyan-dim); margin-bottom: 2rem;">
-                    
-                    <p style="font-size: 1.1rem; line-height: 1.8; color: #ccc;">
-                        My obsession with games goes beyond playing; it is about understanding the mechanics that create immersion. From the narrative depth of <em>Red Dead Redemption 2</em> to the punishing precision of <em>Dark Souls</em>, I study how systems combine to create emotional impact.
-                    </p>
-                    
-                    <h4 style="color: #fff; margin-top: 1.5rem;"><span style="color: var(--tron-orange);">></span> AMBITION.EXE</h4>
-                    <p style="font-size: 1.1rem; line-height: 1.8; color: #ccc;">
-                        My goal is to become a Game Director capable of understanding every element of the pipeline—from Art to UI to Core Architecture. I believe every morsel of a game must be deliberate.
-                    </p>
-                    
-                    <h4 style="color: #fff; margin-top: 1.5rem;"><span style="color: var(--tron-orange);">></span> WHY_HIRE_ME</h4>
-                    <p style="font-size: 1.1rem; line-height: 1.8; color: #ccc;">
-                        I balance my Second Year studies (on track for First Class Honours) with a management role in a high-volume bar. This has forged a work ethic and leadership ability that I apply directly to development. I have pushed myself to build custom engines and complex systems to ensure I am as technically capable as any graduate.
-                    </p>
-                    
-                    <p class="fst-italic mt-4" style="color: var(--tron-cyan); font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; letter-spacing: 1px;">
-                        "I am seeking an internship opportunity to prove my value. I just need a foot in the door; I will do the rest."
-                    </p>
-                    
-                    <div class="mt-4 d-flex gap-3">
-                        <a class="btn btn-tron" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank">Connect on LinkedIn</a>
-                    </div>
-                </div>
-            </div>
+    <dialog class="lightbox" data-lightbox aria-label="Screenshots">
+        <figure class="lightbox__figure">
+            <img data-lightbox-img src="" alt="">
+            <figcaption data-lightbox-caption></figcaption>
+        </figure>
+        <div class="lightbox__controls">
+            <button class="chip-btn" type="button" data-lightbox-prev>Previous</button>
+            <span class="lightbox__count" data-lightbox-count></span>
+            <button class="chip-btn" type="button" data-lightbox-next>Next</button>
+            <button class="chip-btn" type="button" data-lightbox-close>Close</button>
         </div>
-    </div>
-    
-    <script src="js/bootstrap.bundle.js"></script>
-    
-    <!-- Smooth Scrolling script for the Navbar -->
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+    </dialog>
 </body>
 </html>
