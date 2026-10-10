@@ -11,9 +11,9 @@ const COLS = 3;
 const ROWS = 2;
 const DOOR = 56;
 const STATES = ['WANDER', 'INVESTIGATE', 'SPOOK', 'CHASE', 'HUNT', 'STUNNED', 'DEAD'];
-const DETECTION_RADIUS = 120;
-const TORCH_RANGE = 170;
-const TORCH_ANGLE = 0.42;
+const DETECTION_RADIUS = 90;
+const TORCH_RANGE = 210;
+const TORCH_ANGLE = 0.55;
 
 const roomW = HOUSE.w / COLS;
 const roomH = HOUSE.h / ROWS;
@@ -73,6 +73,9 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
     let lastClicks = 0;
     let time = 0;
     let caughtFlash = 0;
+    let grace = 0;
+    let survived = 0;
+    let stuns = 0;
 
     function changeState(next, reason) {
         if (ghost.state === next) return;
@@ -107,13 +110,15 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
         time += dt;
         ghost.timer += dt;
         caughtFlash = Math.max(0, caughtFlash - dt);
+        grace = Math.max(0, grace - dt);
+        survived += dt;
         rooms.forEach((room) => { room.flicker = Math.max(0, room.flicker - dt); });
 
         const steering = pointer.inside && performance.now() - pointer.lastMove < 5000;
         if (steering) {
             player.aim = Math.atan2(pointer.y - player.y, pointer.x - player.x);
             if (pointer.down) movePlayer(pointer.x, pointer.y, 120, dt);
-            else if (Math.hypot(pointer.x - player.x, pointer.y - player.y) > 60) movePlayer(pointer.x, pointer.y, 70, dt);
+            else if (Math.hypot(pointer.x - player.x, pointer.y - player.y) > 60) movePlayer(pointer.x, pointer.y, 95, dt);
             if (pointer.clicks !== lastClicks) {
                 lastClicks = pointer.clicks;
                 const clicked = roomIndexAt(pointer.x, pointer.y);
@@ -125,7 +130,7 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
             }
         } else {
             if (Math.hypot(autoTarget.x - player.x, autoTarget.y - player.y) < 8) autoTarget = roomCentre((Math.random() * rooms.length) | 0);
-            movePlayer(autoTarget.x, autoTarget.y, 70, dt);
+            movePlayer(autoTarget.x, autoTarget.y, 85, dt);
             player.aim += (Math.atan2(ghost.y - player.y, ghost.x - player.x) - player.aim) * Math.min(1, dt * 0.8);
             if (Math.random() < dt * 0.15) {
                 const room = (Math.random() * rooms.length) | 0;
@@ -137,12 +142,13 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
 
         const myRoom = roomIndexAt(player.x, player.y);
         const inLight = myRoom >= 0 && rooms[myRoom].lit;
-        player.sanity = Math.max(0, Math.min(100, player.sanity + (inLight ? 1.5 : -3.2) * dt));
+        player.sanity = Math.max(0, Math.min(100, player.sanity + (inLight ? 3 : -1.1) * dt));
         const sanityPct = player.sanity / 100;
         const toPlayer = Math.hypot(player.x - ghost.x, player.y - ghost.y);
         const canSee = lineOfSight(ghost.x, ghost.y, player.x, player.y);
 
         if (ghost.state !== 'STUNNED' && torchHits(ghost.x, ghost.y) && (ghost.state === 'CHASE' || ghost.state === 'HUNT' || ghost.state === 'SPOOK')) {
+            stuns++;
             changeState('STUNNED', 'caught in the torch beam');
         }
 
@@ -150,43 +156,46 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
         switch (ghost.state) {
             case 'WANDER':
                 if (Math.hypot(ghost.target.x - ghost.x, ghost.target.y - ghost.y) < 10) ghost.target = roomCentre((Math.random() * rooms.length) | 0);
-                if (toPlayer < DETECTION_RADIUS && canSee) changeState('CHASE', 'player inside detection sphere');
-                else if (sanityPct < 0.25) changeState('HUNT', `sanity ${Math.round(player.sanity)}% < 25%`);
-                else if (sanityPct < 0.55 && ghost.timer > 3) changeState('SPOOK', `sanity ${Math.round(player.sanity)}% < 55%`);
+                if (grace <= 0 && toPlayer < DETECTION_RADIUS && canSee) changeState('CHASE', 'player inside detection sphere');
+                else if (sanityPct < 0.2) changeState('HUNT', `sanity ${Math.round(player.sanity)}% < 20%`);
+                else if (sanityPct < 0.45 && ghost.timer > 4) changeState('SPOOK', `sanity ${Math.round(player.sanity)}% < 45%`);
                 break;
             case 'INVESTIGATE':
-                speed = 80;
-                if (toPlayer < DETECTION_RADIUS && canSee) changeState('CHASE', 'found the player while investigating');
+                speed = 65;
+                if (grace <= 0 && toPlayer < DETECTION_RADIUS && canSee) changeState('CHASE', 'found the player while investigating');
                 else if (Math.hypot(ghost.target.x - ghost.x, ghost.target.y - ghost.y) < 10 && ghost.timer > 1.5) changeState('WANDER', 'nothing found');
                 break;
             case 'SPOOK':
-                speed = 70;
+                speed = 55;
                 ghost.target = { x: player.x, y: player.y };
                 if (toPlayer < 70) {
-                    player.sanity = Math.max(0, player.sanity - 12);
+                    player.sanity = Math.max(0, player.sanity - 8);
                     if (myRoom >= 0) { rooms[myRoom].flicker = 0.8; rooms[myRoom].lit = false; }
-                    changeState('WANDER', 'spooked the player (-12 sanity)');
+                    changeState('WANDER', 'spooked the player (-8 sanity)');
                 } else if (ghost.timer > 6) changeState('WANDER', 'lost interest');
                 break;
             case 'HUNT':
-                speed = 85;
+                speed = 60;
                 ghost.target = { x: player.x, y: player.y };
-                if (canSee && toPlayer < 220) changeState('CHASE', 'line-of-sight raycast passed');
+                if (grace <= 0 && canSee && toPlayer < 220) changeState('CHASE', 'line-of-sight raycast passed');
                 else if (sanityPct > 0.4) changeState('WANDER', 'sanity recovered');
                 break;
             case 'CHASE':
-                speed = 105;
+                speed = 72;
                 ghost.target = { x: player.x, y: player.y };
-                if (toPlayer < 14) {
-                    player.sanity = Math.max(0, player.sanity - 30);
+                if (grace <= 0 && toPlayer < 14) {
+                    player.sanity = Math.max(0, player.sanity - 20);
                     caughtFlash = 1;
                     Object.assign(player, roomCentre(0));
-                    changeState('WANDER', 'caught the player (-30 sanity)');
+                    Object.assign(ghost, roomCentre(5));
+                    grace = 3;
+                    survived = 0;
+                    changeState('WANDER', 'caught the player (-20 sanity)');
                 } else if (!canSee && ghost.timer > 2) changeState('HUNT', 'lost line of sight');
                 break;
             case 'STUNNED':
                 speed = 0;
-                if (ghost.timer > 2) changeState('WANDER', 'recovered from stun');
+                if (ghost.timer > 3.5) changeState('WANDER', 'recovered from stun');
                 break;
             default:
                 break;
@@ -283,14 +292,16 @@ export function createGhostDemo(canvas, { reducedMotion = false } = {}) {
             drawHudText(context, `${current ? '>' : ' '} ${state}`, panelX + 8, 72 + i * 26, current ? '#ffffff' : '#4d6876', 12);
         });
         drawHudText(context, `SANITY ${Math.round(player.sanity)}%`, panelX, 258, player.sanity < 25 ? '#ff4d5e' : '#ff8c00');
+        const seconds = Math.floor(survived);
+        drawHudText(context, `SURVIVED ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}  STUNS ${stuns}`, panelX, 290, grace > 0 ? '#3ddc97' : '#8ba3b0', 10);
         context.fillStyle = 'rgba(255, 255, 255, 0.12)';
         context.fillRect(panelX, 266, 170, 6);
         context.fillStyle = player.sanity < 25 ? '#ff4d5e' : '#ff8c00';
         context.fillRect(panelX, 266, 170 * (player.sanity / 100), 6);
-        drawHudText(context, 'TRANSITIONS', panelX, 300, '#8ba3b0', 10);
+        drawHudText(context, 'TRANSITIONS', panelX, 314, '#8ba3b0', 10);
         log.forEach((entry, i) => {
-            drawHudText(context, entry.state, panelX, 318 + i * 24, '#d5e3ea', 10);
-            drawHudText(context, entry.reason.slice(0, 30), panelX, 330 + i * 24, '#4d6876', 9);
+            drawHudText(context, entry.state, panelX, 330 + i * 24, '#d5e3ea', 10);
+            drawHudText(context, entry.reason.slice(0, 30), panelX, 341 + i * 24, '#4d6876', 9);
         });
     }
 
