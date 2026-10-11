@@ -363,20 +363,19 @@ function setUpBays() {
     });
 }
 
-// ---------- Tallow: the real game, loaded into the HUD frame only when asked ----------
+// ---------- Game players: the real build, loaded into the HUD frame only when asked ----------
 
-function setUpTallowPlayer() {
-    const player = document.querySelector('[data-tallow-player]');
-    if (!player) return;
-    const view = player.querySelector('[data-tallow-view]');
-    const play = player.querySelector('[data-tallow-play]');
-    const fullscreen = player.querySelector('[data-tallow-fullscreen]');
+function setUpGamePlayer(player) {
+    const { gameSrc: src, gameTitle: title } = player.dataset;
+    const view = player.querySelector('[data-game-view]');
+    const play = player.querySelector('[data-game-play]');
+    const fullscreen = player.querySelector('[data-game-fullscreen]');
 
     play?.addEventListener('click', () => {
         const frame = document.createElement('iframe');
-        frame.src = 'Tallow/index.html';
-        frame.title = 'Tallow, playable';
-        frame.allow = 'fullscreen; autoplay';
+        frame.src = src;
+        frame.title = `${title}, playable`;
+        frame.allow = 'fullscreen; autoplay; gamepad';
         frame.allowFullscreen = true;
         view.replaceChildren(frame);
         frame.focus();
@@ -384,8 +383,12 @@ function setUpTallowPlayer() {
     });
 
     fullscreen?.addEventListener('click', () => {
-        view.requestFullscreen?.().catch(() => window.open('Tallow/index.html', '_blank', 'noopener'));
+        view.requestFullscreen?.().catch(() => window.open(src, '_blank', 'noopener'));
     });
+}
+
+function setUpGamePlayers() {
+    document.querySelectorAll('[data-game-player]').forEach(setUpGamePlayer);
 }
 
 // ---------- Showreel facade ----------
@@ -540,6 +543,6 @@ setUpFeatures();
 setUpBays();
 watchSlideshowVisibility();
 setUpVideoFacades();
-setUpTallowPlayer();
+setUpGamePlayers();
 startRider();
 whenLoaded(() => onIdle(() => startHero(motion)));

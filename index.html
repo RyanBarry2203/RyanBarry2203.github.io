@@ -58,7 +58,7 @@
                 <p class="hero__role">Gameplay &amp; AI Programmer</p>
                 <p class="hero__lede">I build game AI and engine systems in C#, from a custom MonoGame engine to Unity DOTS. My solo game Pale Roots won EA's <strong>Best Use of AI Algorithms</strong> award at Games Fleadh 2026.</p>
                 <div class="hero__actions">
-                    <a class="btn btn--accent" data-magnetic href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">Play Pale Roots</a>
+                    <a class="btn btn--accent" data-magnetic href="#pale-roots-player">Play Pale Roots</a>
                     <a class="btn" data-magnetic href="#featured">Enter the grid</a>
                     <a class="btn btn--ghost" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
                 </div>
@@ -78,6 +78,30 @@
                 <p class="sector-head__sub">An award-winning game on my own engine, and a traffic system that moves cars between two worlds.</p>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
+
+            <div class="game-player hud" id="pale-roots-player" data-game-player data-game-src="https://itch.io/embed-upload/16990658?color=02060a" data-game-title="Pale Roots" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // PALE_ROOTS_WASM</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">itch.io</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/pale-roots-boss-1280.jpg" srcset="assets/img/pale-roots-boss-640.jpg 640w, assets/img/pale-roots-boss-1280.jpg 1280w" sizes="(min-width: 960px) 80vw, 100vw" width="1280" height="688" loading="lazy" decoding="async" alt="Pale Roots: allies and an orc army clash in a bone-strewn arena under a giant skeleton">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">EA BEST USE OF AI ALGORITHMS &middot; GAMES FLEADH 2026</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">PALE ROOTS</p>
+                            <p class="game-cover__line">Every enemy you kill makes you stronger. Fight your way down to the bosses.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Start the run</button>
+                            <p class="game-cover__note">My own MonoGame engine in WebAssembly &middot; ~200&nbsp;MB &middot; desktop with mouse and keyboard</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">WASD to move &middot; you attack towards the cursor &middot; Shift to dash &middot; 1&ndash;6 cast spells &middot; Space to skip cutscenes</p>
+            </div>
 
             <article class="feature" id="pale-roots" aria-labelledby="pr-title" data-feature data-rider-stop>
                 <header class="feature__head">
@@ -150,8 +174,9 @@
                 </div>
 
                 <div class="feature__links">
-                    <a class="btn btn--accent" data-magnetic href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">Play on itch.io</a>
+                    <a class="btn btn--accent" data-magnetic href="#pale-roots-player">Play it above</a>
                     <a class="btn" href="https://github.com/RyanBarry2203/Pale-Roots" target="_blank" rel="noopener">Source on GitHub</a>
+                    <a class="btn btn--ghost" href="https://bazlightyear.itch.io/pale-roots-game-fleadh-winner-2026" target="_blank" rel="noopener">itch.io page</a>
                 </div>
             </article>
 
@@ -229,24 +254,24 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
-            <div class="tallow-player hud" data-tallow-player data-rider-stop>
+            <div class="game-player game-player--wax hud" id="tallow-player" data-game-player data-game-src="Tallow/index.html" data-game-title="Tallow" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // TALLOW_WEBGL</span>
                     <div class="hud__tabs">
-                        <button type="button" data-tallow-fullscreen hidden>Fullscreen</button>
-                        <a class="tallow-player__tab" href="Tallow/index.html" target="_blank" rel="noopener">New tab</a>
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="Tallow/index.html" target="_blank" rel="noopener">New tab</a>
                     </div>
                 </div>
-                <div class="hud__view tallow-player__view" data-tallow-view>
-                    <div class="tallow-cover">
-                        <img class="tallow-cover__art" src="assets/img/tallow/14_edict_encounter.png" width="640" height="360" alt="Tallow: the Chandler, his candle head dripping, sits across a dark table of cards and melting candles">
-                        <div class="tallow-cover__glow" aria-hidden="true"></div>
-                        <div class="tallow-cover__content">
-                            <p class="tallow-cover__kicker">A CANDLELIT CARD DUEL</p>
-                            <p class="tallow-cover__title" aria-hidden="true">TALLOW</p>
-                            <p class="tallow-cover__line">Your life is a candle. Every card you play is paid for in your own wax.</p>
-                            <button class="tallow-cover__play" type="button" data-tallow-play><span aria-hidden="true">&#9650;</span> Light the candle</button>
-                            <p class="tallow-cover__note">Unity 6 WebGL &middot; ~16 MB &middot; best on desktop with a mouse</p>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/tallow/14_edict_encounter.png" width="640" height="360" alt="Tallow: the Chandler, his candle head dripping, sits across a dark table of cards and melting candles">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">A CANDLELIT CARD DUEL</p>
+                            <p class="game-cover__title" aria-hidden="true">TALLOW</p>
+                            <p class="game-cover__line">Your life is a candle. Every card you play is paid for in your own wax.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Light the candle</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; ~16 MB &middot; best on desktop with a mouse</p>
                         </div>
                     </div>
                 </div>
