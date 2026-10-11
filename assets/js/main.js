@@ -269,6 +269,9 @@ const DEMO_LOADERS = {
     pooling: () => import('./demos/pooling.js').then((m) => m.createPoolingDemo),
     monster: () => import('./demos/monster.js').then((m) => m.createMonsterDemo),
     terminal: () => import('./demos/terminal.js').then((m) => m.createTerminalDemo),
+    strike: () => import('./demos/strike.js').then((m) => m.createStrikeDemo),
+    veil: () => import('./demos/veil.js').then((m) => m.createVeilDemo),
+    replay: () => import('./demos/replay.js').then((m) => m.createReplayDemo),
 };
 
 // Each container owns a set of "slots" (layers or tab panels). A demo runs only when its slot
@@ -357,6 +360,31 @@ function setUpBays() {
                 host.sync();
             });
         });
+    });
+}
+
+// ---------- Tallow: the real game, loaded into the HUD frame only when asked ----------
+
+function setUpTallowPlayer() {
+    const player = document.querySelector('[data-tallow-player]');
+    if (!player) return;
+    const view = player.querySelector('[data-tallow-view]');
+    const play = player.querySelector('[data-tallow-play]');
+    const fullscreen = player.querySelector('[data-tallow-fullscreen]');
+
+    play?.addEventListener('click', () => {
+        const frame = document.createElement('iframe');
+        frame.src = 'Tallow/index.html';
+        frame.title = 'Tallow, playable';
+        frame.allow = 'fullscreen; autoplay';
+        frame.allowFullscreen = true;
+        view.replaceChildren(frame);
+        frame.focus();
+        if (fullscreen && view.requestFullscreen) fullscreen.hidden = false;
+    });
+
+    fullscreen?.addEventListener('click', () => {
+        view.requestFullscreen?.().catch(() => window.open('Tallow/index.html', '_blank', 'noopener'));
     });
 }
 
@@ -512,5 +540,6 @@ setUpFeatures();
 setUpBays();
 watchSlideshowVisibility();
 setUpVideoFacades();
+setUpTallowPlayer();
 startRider();
 whenLoaded(() => onIdle(() => startHero(motion)));

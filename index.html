@@ -37,8 +37,8 @@
         <nav class="site-nav__menu" id="site-menu" aria-label="Main">
             <ul class="site-nav__links">
                 <li><a href="#featured" data-nav-link><span>01</span>Featured</a></li>
-                <li><a href="#projects" data-nav-link><span>02</span>Projects</a></li>
-                <li><a href="#hybrid-lod" data-nav-link-alias="featured"><span>03</span>Research</a></li>
+                <li><a href="#tallow" data-nav-link><span>02</span>Tallow</a></li>
+                <li><a href="#projects" data-nav-link><span>03</span>Projects</a></li>
                 <li><a href="#reel" data-nav-link><span>04</span>Reel</a></li>
                 <li><a href="#init" data-nav-link><span>05</span>Init</a></li>
                 <li><button class="fx-toggle" type="button" data-fx-toggle aria-pressed="true"><span class="fx-toggle__led" aria-hidden="true"></span>FX <span data-fx-state>ON</span></button></li>
@@ -221,9 +221,139 @@
             </article>
         </section>
 
+        <section class="section tallow" id="tallow" aria-labelledby="tallow-title">
+            <header class="sector-head sector-head--wax" data-rider-stop>
+                <p class="sector-head__id">// SECTOR_02</p>
+                <h2 id="tallow-title" data-scramble>Tallow.exe</h2>
+                <p class="sector-head__sub">A candlelit card duel I designed and directed using an AI-assisted workflow. The full game runs right here in your browser.</p>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
+
+            <div class="tallow-player hud" data-tallow-player data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // TALLOW_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-tallow-fullscreen hidden>Fullscreen</button>
+                        <a class="tallow-player__tab" href="Tallow/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view tallow-player__view" data-tallow-view>
+                    <div class="tallow-cover">
+                        <img class="tallow-cover__art" src="assets/img/tallow/14_edict_encounter.png" width="640" height="360" alt="Tallow: the Chandler, his candle head dripping, sits across a dark table of cards and melting candles">
+                        <div class="tallow-cover__glow" aria-hidden="true"></div>
+                        <div class="tallow-cover__content">
+                            <p class="tallow-cover__kicker">A CANDLELIT CARD DUEL</p>
+                            <p class="tallow-cover__title" aria-hidden="true">TALLOW</p>
+                            <p class="tallow-cover__line">Your life is a candle. Every card you play is paid for in your own wax.</p>
+                            <button class="tallow-cover__play" type="button" data-tallow-play><span aria-hidden="true">&#9650;</span> Light the candle</button>
+                            <p class="tallow-cover__note">Unity 6 WebGL &middot; ~16 MB &middot; best on desktop with a mouse</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">Left click to choose &middot; right click to cancel &middot; your progress is saved in this browser</p>
+            </div>
+
+            <article class="feature feature--wax" id="tallow-systems" aria-labelledby="tallow-systems-title" data-feature data-rider-stop>
+                <header class="feature__head">
+                    <p class="feature__meta"><span class="tag tag--award">Solo &middot; AI-directed</span><span class="tag">Unity 6 &middot; URP &middot; C#</span></p>
+                    <h3 class="feature__title" id="tallow-systems-title" data-scramble>Inside the duel</h3>
+                    <p class="feature__pitch">Inscryption's lanes, Balatro's multiplying score and Buckshot Roulette's bluffing, in one dark room across the table from a man whose head is a candle.</p>
+                    <dl class="facts">
+                        <div><dt>Role</dt><dd>Designer and director</dd></div>
+                        <div><dt>Tech</dt><dd>Unity 6, URP, C#, custom dither shader</dd></div>
+                        <div><dt>Workflow</dt><dd>An AI coding agent, held to written project rules and test gates</dd></div>
+                    </dl>
+                </header>
+
+                <div class="feature__body">
+                    <div class="feature__media hud" data-feature-media>
+                        <div class="hud__bar"><span class="hud__label"><i class="hud__rec"></i>FEED // TALLOW</span><span class="hud__label" data-media-caption>THE ROOM</span></div>
+                        <div class="hud__view">
+                            <figure class="media-layer is-active" data-media="0" data-caption="THE ROOM">
+                                <div class="slideshow slideshow--pixel" data-slideshow>
+                                    <img src="assets/img/tallow/14_edict_encounter.png" width="640" height="360" loading="lazy" decoding="async" alt="A duel in progress: four cards in hand, two of the Chandler's on the board and an edict in the corner" data-label="DUEL">
+                                    <img src="assets/img/tallow/12_ending_view.png" width="640" height="360" loading="lazy" decoding="async" alt="The Chandler's empty chair and his candle, after he leaves the table" data-label="HE IS GONE">
+                                    <img src="assets/img/tallow/13_prisoner_talk.png" width="640" height="360" loading="lazy" decoding="async" alt="Old Maeve offers a trade through the cellar bars" data-label="THE CELLAR">
+                                    <img src="assets/img/tallow/11_spot_shelf.png" width="640" height="360" loading="lazy" decoding="async" alt="His shelf of candles, one for every player who lost" data-label="THE SHELF">
+                                    <img src="assets/img/tallow/11_spot_workbench.png" width="640" height="360" loading="lazy" decoding="async" alt="The Chandler's workbench, where two cards can be melted into one" data-label="THE MOULD">
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="1" data-caption="SIM // STRIKE">
+                                <canvas class="demo-canvas" data-demo="strike" aria-label="Live strike demo using Tallow's rules: lanes resolve left to right, direct hits add Heat, sigils and charms add Flicker, and damage is Heat times Flicker. Ring the bell, swap charm order, or deal a new hand."></canvas>
+                                <div class="demo-ui demo-ui--top">
+                                    <button class="chip-btn" type="button" data-strike-bell>Ring the bell</button>
+                                    <button class="chip-btn" type="button" data-strike-swap>Swap charm order</button>
+                                    <button class="chip-btn" type="button" data-strike-deal>New hand</button>
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="2" data-caption="SIM // THE_VEIL">
+                                <canvas class="demo-canvas" data-demo="veil" aria-label="Mini-game: the Chandler plays a card face down and his hand gives a tell that may be a lie. Call it LIT or HOLLOW. He lies more as the night goes on."></canvas>
+                                <div class="demo-ui">
+                                    <button class="chip-btn" type="button" data-veil-lit>Call LIT</button>
+                                    <button class="chip-btn" type="button" data-veil-hollow>Call HOLLOW</button>
+                                </div>
+                            </figure>
+                            <figure class="media-layer" data-media="3" data-caption="ARCH // EVENT_REPLAY">
+                                <canvas class="demo-canvas" data-demo="replay" aria-label="Diagram: the rules model resolves a turn instantly and raises events; the presenter queues them and plays them back one at a time as animation."></canvas>
+                            </figure>
+                            <figure class="media-layer" data-media="4" data-caption="WORKFLOW // PROJECT_RULES">
+                                <div class="workflow-terminal">
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> cat PROJECT_RULES</p>
+                                    <p class="workflow-terminal__rule">rules are plain C# with no engine references, enforced by the assembly</p>
+                                    <p class="workflow-terminal__rule">views react to EncounterEvents, never the other way round</p>
+                                    <p class="workflow-terminal__rule">content is ScriptableObject data written by ContentBuilder</p>
+                                    <p class="workflow-terminal__rule">scene and prefabs are generated by SceneBuilder, never edited by hand</p>
+                                    <p class="workflow-terminal__rule">one state machine, one composition root, no static singletons</p>
+                                    <p class="workflow-terminal__rule">hot paths must not allocate; allocation tests guard them</p>
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> run-tests.ps1 -Platform All</p>
+                                    <p class="workflow-terminal__pass">EditMode 109 passed &middot; PlayMode 4 passed &middot; 0 failed</p>
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> balance sim: greedy bot over 400 seeded runs</p>
+                                    <p class="workflow-terminal__pass">wins 34%, reaches the final duel in 262 of 400</p>
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> <span class="workflow-terminal__cursor"></span></p>
+                                </div>
+                            </figure>
+                        </div>
+                    </div>
+
+                    <ol class="feature__steps">
+                        <li class="step is-active" data-step="0">
+                            <span class="step__index">01 / 05</span>
+                            <h4>Your life is the mana</h4>
+                            <p>Your health is a candle, and every card costs wax melted straight off it, or the lives of your own cards on the board. Beat three of the Chandler's tests and then the man himself. Between duels he leaves the room, and you have three moves to search the house, bargain with the prisoners in the cellar or melt two cards into one.</p>
+                        </li>
+                        <li class="step" data-step="1">
+                            <span class="step__index">02 / 05</span>
+                            <h4>Heat &times; Flicker</h4>
+                            <p>Ring the bell and your lanes strike left to right. Hitting an empty lane adds the card's power to Heat; sigils like Kindle and charms add Flicker; his candle melts by Heat &times; Flicker. Charms fire in slot order, so an adder before a multiplier scores differently from the other way round. Try swapping them.</p>
+                        </li>
+                        <li class="step" data-step="2">
+                            <span class="step__index">03 / 05</span>
+                            <h4>Reading the Chandler</h4>
+                            <p>Each turn he plays one card face down and his hand gives a tell: a confident tap or a wary pull back. The tell is honest 90% of the time in the first test and only 55% once he relights in the final duel. Call it LIT or HOLLOW: right gives Flicker, wrong costs wax.</p>
+                        </li>
+                        <li class="step" data-step="3">
+                            <span class="step__index">04 / 05</span>
+                            <h4>Rules first, then the show</h4>
+                            <p>The rules live in a plain C# assembly that can't reference Unity. A turn resolves instantly and raises <code>EncounterEvent</code> structs; the presenter queues them in a pre-sized queue and plays them back as animation. Turn resolution and the tween runner are covered by tests that assert zero garbage, and the 640&times;360 render is crushed by my own dither shader.</p>
+                        </li>
+                        <li class="step" data-step="4">
+                            <span class="step__index">05 / 05</span>
+                            <h4>Directed, not autopiloted</h4>
+                            <p>I built Tallow with an AI coding agent as my pair programmer and ran it the way a lead runs a team: I designed the game, wrote the architecture rules it had to follow, generated content and scenes from builders, and gated every change on batch-mode test runs. The AI writes faster than I can; knowing what good looks like is what keeps it good.</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="feature__links">
+                    <a class="btn btn--accent" data-magnetic href="#tallow">Play it above</a>
+                    <a class="btn" href="Tallow/index.html" target="_blank" rel="noopener">Open full screen in a new tab</a>
+                </div>
+            </article>
+        </section>
+
         <section class="section" id="projects" aria-labelledby="projects-title">
             <header class="sector-head" data-rider-stop>
-                <p class="sector-head__id">// SECTOR_02</p>
+                <p class="sector-head__id">// SECTOR_03</p>
                 <h2 id="projects-title" data-scramble>Project_Archive</h2>
                 <p class="sector-head__sub">Every project below has a live simulation of the system I built. Most of them are playable.</p>
                 <span class="sector-head__line" aria-hidden="true"></span>
@@ -479,7 +609,7 @@
 
         <section class="section" id="reel" aria-labelledby="reel-title">
             <header class="sector-head" data-rider-stop>
-                <p class="sector-head__id">// SECTOR_03</p>
+                <p class="sector-head__id">// SECTOR_04</p>
                 <h2 id="reel-title" data-scramble>System_Reel.mp4</h2>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
@@ -494,7 +624,7 @@
 
         <section class="section init" id="init" aria-labelledby="init-title" data-rider-stop>
             <header class="sector-head">
-                <p class="sector-head__id">// SECTOR_04</p>
+                <p class="sector-head__id">// SECTOR_05</p>
                 <h2 id="init-title" data-scramble>Init / About_Me</h2>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
