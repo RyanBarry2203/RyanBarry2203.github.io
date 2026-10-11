@@ -403,7 +403,7 @@
                 <div class="bay__screen hud">
                     <div class="hud__bar">
                         <span class="hud__label"><i class="hud__rec"></i>SIM // GHOST_FSM</span>
-                        <div class="hud__tabs" role="tablist" aria-label="Paranormal Investigation view">
+                        <div class="hud__tabs" role="tablist" aria-label="Wrong House view">
                             <button type="button" role="tab" aria-selected="true" data-tab="demo">Live sim</button>
                             <button type="button" role="tab" aria-selected="false" data-tab="screens">Screens</button>
                         </div>
@@ -414,27 +414,28 @@
                         </div>
                         <div class="hud__panel" data-panel="screens">
                             <div class="slideshow" data-slideshow>
-                                <img src="assets/img/paranormal-1-1280.jpg" srcset="assets/img/paranormal-1-640.jpg 640w, assets/img/paranormal-1-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="689" loading="lazy" decoding="async" alt="First-person view of a dark house with the Spirit Box switched on">
-                                <img src="assets/img/paranormal-2-1280.jpg" srcset="assets/img/paranormal-2-640.jpg 640w, assets/img/paranormal-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="689" loading="lazy" decoding="async" alt="Ghost NavMesh agent and the ScriptableObject data assets in the editor">
-                                <img src="assets/img/paranormal-4-1280.jpg" srcset="assets/img/paranormal-4-640.jpg 640w, assets/img/paranormal-4-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Blockout of the haunted house">
+                                <img src="assets/img/wronghouse-ghost-1280.jpg" srcset="assets/img/wronghouse-ghost-640.jpg 640w, assets/img/wronghouse-ghost-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="The ghost manifests behind the sofa in a dimly lit living room, with the objective checklist and equipment quickbar on screen">
+                                <img src="assets/img/wronghouse-kitchen-1280.jpg" srcset="assets/img/wronghouse-kitchen-640.jpg 640w, assets/img/wronghouse-kitchen-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Torchlight on the kitchen floorboards during the heist, with the loot target in the corner">
+                                <img src="assets/img/wronghouse-journal-1280.jpg" srcset="assets/img/wronghouse-journal-640.jpg 640w, assets/img/wronghouse-journal-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="The journal: logged evidence on the left, six ghost types on the right, the ones that no longer fit greyed out">
+                                <img src="assets/img/wronghouse-results-1280.jpg" srcset="assets/img/wronghouse-results-640.jpg 640w, assets/img/wronghouse-results-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Results screen after escaping, with a score breakdown and an A grade">
                             </div>
                         </div>
                     </div>
                     <p class="hud__hint">Pointer moves you and your torch &middot; click a room to flick its light</p>
                 </div>
                 <div class="bay__info">
-                    <p class="bay__index">PRJ_02 // Unity &middot; WebGL</p>
-                    <h3 class="bay__title" id="pi-title" data-scramble>Paranormal Investigation</h3>
-                    <p class="bay__pitch">A first-person ghost hunt where the ghost reacts to your light, your noise and your sanity.</p>
+                    <p class="bay__index">PRJ_02 // Unity 6 &middot; WebGL</p>
+                    <h3 class="bay__title" id="pi-title" data-scramble>Wrong House</h3>
+                    <p class="bay__pitch">A first-person paranormal heist. Rob the house, get locked in, then work out which ghost lives there and banish it before it hunts you down.</p>
                     <p class="bay__label">&gt; SYSTEMS</p>
                     <ul class="bay__systems">
-                        <li><b>Seven-state ghost.</b> Wander, Investigate, Spook, Chase, Hunt, Stunned and Dead. Falling sanity tips it from wandering into spooking you, and a hunt confirms line of sight with a raycast before it commits.</li>
-                        <li><b>Allocation-free senses.</b> Detection runs on <code>OverlapSphereNonAlloc</code> with a reused buffer, so the ghost checks for the player every frame without creating garbage.</li>
-                        <li><b>Event channels.</b> Sanity only drains once the ghost phase starts, signalled through ScriptableObject event channels that also drive the UI, so neither side references the other.</li>
-                        <li><b>Shared equipment base.</b> EMF reader, Spirit Box, parabolic mic, thermometer, crucifix and photo camera all extend one equipment behaviour.</li>
+                        <li><b>Data-driven haunts.</b> Six ghost types are ScriptableObjects, each with two of four evidence types and its own tuning (hunt threshold, speed, how often it throws things). A director picks the type and the room every run, so no two hunts play the same.</li>
+                        <li><b>Eight-state ghost.</b> Wander, Investigate, Manifest, Spook, Hunt warning, Hunt, Stunned and Banished. Hunts are gated by sanity, a cooldown and any crucifix nearby, and a line-of-sight raycast decides whether it is chasing you or searching your last known position.</li>
+                        <li><b>Decoupled by design.</b> Equipment is loaded through Addressables and reads the ghost, rooms and sanity from one runtime-anchor ScriptableObject, while event channels drive the HUD, so no system holds a reference to another.</li>
+                        <li><b>Built and tested from code.</b> Editor tools rebuild the house, furniture, lighting and UI in about 20 seconds, and automated play-mode runs play the whole heist, exorcism and escape, plus a caught run, failing on any logged error.</li>
                     </ul>
                     <div class="bay__links">
-                        <a class="btn btn--small btn--accent" href="UnityDemo3.1/index.html" target="_blank" rel="noopener">Play build</a>
+                        <a class="btn btn--small btn--accent" href="WrongHouse/index.html" target="_blank" rel="noopener">Play in browser <span class="btn__note">~31&nbsp;MB</span></a>
                     </div>
                 </div>
             </article>
