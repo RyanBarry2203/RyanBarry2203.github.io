@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tallow | Ryan Barry</title>
+    <meta name="description" content="Tallow, a candlelit card duel by Ryan Barry. Play it in your browser.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap">
+    <style>
+        :root { color-scheme: dark; --wax: #e9dcc0; --flame: #ffb35c; --ember: #ff8c00; --dim: #8a6a4a; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; background: #050202; color: var(--wax); font: 500 14px/1.5 "Segoe UI", system-ui, sans-serif; overflow: hidden; }
+        .stage { position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(ellipse at center, #1a0905 0%, #050202 70%); }
+        canvas { display: block; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); background: #000; outline: none; }
+        .loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: #050202; transition: opacity 0.6s; }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        .candle { position: relative; width: 34px; height: 150px; display: flex; align-items: flex-end; }
+        .candle__wax { width: 100%; height: 100%; background: linear-gradient(90deg, #cdbd9c, var(--wax) 40%, #bfae8c); border-radius: 3px 3px 2px 2px; transition: height 0.3s; }
+        .candle__flame { position: absolute; left: 50%; width: 14px; height: 30px; margin-left: -7px; border-radius: 50% 50% 45% 45%; background: radial-gradient(ellipse at 50% 70%, #fff3c4, var(--flame) 45%, rgba(255, 120, 30, 0) 75%); filter: drop-shadow(0 0 18px var(--ember)); animation: flicker 0.18s infinite alternate; transition: bottom 0.3s; }
+        @keyframes flicker { to { transform: scale(0.92, 1.08) translateX(1px); } }
+        .loader__title { margin: 0; font: 700 3rem/1 "Rajdhani", "Arial Narrow", sans-serif; letter-spacing: 0.4em; padding-left: 0.4em; color: var(--wax); text-shadow: 0 0 22px rgba(255, 140, 0, 0.5); }
+        .loader__status { margin: 0; font: 600 0.8rem/1 ui-monospace, Consolas, monospace; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; }
+        .loader__error { max-width: 46ch; text-align: center; color: #ff8a6a; display: none; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .candle__flame { display: none; }
+        .back { position: fixed; top: 12px; left: 14px; z-index: 5; font: 600 0.75rem/1 ui-monospace, Consolas, monospace; letter-spacing: 0.12em; color: var(--dim); text-decoration: none; text-transform: uppercase; }
+        .back:hover { color: var(--flame); }
+        .embedded .back { display: none; }
+        @media (prefers-reduced-motion: reduce) { .candle__flame { animation: none; } }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#tallow">&larr; Ryan Barry</a>
+    <div class="stage">
+        <canvas id="unity-canvas" tabindex="-1" aria-label="Tallow game"></canvas>
+    </div>
+    <div class="loader" role="status" aria-live="polite">
+        <div class="candle" aria-hidden="true">
+            <div class="candle__wax"></div>
+            <div class="candle__flame"></div>
+        </div>
+        <p class="loader__title">TALLOW</p>
+        <p class="loader__status">Lighting the candle 0%</p>
+        <p class="loader__error"></p>
+    </div>
+
+    <script src="Build/WebGL.loader.js"></script>
+    <script>
+        (function () {
+            if (window.self !== window.top) document.documentElement.classList.add('embedded');
+
+            var canvas = document.getElementById('unity-canvas');
+            var loader = document.querySelector('.loader');
+            var status = document.querySelector('.loader__status');
+            var wax = document.querySelector('.candle__wax');
+            var flame = document.querySelector('.candle__flame');
+            var error = document.querySelector('.loader__error');
+
+            canvas.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+            canvas.addEventListener('pointerdown', function () { canvas.focus(); });
+
+            function burn(progress) {
+                var left = 1 - progress * 0.75;
+                wax.style.height = (left * 100) + '%';
+                flame.style.bottom = (left * 150 - 4) + 'px';
+                status.textContent = 'Lighting the candle ' + Math.round(progress * 100) + '%';
+            }
+            burn(0);
+
+            createUnityInstance(canvas, {
+                dataUrl: 'Build/WebGL.data',
+                frameworkUrl: 'Build/WebGL.framework.js',
+                codeUrl: 'Build/WebGL.wasm',
+                streamingAssetsUrl: 'StreamingAssets',
+                companyName: 'Ryan Barry',
+                productName: 'Tallow',
+                productVersion: '0.1.0',
+                autoSyncPersistentDataPath: true,
+                showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
+            }, burn).then(function () {
+                status.textContent = 'The Chandler is waiting';
+                loader.classList.add('is-done');
+                canvas.focus();
+            }).catch(function (message) {
+                loader.classList.add('is-error');
+                status.textContent = 'The candle would not light';
+                error.textContent = 'Tallow needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+            });
+        })();
+    </script>
+</body>
+</html>
