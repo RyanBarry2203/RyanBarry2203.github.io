@@ -45,6 +45,27 @@
         <p class="loader__error"></p>
     </div>
 
+    <script>
+        // Lets the portfolio silence the game while it is scrolled out of view: every AudioContext the game creates
+        // is tracked, then suspended or resumed on a message from the page this build is embedded in.
+        (function () {
+            var Native = window.AudioContext || window.webkitAudioContext;
+            if (!Native) return;
+            var contexts = [];
+            function Tracked(options) {
+                var context = new Native(options);
+                contexts.push(context);
+                return context;
+            }
+            Tracked.prototype = Native.prototype;
+            window.AudioContext = window.webkitAudioContext = Tracked;
+            window.addEventListener('message', function (event) {
+                if (event.origin !== location.origin) return;
+                if (event.data === 'portfolio:pause') contexts.forEach(function (context) { context.suspend(); });
+                if (event.data === 'portfolio:resume') contexts.forEach(function (context) { context.resume(); });
+            });
+        })();
+    </script>
     <script src="Build/WebGL.loader.js"></script>
     <script>
         (function () {

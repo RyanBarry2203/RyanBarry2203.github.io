@@ -363,16 +363,122 @@ function setUpBays() {
     });
 }
 
+// ---------- Soundtrack: a quiet ambient loop that steps aside whenever a game or the reel is playing ----------
+
+const SOUND_KEY = 'rb-sound';
+const audibleSources = new Set();
+let soundtrack = null;
+
+function readSoundChoice() {
+    try { return localStorage.getItem(SOUND_KEY); } catch { return null; }
+}
+
+function setAudible(source, audible) {
+    if (audible) audibleSources.add(source);
+    else audibleSources.delete(source);
+    soundtrack?.sync();
+}
+
+// Browsers only allow sound after the visitor interacts, so the loop starts on the first click or key press.
+function setUpSoundtrack() {
+    const button = document.querySelector('[data-sound-toggle]');
+    const AudioContextType = window.AudioContext || window.webkitAudioContext;
+    if (!button || !AudioContextType) {
+        button?.closest('li')?.remove();
+        return;
+    }
+    const label = button.querySelector('[data-sound-state]');
+    let enabled = readSoundChoice() !== 'off';
+    let ambient = null;
+    let starting = false;
+
+    const shouldPlay = () => enabled && audibleSources.size === 0 && !document.hidden;
+    const render = () => {
+        button.setAttribute('aria-pressed', String(enabled));
+        if (label) label.textContent = enabled ? 'ON' : 'OFF';
+        button.title = enabled ? 'Mute the background music' : 'Play the background music';
+        button.classList.toggle('is-playing', Boolean(ambient) && shouldPlay());
+    };
+    const sync = () => {
+        ambient?.setPlaying(shouldPlay());
+        render();
+    };
+    const begin = () => {
+        if (ambient || starting) return;
+        starting = true;
+        const context = new AudioContextType();
+        context.resume();
+        import('./ambient.js').then(({ createGridAmbient }) => {
+            ambient = createGridAmbient(context);
+            sync();
+        });
+    };
+
+    const onFirstGesture = (event) => {
+        if (enabled && !button.contains(event.target)) begin();
+    };
+    window.addEventListener('pointerdown', onFirstGesture, { once: true, capture: true });
+    window.addEventListener('keydown', onFirstGesture, { once: true, capture: true });
+
+    button.addEventListener('click', () => {
+        if (enabled && !ambient && !starting) {
+            begin();
+            return;
+        }
+        enabled = !enabled;
+        try { localStorage.setItem(SOUND_KEY, enabled ? 'on' : 'off'); } catch { /* storage blocked: the choice lasts for this visit */ }
+        if (enabled) begin();
+        sync();
+    });
+    document.addEventListener('visibilitychange', sync);
+
+    soundtrack = { sync };
+    render();
+}
+
 // ---------- Game players: the real build, loaded into the HUD frame only when asked ----------
+
+// Below this share of the player on screen, the game counts as scrolled away and goes quiet.
+const GAME_VISIBLE_RATIO = 0.3;
 
 function setUpGamePlayer(player) {
     const { gameSrc: src, gameTitle: title } = player.dataset;
     const view = player.querySelector('[data-game-view]');
     const play = player.querySelector('[data-game-play]');
     const fullscreen = player.querySelector('[data-game-fullscreen]');
+    const cover = view.firstElementChild;
+    // Our own builds listen for pause/resume messages. A build hosted elsewhere can't be reached, so it is unloaded.
+    const ownBuild = new URL(src, location.href).origin === location.origin;
+    let frame = null;
+    let visibleRatio = 0;
+
+    const update = () => {
+        if (!frame || player.contains(document.fullscreenElement)) return;
+        if (ownBuild) {
+            const active = visibleRatio >= GAME_VISIBLE_RATIO && !document.hidden;
+            frame.contentWindow?.postMessage(active ? 'portfolio:resume' : 'portfolio:pause', location.origin);
+            setAudible(player, active);
+        } else if (visibleRatio === 0) {
+            unload();
+        }
+    };
+
+    const unload = () => {
+        frame = null;
+        view.replaceChildren(cover);
+        if (fullscreen) fullscreen.hidden = true;
+        if (!cover.querySelector('[data-game-stopped]')) {
+            const note = document.createElement('p');
+            note.className = 'game-cover__note';
+            note.dataset.gameStopped = '';
+            note.textContent = 'Stopped when you scrolled away, so it wouldn’t play in the background.';
+            play.after(note);
+        }
+        setAudible(player, false);
+    };
 
     play?.addEventListener('click', () => {
-        const frame = document.createElement('iframe');
+        frame = document.createElement('iframe');
         frame.src = src;
         frame.title = `${title}, playable`;
         frame.allow = 'fullscreen; autoplay; gamepad';
@@ -380,11 +486,19 @@ function setUpGamePlayer(player) {
         view.replaceChildren(frame);
         frame.focus();
         if (fullscreen && view.requestFullscreen) fullscreen.hidden = false;
+        setAudible(player, true);
     });
 
     fullscreen?.addEventListener('click', () => {
         view.requestFullscreen?.().catch(() => window.open(src, '_blank', 'noopener'));
     });
+
+    new IntersectionObserver(([entry]) => {
+        visibleRatio = entry.isIntersecting ? entry.intersectionRatio : 0;
+        update();
+    }, { threshold: [0, GAME_VISIBLE_RATIO] }).observe(player);
+    document.addEventListener('visibilitychange', update);
+    document.addEventListener('fullscreenchange', update);
 }
 
 function setUpGamePlayers() {
@@ -393,19 +507,42 @@ function setUpGamePlayers() {
 
 // ---------- Showreel facade ----------
 
+const YOUTUBE_ORIGIN = 'https://www.youtube-nocookie.com';
+const YOUTUBE_PLAYING = 1;
+const YOUTUBE_BUFFERING = 3;
+
+// The embed's JS API reports play state (so the music steps aside only while the reel is playing),
+// and takes a pause command when the reel scrolls out of view.
 function setUpVideoFacades() {
     document.querySelectorAll('[data-youtube]').forEach((facade) => {
+        let iframe = null;
+        const command = (message) => iframe?.contentWindow?.postMessage(JSON.stringify(message), YOUTUBE_ORIGIN);
+
+        window.addEventListener('message', (event) => {
+            if (!iframe || event.origin !== YOUTUBE_ORIGIN || event.source !== iframe.contentWindow) return;
+            let data;
+            try { data = JSON.parse(event.data); } catch { return; }
+            const state = data.event === 'onStateChange' ? data.info : data.info?.playerState;
+            if (typeof state === 'number') setAudible(facade, state === YOUTUBE_PLAYING || state === YOUTUBE_BUFFERING);
+        });
+
+        new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) command({ event: 'command', func: 'pauseVideo', args: [] });
+        }).observe(facade);
+
         facade.querySelector('a')?.addEventListener('click', (event) => {
             event.preventDefault();
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube-nocookie.com/embed/${facade.dataset.youtube}?autoplay=1&rel=0`;
+            iframe = document.createElement('iframe');
+            iframe.src = `${YOUTUBE_ORIGIN}/embed/${facade.dataset.youtube}?autoplay=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
             iframe.title = 'Ryan Barry showreel';
             iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
             iframe.allowFullscreen = true;
+            iframe.addEventListener('load', () => command({ event: 'listening', id: 'showreel' }));
             facade.querySelector('img')?.remove();
             facade.querySelector('a')?.remove();
             facade.append(iframe);
             iframe.focus();
+            setAudible(facade, true);
         });
     });
 }
@@ -536,6 +673,7 @@ async function startRider() {
 
 const motion = setUpMotion();
 setUpFxToggle();
+setUpSoundtrack();
 setUpNavigation(motion);
 setUpMagneticButtons(motion?.gsap);
 setUpSlideshows(setUpLightbox(motion?.lenis));

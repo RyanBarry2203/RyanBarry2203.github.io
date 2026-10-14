@@ -1107,6 +1107,9 @@ main, .site-footer { position: relative; z-index: 1; }
 .fx-toggle__led { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
 .fx-toggle[aria-pressed="false"] [data-fx-state] { color: var(--orange); }
 .fx-toggle[aria-pressed="false"] .fx-toggle__led { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.sound-toggle[aria-pressed="true"]:not(.is-playing) .fx-toggle__led { opacity: 0.45; box-shadow: none; }
+.sound-toggle.is-playing .fx-toggle__led { animation: led-beat 0.652s ease-in-out infinite alternate; }
+@keyframes led-beat { to { opacity: 0.35; box-shadow: 0 0 2px var(--cyan); } }
 
 /* Run button shown over demos when animations are off */
 .demo-run {
