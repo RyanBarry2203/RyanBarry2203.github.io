@@ -924,6 +924,15 @@ main, .site-footer { position: relative; z-index: 1; }
     --game-note: #a88a6a;
     --game-title: linear-gradient(180deg, #fff6dc 0%, #e9dcc0 45%, #ff9a3c 100%);
 }
+.hud.game-player--bulb {
+    --game-rgb: 255, 217, 168;
+    --game-accent: #ffd9a8;
+    --game-bg: #040506;
+    --game-text: #e1d9c7;
+    --game-play: #fff1dc;
+    --game-note: #8a8272;
+    --game-title: linear-gradient(180deg, #fff6e4 0%, #e1d9c7 50%, #c9a77a 100%);
+}
 .game-player::before, .game-player::after { border-color: var(--game-accent); filter: drop-shadow(0 0 6px var(--game-accent)); }
 .game-player .hud__bar { background: linear-gradient(90deg, rgba(var(--game-rgb), 0.12), rgba(var(--game-rgb), 0.02)); border-bottom-color: rgba(var(--game-rgb), 0.25); }
 .game-player .hud__label { color: var(--game-accent); }
@@ -971,6 +980,18 @@ main, .site-footer { position: relative; z-index: 1; }
         radial-gradient(40% 55% at 50% 30%, rgba(255, 150, 60, 0.32), transparent 70%),
         radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(5, 2, 2, 0.92) 100%);
     animation: candle-flicker 2.8s steps(1) infinite;
+}
+.game-player--bulb .game-cover__art { filter: brightness(0.36) saturate(1.1); }
+.game-player--bulb .game-cover__glow {
+    background:
+        radial-gradient(35% 50% at 50% 22%, rgba(255, 210, 160, 0.26), transparent 70%),
+        radial-gradient(120% 90% at 50% 50%, transparent 35%, rgba(4, 5, 6, 0.94) 100%);
+    animation: bulb-flicker 4.2s infinite;
+}
+@keyframes bulb-flicker {
+    0%, 18%, 22%, 60%, 63%, 100% { opacity: 1; }
+    20%, 61.5% { opacity: 0.45; }
+    21% { opacity: 0.8; }
 }
 @keyframes candle-flicker {
     0%, 100% { opacity: 1; }

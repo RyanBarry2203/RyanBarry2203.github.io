@@ -424,6 +424,30 @@
                 </div>
             </article>
 
+            <div class="game-player game-player--bulb hud" id="wrong-house-player" data-game-player data-game-src="WrongHouse/index.html" data-game-title="Wrong House" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // WRONG_HOUSE_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="WrongHouse/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/wronghouse-ghost-1280.jpg" srcset="assets/img/wronghouse-ghost-640.jpg 640w, assets/img/wronghouse-ghost-1280.jpg 1280w" sizes="(min-width: 960px) 80vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Wrong House: the ghost manifests behind the sofa in a dimly lit living room">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">A FIRST-PERSON PARANORMAL HEIST</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">WRONG HOUSE</p>
+                            <p class="game-cover__line">You came to rob it. Something already lives here.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Pick the lock</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; ~31&nbsp;MB &middot; desktop with mouse and keyboard</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">Click the game to look around &middot; WASD to move &middot; Shift sprint &middot; E interact &middot; F torch &middot; 1&ndash;6 equipment, right click to use &middot; Tab journal &middot; P pause</p>
+            </div>
+
             <article class="bay bay--flip" id="paranormal" aria-labelledby="pi-title" data-bay data-rider-stop>
                 <div class="bay__screen hud">
                     <div class="hud__bar">
@@ -460,7 +484,8 @@
                         <li><b>Built and tested from code.</b> Editor tools rebuild the house, furniture, lighting and UI in about 20 seconds, and automated play-mode runs play the whole heist, exorcism and escape, plus a caught run, failing on any logged error.</li>
                     </ul>
                     <div class="bay__links">
-                        <a class="btn btn--small btn--accent" href="WrongHouse/index.html" target="_blank" rel="noopener">Play in browser <span class="btn__note">~31&nbsp;MB</span></a>
+                        <a class="btn btn--small btn--accent" href="#wrong-house-player">Play it above</a>
+                        <a class="btn btn--small" href="WrongHouse/index.html" target="_blank" rel="noopener">Full screen tab <span class="btn__note">~31&nbsp;MB</span></a>
                     </div>
                 </div>
             </article>
