@@ -1,150 +1,303 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | Split_Shift</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <div id="unity-fullscreen-container">
-        <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
-        <div id="unity-loading-container">
-          <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
-              <div id="unity-progress-bar-full"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hybrid LOD Traffic | Ryan Barry</title>
+    <meta name="description" content="Hybrid LOD traffic by Ryan Barry: Unity GameObjects near the camera, Burst-compiled ECS entities everywhere else. Runs in your browser.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Rajdhani:wght@600;700&display=swap">
+    <style>
+        :root {
+            color-scheme: dark;
+            --void: #03060b;
+            --panel: rgba(4, 10, 16, 0.72);
+            --line: rgba(0, 243, 255, 0.22);
+            --text: #d6f6ff;
+            --muted: #6f97a3;
+            --cyan: #00f3ff;
+            --orange: #ff8c00;
+            --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+            --display: "Rajdhani", "Arial Narrow", sans-serif;
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; background: var(--void); color: var(--text); font: 500 12px/1.4 var(--mono); }
+        canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: var(--void); touch-action: none; }
+
+        .loader {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+            background:
+                radial-gradient(60% 50% at 50% 55%, rgba(0, 243, 255, 0.08), transparent 70%),
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px) 0 0 / 40px 40px,
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px) 0 0 / 40px 40px,
+                var(--void);
+            transition: opacity 0.6s;
+        }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        .loader__kicker { margin: 0; letter-spacing: 0.32em; color: var(--orange); font-size: 0.72rem; }
+        .loader__title {
+            margin: 0; padding-left: 0.2em;
+            font: 700 clamp(2.2rem, 7vw, 4.4rem)/0.9 var(--display); letter-spacing: 0.2em;
+            background: linear-gradient(180deg, #fff 0%, #bff9ff 45%, var(--cyan) 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 18px rgba(0, 243, 255, 0.5));
+        }
+        .loader__bar { position: relative; width: min(340px, 70vw); height: 3px; background: rgba(0, 243, 255, 0.15); overflow: hidden; }
+        .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--orange), var(--cyan)); box-shadow: 0 0 12px var(--cyan); transition: width 0.25s; }
+        .loader__status { margin: 0; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; font-size: 0.7rem; }
+        .loader__error { display: none; max-width: 46ch; margin: 0; text-align: center; color: #ff8a6a; line-height: 1.6; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .loader__bar { display: none; }
+
+        .hud { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 0.6s 0.2s; }
+        .hud.is-live { opacity: 1; }
+        .panel {
+            position: absolute; pointer-events: auto;
+            background: var(--panel); border: 1px solid var(--line);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+        .panel__label { margin: 0 0 8px; color: var(--muted); font-size: 0.62rem; letter-spacing: 0.24em; text-transform: uppercase; }
+
+        .modes { top: 12px; left: 12px; padding: 10px 12px 12px; max-width: min(420px, calc(100vw - 24px)); }
+        .modes__title { margin: 0 0 8px; font: 700 1.05rem/1 var(--display); letter-spacing: 0.16em; color: #fff; }
+        .modes__title span { color: var(--cyan); }
+        .segmented { display: flex; gap: 4px; }
+        .chip {
+            appearance: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            min-height: 30px; padding: 0 10px; border: 1px solid rgba(0, 243, 255, 0.35);
+            background: rgba(0, 243, 255, 0.05); color: var(--text);
+            font: 600 0.68rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+        }
+        .chip:hover { background: rgba(0, 243, 255, 0.16); }
+        .chip:focus-visible { outline: 1px solid var(--cyan); outline-offset: 2px; }
+        .chip[aria-pressed="true"] { background: var(--cyan); color: #001014; box-shadow: 0 0 16px rgba(0, 243, 255, 0.45); }
+        .chip kbd { font: inherit; opacity: 0.55; }
+        .chip--orange { border-color: rgba(255, 140, 0, 0.45); background: rgba(255, 140, 0, 0.06); }
+        .chip--orange:hover { background: rgba(255, 140, 0, 0.18); }
+        .modes__note { margin: 8px 0 0; color: var(--muted); font-size: 0.68rem; line-height: 1.5; min-height: 2.4em; }
+
+        .stats { top: 12px; right: 12px; width: 230px; padding: 10px 12px 12px; }
+        .stat { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 4px; }
+        .stat dt { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; }
+        .stat dd { margin: 0; font: 700 1.15rem/1 var(--display); letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+        .dot--go { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+        .dot--ecs { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+        .stat--go dd { color: var(--cyan); }
+        .stat--ecs dd { color: var(--orange); }
+        .split { display: flex; height: 4px; margin: 8px 0 10px; background: rgba(255, 255, 255, 0.06); }
+        .split__go { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); transition: width 0.3s; }
+        .split__ecs { background: var(--orange); box-shadow: 0 0 8px var(--orange); transition: width 0.3s; }
+        .stat--small dd { font-size: 0.95rem; color: var(--text); }
+        .stats__legend { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid rgba(0, 243, 255, 0.12); color: var(--muted); font-size: 0.6rem; line-height: 1.55; }
+
+        .controls { left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 10px 12px; max-width: calc(100vw - 24px); }
+        .controls__group { display: flex; align-items: center; gap: 4px; }
+        .controls__group .panel__label { margin: 0 6px 0 0; }
+
+        .hint { right: 12px; bottom: 12px; padding: 8px 12px; color: var(--muted); font-size: 0.62rem; letter-spacing: 0.06em; line-height: 1.7; text-align: right; }
+        .hint b { color: var(--text); font-weight: 600; }
+
+        .back { position: fixed; z-index: 6; left: 12px; bottom: 76px; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
+        .back:hover { color: var(--cyan); }
+        .embedded .back { display: none; }
+
+        @media (max-width: 860px) {
+            .hint { display: none; }
+            .stats { width: 190px; }
+            .stats__legend { display: none; }
+        }
+        @media (max-width: 600px) {
+            .modes__note, .modes__title { display: none; }
+            .stats { top: 62px; right: 12px; width: 168px; padding: 8px 10px; }
+            .stats .panel__label { display: none; }
+            .chip kbd { display: none; }
+            .back { bottom: auto; top: 64px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .loader, .hud, .split__go, .split__ecs, .loader__fill { transition: none; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="unity-canvas" tabindex="-1" aria-label="Hybrid LOD traffic simulation. Drag to orbit, right-drag to pan, scroll to zoom."></canvas>
+
+    <div class="hud" data-hud>
+        <section class="panel modes" aria-label="Simulation mode">
+            <p class="modes__title">HYBRID_LOD <span>// TRAFFIC</span></p>
+            <div class="segmented" role="group" aria-label="Simulation mode">
+                <button class="chip" type="button" data-mode="HybridLOD" aria-pressed="true"><kbd>1</kbd>Hybrid LOD</button>
+                <button class="chip" type="button" data-mode="PureOOP" aria-pressed="false"><kbd>2</kbd>Pure OOP</button>
+                <button class="chip" type="button" data-mode="PureECS" aria-pressed="false"><kbd>3</kbd>Pure ECS</button>
             </div>
-          </div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Split_Shift</div>
-      </div>
+            <p class="modes__note" data-mode-note aria-live="polite"></p>
+        </section>
+
+        <section class="panel stats" aria-label="Live statistics">
+            <p class="panel__label">Live // world split</p>
+            <dl>
+                <div class="stat stat--go"><dt><i class="dot dot--go"></i>GameObjects</dt><dd data-stat="active">0</dd></div>
+                <div class="stat stat--ecs"><dt><i class="dot dot--ecs"></i>ECS entities</dt><dd data-stat="background">0</dd></div>
+                <div class="split" aria-hidden="true"><span class="split__go" data-split-go></span><span class="split__ecs" data-split-ecs></span></div>
+                <div class="stat stat--small"><dt>Hand-offs / s</dt><dd data-stat="handoffs">0</dd></div>
+                <div class="stat stat--small"><dt>Frame rate</dt><dd data-stat="fps">--</dd></div>
+            </dl>
+            <p class="stats__legend">Cyan cars run full AI: sensors, raycasts, A* routes. Orange cars are three components moved by a Burst job. They swap at the rings.</p>
+        </section>
+
+        <section class="panel controls" aria-label="Controls">
+            <div class="controls__group" role="group" aria-label="Number of cars">
+                <p class="panel__label">Cars</p>
+                <button class="chip" type="button" data-cars="250" aria-pressed="false">250</button>
+                <button class="chip" type="button" data-cars="500" aria-pressed="true">500</button>
+                <button class="chip" type="button" data-cars="1000" aria-pressed="false">1000</button>
+            </div>
+            <div class="controls__group">
+                <button class="chip" type="button" data-xray aria-pressed="true"><kbd>X</kbd>X-ray</button>
+                <button class="chip chip--orange" type="button" data-dispatch><kbd>F</kbd>Dispatch here</button>
+            </div>
+        </section>
+
+        <p class="panel hint"><b>Drag</b> orbit &middot; <b>Right-drag</b> / <b>WASD</b> pan &middot; <b>Scroll</b> zoom<br><b>Q E</b> rotate &middot; <b>R</b> reset view</p>
     </div>
+
+    <a class="back" href="../#hybrid-lod">&larr; Ryan Barry</a>
+
+    <div class="loader" role="status" aria-live="polite" data-loader>
+        <p class="loader__kicker">UNITY 6 &middot; DOTS &middot; WEBGL</p>
+        <p class="loader__title">HYBRID_LOD</p>
+        <div class="loader__bar" aria-hidden="true"><span class="loader__fill" data-loader-fill></span></div>
+        <p class="loader__status" data-loader-status>Building the city 0%</p>
+        <p class="loader__error" data-loader-error></p>
+    </div>
+
+    <script src="Build/HybridLOD.loader.js"></script>
     <script>
-      let canvas = document.querySelector("#unity-canvas");
-      let fullscreenContainer = document.querySelector("#unity-fullscreen-container");
+        (function () {
+            var embedded = window.self !== window.top;
+            if (embedded) document.documentElement.classList.add('embedded');
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+            var canvas = document.getElementById('unity-canvas');
+            var hud = document.querySelector('[data-hud]');
+            var loader = document.querySelector('[data-loader]');
+            var fill = document.querySelector('[data-loader-fill]');
+            var status = document.querySelector('[data-loader-status]');
+            var error = document.querySelector('[data-loader-error]');
+            var modeNote = document.querySelector('[data-mode-note]');
+            var modeButtons = document.querySelectorAll('[data-mode]');
+            var carButtons = document.querySelectorAll('[data-cars]');
+            var xRayButton = document.querySelector('[data-xray]');
+            var stat = function (name) { return document.querySelector('[data-stat="' + name + '"]'); };
+            var activeStat = stat('active');
+            var backgroundStat = stat('background');
+            var handoffStat = stat('handoffs');
+            var fpsStat = stat('fps');
+            var splitGo = document.querySelector('[data-split-go]');
+            var splitEcs = document.querySelector('[data-split-ecs]');
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Project300.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/Project300.data",
-        frameworkUrl: buildUrl + "/Project300.framework.js",
-        codeUrl: buildUrl + "/Project300.wasm",
-        streamingAssetsUrl: "StreamingAssets",
+            var modeNames = ['PureOOP', 'PureECS', 'HybridLOD'];
+            var modeNotes = {
+                HybridLOD: 'Cars become GameObjects inside the cyan ring (150 m) and drop back to ECS past the orange ring (200 m).',
+                PureOOP: 'Every car is a full GameObject. Watch the frame rate at 1000 cars.',
+                PureECS: 'Every car is ECS data moved by one Burst job. Cheap, but there is no AI up close.'
+            };
+            var instance = null;
 
-        // If you have a custom web site structure, or want to place multiple Unity build instances on the same page,
-        // you can pass fullscreenElementID: "my-unity-fullscreen-container-id", in this configuration field to
-        // explicitly point to the element tree root that is displayed in fullscreen mode.
-        fullscreenElementID: "unity-fullscreen-container",
+            function send(method, value) {
+                if (!instance) return;
+                if (value === undefined) instance.SendMessage('ShowcaseBridge', method);
+                else instance.SendMessage('ShowcaseBridge', method, value);
+            }
 
-        companyName: "DefaultCompany",
-        productName: "Split_Shift",
-        productVersion: "0.1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
+            function press(buttons, match) {
+                buttons.forEach(function (button) { button.setAttribute('aria-pressed', String(match(button))); });
+            }
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+            function showMode(mode) {
+                press(modeButtons, function (button) { return button.dataset.mode === mode; });
+                modeNote.textContent = modeNotes[mode];
+            }
+            showMode('HybridLOD');
 
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
+            modeButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    send('SetMode', button.dataset.mode);
+                    showMode(button.dataset.mode);
+                    canvas.focus();
+                });
+            });
+            carButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    send('SetVehicleCount', Number(button.dataset.cars));
+                    press(carButtons, function (other) { return other === button; });
+                    canvas.focus();
+                });
+            });
+            xRayButton.addEventListener('click', function () {
+                var enabled = xRayButton.getAttribute('aria-pressed') !== 'true';
+                send('SetXRay', enabled ? 1 : 0);
+                xRayButton.setAttribute('aria-pressed', String(enabled));
+                canvas.focus();
+            });
+            document.querySelector('[data-dispatch]').addEventListener('click', function () {
+                send('Dispatch');
+                canvas.focus();
+            });
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas container in a window that can be maximized to fullscreen:
-        fullscreenContainer.style.width = "960px";
-        fullscreenContainer.style.height = "600px";
-      }
-
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        const loadingContainer = document.querySelector("#unity-loading-container");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
-
-        createUnityInstance(canvas, config, (progress) => {
-          if (progress < 1) {
-            loadingContainer.style.display = "block";
-            progressBarFull.style.width = 100 * progress + "%";
-          } else {
-            loadingContainer.style.display = "none";
-          }
-        }).then((unityInstance) => {
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
+            window.onShowcaseStats = function (stats) {
+                var total = stats.active + stats.background;
+                activeStat.textContent = stats.active;
+                backgroundStat.textContent = stats.background;
+                handoffStat.textContent = stats.handoffs.toFixed(1);
+                fpsStat.textContent = Math.round(stats.fps);
+                splitGo.style.width = total ? (stats.active / total * 100) + '%' : '0';
+                splitEcs.style.width = total ? (stats.background / total * 100) + '%' : '0';
+                showMode(modeNames[stats.mode]);
+                xRayButton.setAttribute('aria-pressed', String(stats.xRay));
+                press(carButtons, function (button) { return Number(button.dataset.cars) === stats.target; });
             };
 
-      document.body.appendChild(script);
+            window.addEventListener('message', function (event) {
+                if (event.origin !== location.origin) return;
+                if (event.data === 'portfolio:pause') send('SetPaused', 1);
+                if (event.data === 'portfolio:resume') send('SetPaused', 0);
+            });
 
+            canvas.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+            canvas.addEventListener('pointerdown', function () { canvas.focus(); });
+
+            function progress(value) {
+                fill.style.width = (value * 100) + '%';
+                status.textContent = (value < 0.9 ? 'Building the city ' : 'Spawning traffic ') + Math.round(value * 100) + '%';
+            }
+            progress(0);
+
+            createUnityInstance(canvas, {
+                dataUrl: 'Build/HybridLOD.data.unityweb',
+                frameworkUrl: 'Build/HybridLOD.framework.js.unityweb',
+                codeUrl: 'Build/HybridLOD.wasm.unityweb',
+                streamingAssetsUrl: 'StreamingAssets',
+                companyName: 'Ryan Barry',
+                productName: 'Hybrid LOD Traffic',
+                productVersion: '1.0',
+                devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+                showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
+            }, progress).then(function (unityInstance) {
+                instance = unityInstance;
+                loader.classList.add('is-done');
+                hud.classList.add('is-live');
+                canvas.focus();
+            }).catch(function (message) {
+                loader.classList.add('is-error');
+                status.textContent = 'The city would not load';
+                error.textContent = 'This needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+            });
+        })();
     </script>
-  </body>
+</body>
 </html>
