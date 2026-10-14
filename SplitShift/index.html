@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Split Shift | Ryan Barry</title>
+    <meta name="description" content="Split Shift, an open-world neon city driving game. Arcade handling, AI traffic that obeys the lights, police pursuits and a street race. Play it in your browser.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Permanent+Marker&family=Rajdhani:wght@700&display=swap">
+    <style>
+        :root {
+            color-scheme: dark;
+            --night: #05040a;
+            --text: #e9e4ff;
+            --muted: #8a83a8;
+            --neon: #ff2bd6;
+            --cyan: #00f3ff;
+            --amber: #ffb347;
+            --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; background: var(--night); color: var(--text); font: 500 13px/1.5 var(--mono); }
+        canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: var(--night); touch-action: none; }
+
+        .loader {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+            background:
+                radial-gradient(70% 45% at 50% 100%, rgba(255, 43, 214, 0.18), transparent 70%),
+                radial-gradient(50% 40% at 50% 0%, rgba(0, 243, 255, 0.08), transparent 70%),
+                repeating-linear-gradient(90deg, transparent 0 79px, rgba(0, 243, 255, 0.05) 79px 80px),
+                var(--night);
+            transition: opacity 0.6s;
+        }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        .loader__kicker { margin: 0; letter-spacing: 0.32em; color: var(--cyan); font-size: 0.72rem; text-transform: uppercase; }
+        .loader__title { position: relative; margin: 0; padding-left: 0.18em; font: 700 clamp(2.6rem, 9vw, 5rem)/0.9 "Rajdhani", "Arial Narrow", sans-serif; letter-spacing: 0.18em; color: #fff; text-shadow: 0 0 18px rgba(255, 43, 214, 0.75), 0 0 2px #fff; }
+        .loader__tag { position: absolute; right: -0.6em; bottom: -0.55em; font: 400 0.36em/1 "Permanent Marker", cursive; letter-spacing: 0.02em; color: var(--amber); transform: rotate(-8deg); text-shadow: 0 0 10px rgba(255, 179, 71, 0.6); }
+        .loader__line { margin: 6px 0 0; color: var(--muted); }
+        .loader__bar { position: relative; width: min(340px, 70vw); height: 3px; background: rgba(255, 43, 214, 0.15); overflow: hidden; }
+        .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--neon), var(--cyan)); box-shadow: 0 0 12px var(--neon); transition: width 0.25s; }
+        .loader__status { margin: 0; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; font-size: 0.7rem; }
+        .loader__error { display: none; max-width: 46ch; margin: 0; text-align: center; color: #ff8a6a; line-height: 1.6; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .loader__bar { display: none; }
+
+        .controls {
+            position: fixed; right: 12px; bottom: 12px; z-index: 5; width: min(300px, calc(100vw - 24px));
+            padding: 10px 12px 12px; background: rgba(8, 5, 18, 0.78); border: 1px solid rgba(255, 43, 214, 0.35);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            opacity: 0; transform: translateY(8px); transition: opacity 0.5s, transform 0.5s;
+        }
+        .controls.is-live { opacity: 1; transform: none; }
+        .controls.is-hidden { opacity: 0; pointer-events: none; }
+        .controls__head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
+        .controls__title { margin: 0; font-size: 0.62rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+        .controls__close { appearance: none; border: 0; background: none; color: var(--muted); font: inherit; font-size: 0.7rem; cursor: pointer; letter-spacing: 0.12em; text-transform: uppercase; }
+        .controls__close:hover, .controls__close:focus-visible { color: var(--cyan); outline: none; }
+        .controls dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 0.72rem; }
+        .controls dt { color: var(--cyan); white-space: nowrap; }
+        .controls dd { margin: 0; color: var(--text); }
+        .back { position: fixed; top: 12px; left: 14px; z-index: 6; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+        .back:hover, .back:focus-visible { color: var(--neon); }
+        .embedded .back { display: none; }
+        @media (max-width: 640px) { .controls { display: none; } }
+        @media (prefers-reduced-motion: reduce) { .loader, .controls { transition: none; } }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#split-shift">&larr; Ryan Barry</a>
+    <canvas id="unity-canvas" tabindex="-1" aria-label="Split Shift game"></canvas>
+
+    <div class="loader" role="status" aria-live="polite">
+        <p class="loader__kicker">Project 300 &middot; team project</p>
+        <p class="loader__title">SPLIT SHIFT<span class="loader__tag" aria-hidden="true">night run</span></p>
+        <p class="loader__line">Neon city. Live traffic. Cops that don't let go.</p>
+        <div class="loader__bar"><div class="loader__fill"></div></div>
+        <p class="loader__status">Starting the engine 0%</p>
+        <p class="loader__error"></p>
+    </div>
+
+    <aside class="controls" aria-label="Controls">
+        <div class="controls__head">
+            <p class="controls__title">Controls</p>
+            <button class="controls__close" type="button">Hide</button>
+        </div>
+        <dl>
+            <dt>W / S</dt><dd>Throttle / brake (hold S to reverse)</dd>
+            <dt>A / D</dt><dd>Steer</dd>
+            <dt>Space</dt><dd>Handbrake drift</dd>
+            <dt>E</dt><dd>Talk to Dee for a street race</dd>
+            <dt>Pad</dt><dd>RT / LT, left stick, A drift, right stick look, Y look back</dd>
+        </dl>
+    </aside>
+
+    <script src="Build/SplitShift.loader.js"></script>
+    <script>
+        (function () {
+            if (window.self !== window.top) document.documentElement.classList.add('embedded');
+
+            var canvas = document.getElementById('unity-canvas');
+            var loader = document.querySelector('.loader');
+            var status = document.querySelector('.loader__status');
+            var fill = document.querySelector('.loader__fill');
+            var error = document.querySelector('.loader__error');
+            var controls = document.querySelector('.controls');
+
+            document.querySelector('.controls__close').addEventListener('click', function () {
+                controls.classList.add('is-hidden');
+                canvas.focus();
+            });
+            canvas.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+            canvas.addEventListener('pointerdown', function () { canvas.focus(); });
+
+            function progress(value) {
+                fill.style.width = Math.round(value * 100) + '%';
+                status.textContent = (value < 0.9 ? 'Starting the engine ' : 'Filling the streets ') + Math.round(value * 100) + '%';
+            }
+            progress(0);
+
+            createUnityInstance(canvas, {
+                dataUrl: 'Build/SplitShift.data.unityweb',
+                frameworkUrl: 'Build/SplitShift.framework.js.unityweb',
+                codeUrl: 'Build/SplitShift.wasm.unityweb',
+                streamingAssetsUrl: 'StreamingAssets',
+                companyName: 'Ryan Barry',
+                productName: 'Split Shift',
+                productVersion: '0.2',
+                devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+                showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
+            }, progress).then(function () {
+                loader.classList.add('is-done');
+                controls.classList.add('is-live');
+                canvas.focus();
+            }).catch(function (message) {
+                loader.classList.add('is-error');
+                status.textContent = 'The engine would not start';
+                error.textContent = 'Split Shift needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+            });
+        })();
+    </script>
+</body>
+</html>

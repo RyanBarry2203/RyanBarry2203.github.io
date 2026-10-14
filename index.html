@@ -422,6 +422,30 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
+            <div class="game-player game-player--grid hud" id="split-shift-player" data-game-player data-game-silent data-game-src="SplitShift/index.html" data-game-title="Split Shift" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // SPLIT_SHIFT_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="SplitShift/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/splitshift-street-1280.jpg" srcset="assets/img/splitshift-street-640.jpg 640w, assets/img/splitshift-street-1280.jpg 1280w" sizes="(min-width: 960px) 80vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Split Shift: the player car on a neon-lit night street with city traffic ahead">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">UNITY 6 &middot; PROJECT 300 &middot; WORK IN PROGRESS</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">SPLIT SHIFT</p>
+                            <p class="game-cover__line">A neon city that drives itself. Traffic that stops at red lights, police that hunt you along the roads, and a street race for the Green crew.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Start the engine</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; best on desktop with a keyboard or gamepad</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">W / S throttle and brake (hold S to reverse) &middot; A / D steer &middot; Space handbrake drift &middot; E talk to Dee &middot; gamepad right stick looks around</p>
+            </div>
+
             <article class="bay" id="split-shift" aria-labelledby="ss-title" data-bay data-rider-stop>
                 <div class="bay__screen hud">
                     <div class="hud__bar">
@@ -438,8 +462,10 @@
                         </div>
                         <div class="hud__panel" data-panel="screens">
                             <div class="slideshow" data-slideshow>
+                                <img src="assets/img/splitshift-pursuit-1280.jpg" srcset="assets/img/splitshift-pursuit-640.jpg 640w, assets/img/splitshift-pursuit-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Police cars closing in on the player at night, with the police pursuit banner on screen">
+                                <img src="assets/img/splitshift-junction-1280.jpg" srcset="assets/img/splitshift-junction-640.jpg 640w, assets/img/splitshift-junction-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="AI traffic approaching a signalled junction between lit tower blocks">
+                                <img src="assets/img/splitshift-quest-1280.jpg" srcset="assets/img/splitshift-quest-640.jpg 640w, assets/img/splitshift-quest-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Dee, the Green crew's quest giver, offering the player a street race in a dialogue box">
                                 <img src="assets/img/hybrid-lod-2-1280.jpg" srcset="assets/img/hybrid-lod-2-640.jpg 640w, assets/img/hybrid-lod-2-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Split_Shift's AI test scene in the Unity editor: the waypoint road graph with an AI car and its sensor rays">
-                                <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 55vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Hybrid LOD traffic running inside the Split_Shift project">
                             </div>
                         </div>
                     </div>
@@ -454,10 +480,12 @@
                         <li><b>Pursuit coordinator.</b> A reported crime recruits the 3 nearest units within 220&nbsp;m and re-routes them to the node nearest the suspect every second. Keep every unit beyond 120&nbsp;m for 10&nbsp;s and you escape.</li>
                         <li><b>Pure-pursuit steering.</b> Each car aims at a lookahead point on its route and turns that into a steering angle from its wheelbase, the same geometry used for path tracking in autonomous vehicles.</li>
                         <li><b>Swappable driving strategies.</b> Traffic, racing and police behaviour sit behind one <code>IAIDrivingStrategy</code> interface; police fall back to traffic driving when they have no target.</li>
-                        <li><b>Tested.</b> 47 automated tests, including allocation tests that fail if steering or speed planning allocates any garbage.</li>
+                        <li><b>Arcade handling, measured.</b> An assist layer adds grip, stability control and handbrake drifts on top of the WheelCollider car. Six handling tests drive the real car prefab and found the actual bug: wheel colliders rotated 90&deg;, so the car pulled to one side. Cornering grip went from 0.69&nbsp;g to 1.41&nbsp;g.</li>
+                        <li><b>Tested.</b> 59 automated tests, including allocation tests that fail if steering or speed planning allocates any garbage.</li>
                     </ul>
                     <div class="bay__links">
-                        <a class="btn btn--small btn--accent" href="#hybrid-lod-player">Play the traffic sandbox</a>
+                        <a class="btn btn--small btn--accent" href="#split-shift-player">Play the full game</a>
+                        <a class="btn btn--small" href="#hybrid-lod-player">Play the traffic sandbox</a>
                     </div>
                 </div>
             </article>
