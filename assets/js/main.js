@@ -449,6 +449,8 @@ function setUpGamePlayer(player) {
     const cover = view.firstElementChild;
     // Our own builds listen for pause/resume messages. A build hosted elsewhere can't be reached, so it is unloaded.
     const ownBuild = new URL(src, location.href).origin === location.origin;
+    // A build with no sound of its own (data-game-silent) leaves the soundtrack playing.
+    const silent = 'gameSilent' in player.dataset;
     let frame = null;
     let visibleRatio = 0;
 
@@ -457,7 +459,7 @@ function setUpGamePlayer(player) {
         if (ownBuild) {
             const active = visibleRatio >= GAME_VISIBLE_RATIO && !document.hidden;
             frame.contentWindow?.postMessage(active ? 'portfolio:resume' : 'portfolio:pause', location.origin);
-            setAudible(player, active);
+            setAudible(player, active && !silent);
         } else if (visibleRatio === 0) {
             unload();
         }
@@ -486,7 +488,7 @@ function setUpGamePlayer(player) {
         view.replaceChildren(frame);
         frame.focus();
         if (fullscreen && view.requestFullscreen) fullscreen.hidden = false;
-        setAudible(player, true);
+        setAudible(player, !silent);
     });
 
     fullscreen?.addEventListener('click', () => {

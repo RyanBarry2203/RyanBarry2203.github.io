@@ -988,6 +988,16 @@ main, .site-footer { position: relative; z-index: 1; }
         radial-gradient(120% 90% at 50% 50%, transparent 35%, rgba(4, 5, 6, 0.94) 100%);
     animation: bulb-flicker 4.2s infinite;
 }
+.game-player--grid .game-cover__art { filter: brightness(0.55) saturate(1.2); }
+.game-player--grid .game-cover__glow {
+    background:
+        radial-gradient(circle at 50% 50%, transparent 0 31%, rgba(0, 243, 255, 0.28) 31.3%, transparent 31.9%, transparent 40%, rgba(255, 140, 0, 0.22) 40.3%, transparent 40.8%),
+        radial-gradient(40% 55% at 50% 45%, rgba(0, 243, 255, 0.16), transparent 70%),
+        repeating-linear-gradient(0deg, rgba(0, 243, 255, 0.04) 0 1px, transparent 1px 4px),
+        radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(2, 6, 10, 0.92) 100%);
+    animation: lod-rings 6s ease-in-out infinite alternate;
+}
+@keyframes lod-rings { to { background-size: 112% 112%, 100% 100%, 100% 100%, 100% 100%; background-position: center; } }
 @keyframes bulb-flicker {
     0%, 18%, 22%, 60%, 63%, 100% { opacity: 1; }
     20%, 61.5% { opacity: 0.45; }

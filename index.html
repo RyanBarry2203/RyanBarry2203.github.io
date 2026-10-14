@@ -181,6 +181,30 @@
                 </div>
             </article>
 
+            <div class="game-player game-player--grid hud" id="hybrid-lod-player" data-game-player data-game-silent data-game-src="Project300/index.html" data-game-title="Hybrid LOD Traffic" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // HYBRID_LOD_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="Project300/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/hybrid-lod-city-1280.jpg" srcset="assets/img/hybrid-lod-city-640.jpg 640w, assets/img/hybrid-lod-city-1280.jpg 1280w" sizes="(min-width: 960px) 80vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Hybrid LOD Traffic: a neon city at night, with a cyan ring around the camera where cars run as GameObjects and orange ECS traffic beyond it">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">UNITY 6 &middot; DOTS &middot; RESEARCH SANDBOX</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">HYBRID LOD</p>
+                            <p class="game-cover__line">500 cars, two worlds. Full GameObjects near the camera, Burst-compiled ECS everywhere else, swapped as they cross the rings.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Boot the city</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; ~15&nbsp;MB &middot; best on desktop with a mouse</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">Drag to orbit &middot; right-drag or WASD to pan &middot; scroll to zoom &middot; 1 2 3 switch modes &middot; X toggles x-ray &middot; F dispatches every car to where you're looking</p>
+            </div>
+
             <article class="feature feature--flip" id="hybrid-lod" aria-labelledby="lod-title" data-feature data-rider-stop>
                 <header class="feature__head">
                     <p class="feature__meta"><span class="tag">Research &middot; with paper</span><span class="tag">Unity 6 &middot; DOTS</span></p>
@@ -218,31 +242,44 @@
                                     <img src="assets/img/profiler-hybrid-1280.jpg" srcset="assets/img/profiler-hybrid-640.jpg 640w, assets/img/profiler-hybrid-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="690" loading="lazy" decoding="async" alt="Hybrid LOD, 100 cars: a mostly flat GC line with occasional spikes" data-label="HYBRID LOD">
                                 </div>
                             </figure>
+                            <figure class="media-layer" data-media="3" data-caption="SANDBOX // WEBGL">
+                                <div class="slideshow" data-slideshow>
+                                    <img src="assets/img/hybrid-lod-rings-1280.jpg" srcset="assets/img/hybrid-lod-rings-640.jpg 640w, assets/img/hybrid-lod-rings-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Close to the ground: cyan GameObject cars inside the hydration ring, orange ECS cars beyond the dashed dehydration ring" data-label="HYBRID">
+                                    <img src="assets/img/hybrid-lod-oop-1280.jpg" srcset="assets/img/hybrid-lod-oop-640.jpg 640w, assets/img/hybrid-lod-oop-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="Pure OOP mode: the ring has expanded over the whole city and every car is a cyan GameObject" data-label="PURE OOP">
+                                    <img src="assets/img/hybrid-lod-dispatch-1280.jpg" srcset="assets/img/hybrid-lod-dispatch-640.jpg 640w, assets/img/hybrid-lod-dispatch-1280.jpg 1280w" sizes="(min-width: 960px) 60vw, 100vw" width="1280" height="720" loading="lazy" decoding="async" alt="A dispatch beacon pulsing at a junction while traffic from across the city converges on it" data-label="DISPATCH">
+                                </div>
+                            </figure>
                         </div>
                     </div>
 
                     <ol class="feature__steps">
                         <li class="step is-active" data-step="0">
-                            <span class="step__index">01 / 03</span>
+                            <span class="step__index">01 / 04</span>
                             <h4>The problem</h4>
                             <p>A hundred cars with rigidbodies, raycasts and Update loops loads the main thread and allocates garbage every frame. Most of those cars are too far away for the player to ever see.</p>
                         </li>
                         <li class="step" data-step="1">
-                            <span class="step__index">02 / 03</span>
+                            <span class="step__index">02 / 04</span>
                             <h4>Hydrate near, dehydrate far</h4>
-                            <p>Cars become full GameObjects inside 150&nbsp;m and turn back into three-component ECS entities past 200&nbsp;m, moved by a Burst job. Both worlds share integer node IDs, so a car crosses over carrying only its position, destination and remaining A* path. 150 pre-warmed pooled cars mean a hand-off never instantiates.</p>
+                            <p>Cars become full GameObjects inside 150&nbsp;m and turn back into lightweight ECS entities past 200&nbsp;m, where a Burst-compiled <code>IJobEntity</code> moves them along the lanes. The 50&nbsp;m gap stops cars flickering between worlds on the boundary. Both worlds share integer node IDs, so a car crosses over carrying only its position, current target and remaining route, and 150 pre-warmed pooled cars cover the hand-offs.</p>
                         </li>
                         <li class="step" data-step="2">
-                            <span class="step__index">03 / 03</span>
+                            <span class="step__index">03 / 04</span>
                             <h4>Measured, then written up</h4>
                             <p>With 100 cars in the Unity Profiler, pure GameObjects allocate garbage every frame, while pure ECS and the hybrid show no steady per-frame allocation. Editor tools mirror the road graph into the DOTS subscene, so designers edit one road network instead of two. The paper walks through all three modes.</p>
+                        </li>
+                        <li class="step" data-step="3">
+                            <span class="step__index">04 / 04</span>
+                            <h4>A city to break it in</h4>
+                            <p>The playable build generates its own city from an editor script: a 7&times;7 grid of two-way streets with curved turn lanes, 912 waypoint nodes mirrored into the DOTS subscene by the same sync tool. Dispatch sends every car in both worlds to one junction; a single reverse Dijkstra search builds a route tree that every car reads from, instead of running one A* search per car.</p>
                         </li>
                     </ol>
                 </div>
 
                 <div class="feature__links">
-                    <a class="btn btn--accent" data-magnetic href="Project300/index.html" target="_blank" rel="noopener">Play in browser <span class="btn__note">~21&nbsp;MB</span></a>
+                    <a class="btn btn--accent" data-magnetic href="#hybrid-lod-player">Play it above</a>
                     <a class="btn" href="Content/Ryan_Barry_Project300_Paper.pdf" target="_blank" rel="noopener">Read the paper (PDF)</a>
+                    <a class="btn btn--ghost" href="Project300/index.html" target="_blank" rel="noopener">Full screen tab</a>
                 </div>
             </article>
         </section>
@@ -420,7 +457,7 @@
                         <li><b>Tested.</b> 47 automated tests, including allocation tests that fail if steering or speed planning allocates any garbage.</li>
                     </ul>
                     <div class="bay__links">
-                        <a class="btn btn--small btn--accent" href="Project300/index.html" target="_blank" rel="noopener">Play AI sandbox <span class="btn__note">~21&nbsp;MB</span></a>
+                        <a class="btn btn--small btn--accent" href="#hybrid-lod-player">Play the traffic sandbox</a>
                     </div>
                 </div>
             </article>
