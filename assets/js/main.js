@@ -441,6 +441,17 @@ function setUpSoundtrack() {
 // Below this share of the player on screen, the game counts as scrolled away and goes quiet.
 const GAME_VISIBLE_RATIO = 0.3;
 
+// Our builds run in same-origin frames, which share this page's main thread: while any game is on screen, the page's
+// always-on animation (the scroll rider) stops so the game gets the whole frame.
+const runningGames = new Set();
+let scrollRider = null;
+
+function setGameRunning(player, running) {
+    if (running) runningGames.add(player);
+    else runningGames.delete(player);
+    scrollRider?.setPaused(runningGames.size > 0);
+}
+
 function setUpGamePlayer(player) {
     const { gameSrc: src, gameTitle: title } = player.dataset;
     const view = player.querySelector('[data-game-view]');
@@ -460,6 +471,7 @@ function setUpGamePlayer(player) {
             const active = visibleRatio >= GAME_VISIBLE_RATIO && !document.hidden;
             frame.contentWindow?.postMessage(active ? 'portfolio:resume' : 'portfolio:pause', location.origin);
             setAudible(player, active && !silent);
+            setGameRunning(player, active);
         } else if (visibleRatio === 0) {
             unload();
         }
@@ -470,6 +482,7 @@ function setUpGamePlayer(player) {
         if (document.fullscreenElement === view) document.exitFullscreen();
         frame = null;
         view.replaceChildren(cover);
+        setGameRunning(player, false);
         if (fullscreen) fullscreen.hidden = true;
         if (!quit && !cover.querySelector('[data-game-stopped]')) {
             const note = document.createElement('p');
@@ -488,6 +501,7 @@ function setUpGamePlayer(player) {
         frame.allow = 'fullscreen; autoplay; gamepad';
         frame.allowFullscreen = true;
         view.replaceChildren(frame);
+        if (ownBuild) setGameRunning(player, true);
         frame.focus();
         if (fullscreen && view.requestFullscreen) fullscreen.hidden = false;
         setAudible(player, !silent);
@@ -683,7 +697,8 @@ async function startRider() {
     }
     try {
         const { createScrollRider } = await import('./scroll-rider.js');
-        createScrollRider(canvas, { stops, hero: document.querySelector('.hero'), lowPower, onPass: lightUp });
+        scrollRider = createScrollRider(canvas, { stops, hero: document.querySelector('.hero'), lowPower, onPass: lightUp });
+        scrollRider.setPaused(runningGames.size > 0);
     } catch (error) {
         console.warn('Scroll rider unavailable.', error);
         canvas.remove();

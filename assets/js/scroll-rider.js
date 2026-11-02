@@ -269,8 +269,21 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         context.stroke();
 
         drawBike(bx, by, heading, speed);
-        requestAnimationFrame(frame);
+        if (paused) running = false;
+        else requestAnimationFrame(frame);
     }
+
+    // A playing game shares this page's main thread, so the rider stops drawing until it is closed.
+    let paused = false;
+    let running = true;
+    const setPaused = (value) => {
+        paused = value;
+        if (!paused && !running) {
+            running = true;
+            last = performance.now();
+            requestAnimationFrame(frame);
+        }
+    };
 
     let pending = 0;
     const relayout = () => {
@@ -291,4 +304,5 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         if (key >= marker.key) { marker.passed = true; onPass(marker.element); }
     });
     requestAnimationFrame(frame);
+    return { setPaused };
 }
