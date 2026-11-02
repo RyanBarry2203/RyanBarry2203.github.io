@@ -38,9 +38,10 @@
             <ul class="site-nav__links">
                 <li><a href="#featured" data-nav-link><span>01</span>Featured</a></li>
                 <li><a href="#tallow" data-nav-link><span>02</span>Tallow</a></li>
-                <li><a href="#projects" data-nav-link><span>03</span>Projects</a></li>
-                <li><a href="#reel" data-nav-link><span>04</span>Reel</a></li>
-                <li><a href="#init" data-nav-link><span>05</span>Init</a></li>
+                <li><a href="#arkade" data-nav-link><span>03</span>Arkade</a></li>
+                <li><a href="#projects" data-nav-link><span>04</span>Projects</a></li>
+                <li><a href="#reel" data-nav-link><span>05</span>Reel</a></li>
+                <li><a href="#init" data-nav-link><span>06</span>Init</a></li>
                 <li><button class="fx-toggle" type="button" data-fx-toggle aria-pressed="true"><span class="fx-toggle__led" aria-hidden="true"></span>FX <span data-fx-state>ON</span></button></li>
                 <li><button class="fx-toggle sound-toggle" type="button" data-sound-toggle aria-pressed="true"><span class="fx-toggle__led" aria-hidden="true"></span>SND <span data-sound-state>ON</span></button></li>
                 <li><a class="btn btn--small" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">CV.pdf</a></li>
@@ -414,9 +415,144 @@
             </article>
         </section>
 
+        <section class="section arkade" id="arkade" aria-labelledby="arkade-title">
+            <header class="sector-head sector-head--arkade" data-rider-stop>
+                <p class="sector-head__id">// SECTOR_03</p>
+                <h2 id="arkade-title" data-scramble>Arkade_Gun.lib</h2>
+                <p class="sector-head__sub">Two light-gun games I led for my studio, Púca Games, built for the Arkade Gaming Gun and pitched to Arkade as exclusives. Both run right here; your mouse stands in for the gun.</p>
+                <span class="sector-head__line" aria-hidden="true"></span>
+            </header>
+
+            <div class="game-player game-player--blood hud" id="sangue-frio-player" data-game-player data-game-id="SangueFrio" data-game-src="SangueFrio/index.html" data-game-title="A Sangue Frio" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // A_SANGUE_FRIO_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="SangueFrio/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/arkade/sf-cover.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="A Sangue Frio: down the sights of a pistol at sunset, gunmen moving between crates in a Rio alley">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">ARCADE RAIL SHOOTER &middot; RIO DE JANEIRO</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">A SANGUE FRIO</p>
+                            <p class="game-cover__line">Eight stops up a Rio hillside, cover to cover. Slow time, mark six targets, and let them all drop at once.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Take aim</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; ~56&nbsp;MB &middot; desktop with a mouse</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">Mouse aims &middot; left click fire &middot; hold right click to focus &middot; R reload (again in the gold for a perfect one) &middot; hold Space for cover, A / D to shift &middot; Q Sangue Frio &middot; Esc pause</p>
+            </div>
+
+            <div class="game-player game-player--torch hud" id="last-known-location-player" data-game-player data-game-id="LastKnownLocation" data-game-src="LastKnownLocation/index.html" data-game-title="Last Known Location" data-rider-stop>
+                <div class="hud__bar">
+                    <span class="hud__label"><i class="hud__rec"></i>LIVE // LAST_KNOWN_LOCATION_WEBGL</span>
+                    <div class="hud__tabs">
+                        <button type="button" data-game-fullscreen hidden>Fullscreen</button>
+                        <a class="game-player__tab" href="LastKnownLocation/index.html" target="_blank" rel="noopener">New tab</a>
+                    </div>
+                </div>
+                <div class="hud__view game-player__view" data-game-view>
+                    <div class="game-cover">
+                        <img class="game-cover__art" src="assets/img/arkade/lkl-darkroom.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="Last Known Location: photographs pegged on a line in a darkroom, lit only by a torch">
+                        <div class="game-cover__glow" aria-hidden="true"></div>
+                        <div class="game-cover__content">
+                            <p class="game-cover__kicker">FIRST-PERSON HORROR &middot; HEADPHONES ON</p>
+                            <p class="game-cover__title game-cover__title--long" aria-hidden="true">LAST KNOWN LOCATION</p>
+                            <p class="game-cover__line">Her phone pinged once from a farmhouse at the edge of the bog. The only light in the house is the torch on your gun.</p>
+                            <button class="game-cover__play" type="button" data-game-play><span aria-hidden="true">&#9650;</span> Open the door</button>
+                            <p class="game-cover__note">Unity 6 WebGL &middot; ~139&nbsp;MB &middot; about ten minutes &middot; desktop with a mouse</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="hud__hint">Mouse aims the gun and torch &middot; left click shoot &middot; hold right click for a tight beam &middot; F torch &middot; R reload, hold for a battery &middot; WASD walk, Shift run &middot; Space use &middot; Tab phone &middot; Esc pause</p>
+            </div>
+
+            <article class="feature feature--arkade" id="arkade-systems" aria-labelledby="arkade-systems-title" data-feature data-rider-stop>
+                <header class="feature__head">
+                    <p class="feature__meta"><span class="tag tag--award">Tech lead &middot; Púca Games</span><span class="tag">Unity 6 &middot; URP &middot; C#</span></p>
+                    <h3 class="feature__title" id="arkade-systems-title" data-scramble>Built for a gun</h3>
+                    <p class="feature__pitch">A rail shooter in five days and a horror demo in three, both played with a real light gun, launched from one menu and sent to Arkade as a pitch for exclusives.</p>
+                    <dl class="facts">
+                        <div><dt>Role</dt><dd>Tech lead: architecture, gameplay, tools and builds</dd></div>
+                        <div><dt>Tech</dt><dd>Unity 6.3, URP, Input System, IL2CPP WebGL</dd></div>
+                        <div><dt>Tested</dt><dd>103 automated tests on A Sangue Frio, 89 on Last Known Location</dd></div>
+                    </dl>
+                </header>
+
+                <div class="feature__body">
+                    <div class="feature__media hud" data-feature-media>
+                        <div class="hud__bar"><span class="hud__label"><i class="hud__rec"></i>FEED // ARKADE</span><span class="hud__label" data-media-caption>THE HILL</span></div>
+                        <div class="hud__view">
+                            <figure class="media-layer is-active" data-media="0" data-caption="THE HILL">
+                                <img src="assets/img/arkade/sf-alley-1.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="O Beco, the first stop: an alley with crates for cover and enemies at the far end">
+                            </figure>
+                            <figure class="media-layer" data-media="1" data-caption="SANGUE FRIO">
+                                <img src="assets/img/arkade/sf-alley-2.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="Targets marked in gold during the Sangue Frio slow motion">
+                            </figure>
+                            <figure class="media-layer" data-media="2" data-caption="THE TORCH">
+                                <img src="assets/img/arkade/lkl-torch.jpg" width="1920" height="1080" loading="lazy" decoding="async" alt="A torch beam down a dark farmhouse hallway, a grandfather clock at the far end">
+                            </figure>
+                            <figure class="media-layer" data-media="3" data-caption="THE DARKROOM">
+                                <img src="assets/img/arkade/lkl-study.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="The torch beam on a wooden door in the study, everything else black">
+                            </figure>
+                            <figure class="media-layer" data-media="4" data-caption="ARCH // PAGE_BRIDGE">
+                                <div class="workflow-terminal">
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> library: LAST KNOWN LOCATION &rarr; Launch()</p>
+                                    <p class="workflow-terminal__rule">windows: Process.Start(LastKnownLocation.exe -lkLibrary), menu idles at 5 fps</p>
+                                    <p class="workflow-terminal__rule">windows: gun-bindings.json written first, so the gun is set up once</p>
+                                    <p class="workflow-terminal__rule">browser: PageBridge.OpenGame("LastKnownLocation") &rarr; .jslib &rarr; host page</p>
+                                    <p class="workflow-terminal__rule">browser: QUIT &rarr; PageBridge.Quit() &rarr; the page puts its cover back</p>
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> WebGLBuild.Build -sfMaxTexture 1024</p>
+                                    <p class="workflow-terminal__pass">Brotli, decompression fallback for GitHub Pages, textures capped for the web only</p>
+                                    <p><span class="workflow-terminal__prompt">&gt;</span> <span class="workflow-terminal__cursor"></span></p>
+                                </div>
+                            </figure>
+                        </div>
+                    </div>
+
+                    <ol class="feature__steps">
+                        <li class="step is-active" data-step="0">
+                            <span class="step__index">01 / 05</span>
+                            <h4>Feel before content</h4>
+                            <p>On a light gun, any lag between the trigger and the hit reads as a broken gun. Aim is the raw mouse delta with no smoothing anywhere, and the hitscan fires in <code>Update</code> on the same frame the input is read. One <code>InputRouter</code> is the only class that touches the Input System, so the real gun's buttons were one mapping away from the keyboard.</p>
+                        </li>
+                        <li class="step" data-step="1">
+                            <span class="step__index">02 / 05</span>
+                            <h4>Slow time, one owner</h4>
+                            <p>Sangue Frio drops time to a crawl while you mark up to six targets, then fires them all in order. <code>TimeController</code> is the only writer of <code>Time.timeScale</code>: systems request a channel instead of fighting over it. Player-facing timers run on unscaled time, so reloads and the camera stay sharp while the world crawls.</p>
+                        </li>
+                        <li class="step" data-step="2">
+                            <span class="step__index">03 / 05</span>
+                            <h4>Zero garbage per shot</h4>
+                            <p>Gameplay raises readonly-struct events on a typed <code>EventBus&lt;T&gt;</code> and only presentation listens, so a shot never calls VFX, audio or the HUD directly. Impacts, tracers and popups are pooled, strings are cached, and a PlayMode test fails if firing allocates a single byte.</p>
+                        </li>
+                        <li class="step" data-step="3">
+                            <span class="step__index">04 / 05</span>
+                            <h4>The torch is the light</h4>
+                            <p>Last Known Location shares the gun code and changes the genre. The torch under the barrel is the only light in the house, so where you aim is what you see. Nothing roams: every scare is staged for the beam and armed by checkpoints, which kept a three-day horror demo reliable enough to hand to a company.</p>
+                        </li>
+                        <li class="step" data-step="4">
+                            <span class="step__index">05 / 05</span>
+                            <h4>One menu, two games, then the web</h4>
+                            <p>On Windows, Sangue Frio's menu launches the horror game as a child process, waits behind a black screen and comes back when it closes. In the browser there is no process to start, so a small <code>PageBridge</code> and <code>.jslib</code> hand the same calls to this page: the library card opens the other player above, and QUIT brings back the cover.</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="feature__links">
+                    <a class="btn btn--accent" data-magnetic href="#sangue-frio-player">Play A Sangue Frio</a>
+                    <a class="btn" data-magnetic href="#last-known-location-player">Play Last Known Location</a>
+                </div>
+            </article>
+        </section>
+
         <section class="section" id="projects" aria-labelledby="projects-title">
             <header class="sector-head" data-rider-stop>
-                <p class="sector-head__id">// SECTOR_03</p>
+                <p class="sector-head__id">// SECTOR_04</p>
                 <h2 id="projects-title" data-scramble>Project_Archive</h2>
                 <p class="sector-head__sub">Every project below has a live simulation of the system I built. Most of them are playable.</p>
                 <span class="sector-head__line" aria-hidden="true"></span>
@@ -726,7 +862,7 @@
 
         <section class="section" id="reel" aria-labelledby="reel-title">
             <header class="sector-head" data-rider-stop>
-                <p class="sector-head__id">// SECTOR_04</p>
+                <p class="sector-head__id">// SECTOR_05</p>
                 <h2 id="reel-title" data-scramble>System_Reel.mp4</h2>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
@@ -741,7 +877,7 @@
 
         <section class="section init" id="init" aria-labelledby="init-title" data-rider-stop>
             <header class="sector-head">
-                <p class="sector-head__id">// SECTOR_05</p>
+                <p class="sector-head__id">// SECTOR_06</p>
                 <h2 id="init-title" data-scramble>Init / About_Me</h2>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>

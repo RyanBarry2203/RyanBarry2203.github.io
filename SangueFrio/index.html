@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A Sangue Frio | Ryan Barry</title>
+    <meta name="description" content="A Sangue Frio, an arcade rail shooter for the Arkade Gaming Gun by Púca Games. Play it in your browser with a mouse.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Rajdhani:wght@700&display=swap">
+    <style>
+        :root { color-scheme: dark; --night: #0a0504; --text: #f1dcc4; --muted: #a8826a; --blood: #ff6a4a; --gold: #f0c878; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; background: var(--night); color: var(--text); font: 500 13px/1.5 var(--mono); }
+        canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: #000; touch-action: none; }
+
+        .loader {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center;
+            background:
+                radial-gradient(60% 45% at 50% 110%, rgba(232, 96, 40, 0.3), transparent 70%),
+                repeating-linear-gradient(0deg, transparent 0 79px, rgba(255, 106, 74, 0.05) 79px 80px),
+                repeating-linear-gradient(90deg, transparent 0 79px, rgba(255, 106, 74, 0.05) 79px 80px),
+                var(--night);
+            transition: opacity 0.6s;
+        }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        .sight { position: relative; width: 70px; height: 70px; border: 1px solid var(--blood); border-radius: 50%; box-shadow: 0 0 16px rgba(255, 106, 74, 0.5); animation: sweep 3s ease-in-out infinite; }
+        .sight::before, .sight::after { content: ""; position: absolute; background: var(--blood); }
+        .sight::before { left: 50%; top: -10px; bottom: -10px; width: 1px; }
+        .sight::after { top: 50%; left: -10px; right: -10px; height: 1px; }
+        @keyframes sweep { 50% { transform: translate(12px, -5px); } }
+        .loader__kicker { margin: 0; letter-spacing: 0.32em; color: var(--blood); font-size: 0.72rem; text-transform: uppercase; }
+        .loader__title { margin: 0; padding-left: 0.16em; font: 700 clamp(2.4rem, 8vw, 4.6rem)/0.9 "Rajdhani", "Arial Narrow", sans-serif; letter-spacing: 0.16em; background: linear-gradient(180deg, #fff2d6, var(--gold) 50%, #e8482e); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 18px rgba(232, 72, 46, 0.55)); }
+        .loader__line { margin: 0; color: var(--muted); }
+        .loader__bar { position: relative; width: min(340px, 70vw); height: 3px; background: rgba(255, 106, 74, 0.15); overflow: hidden; }
+        .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, #e8482e, var(--gold)); box-shadow: 0 0 12px var(--blood); transition: width 0.25s; }
+        .loader__status { margin: 0; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; font-size: 0.7rem; }
+        .loader__error { display: none; max-width: 46ch; margin: 0; color: #ff8a6a; line-height: 1.6; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .loader__bar, .loader.is-error .sight { display: none; }
+        .back { position: fixed; top: 12px; left: 14px; z-index: 11; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+        .back:hover, .back:focus-visible { color: var(--blood); }
+        .embedded .back { display: none; }
+        @media (prefers-reduced-motion: reduce) { .loader { transition: none; } .sight { animation: none; } }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#arkade">&larr; Ryan Barry</a>
+    <canvas id="unity-canvas" tabindex="-1" aria-label="A Sangue Frio game"></canvas>
+
+    <div class="loader" role="status" aria-live="polite">
+        <div class="sight" aria-hidden="true"></div>
+        <p class="loader__kicker">Púca Games &middot; Arkade Gaming Gun</p>
+        <p class="loader__title">A SANGUE FRIO</p>
+        <p class="loader__line">In cold blood. Eight stops up the Morro.</p>
+        <div class="loader__bar"><div class="loader__fill"></div></div>
+        <p class="loader__status">Loading 0%</p>
+        <p class="loader__error"></p>
+    </div>
+
+    <script src="../assets/js/unity-frame.js" data-build="SangueFrio" data-title="A Sangue Frio"
+        data-progress="Loading the guns|Climbing the hill|Taking cover|Safety off"></script>
+</body>
+</html>

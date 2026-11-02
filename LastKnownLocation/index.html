@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Last Known Location | Ryan Barry</title>
+    <meta name="description" content="Last Known Location, a first-person horror demo for the Arkade Gaming Gun by Púca Games. Play it in your browser with a mouse.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Rajdhani:wght@700&display=swap">
+    <style>
+        :root { color-scheme: dark; --night: #030404; --beam: #ece4ce; --muted: #7d786b; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; background: var(--night); color: var(--beam); font: 500 13px/1.5 var(--mono); }
+        canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: #000; touch-action: none; }
+
+        .loader {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center;
+            background: var(--night); transition: opacity 1.2s;
+        }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        /* one torch beam drifting over the dark, with a tired battery's stutter */
+        .loader::before {
+            content: ""; position: absolute; inset: -20%; pointer-events: none;
+            background: radial-gradient(circle 22vmax at 50% 50%, rgba(236, 228, 206, 0.1), rgba(236, 228, 206, 0.025) 40%, transparent 70%);
+            animation: drift 9s ease-in-out infinite alternate, stutter 7s steps(1) infinite;
+        }
+        @keyframes drift { from { transform: translate(-9%, 4%); } to { transform: translate(9%, -5%); } }
+        @keyframes stutter { 0%, 61%, 63%, 100% { opacity: 1; } 62% { opacity: 0.3; } }
+        .loader > * { position: relative; }
+        .loader__kicker { margin: 0; letter-spacing: 0.32em; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
+        .loader__title { margin: 0; padding-left: 0.14em; font: 700 clamp(2rem, 7vw, 4.2rem)/0.95 "Rajdhani", "Arial Narrow", sans-serif; letter-spacing: 0.14em; color: var(--beam); text-shadow: 0 0 24px rgba(236, 228, 206, 0.25); }
+        .loader__line { margin: 0; color: var(--muted); }
+        .loader__bar { position: relative; width: min(300px, 66vw); height: 2px; background: rgba(236, 228, 206, 0.1); overflow: hidden; }
+        .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--beam); box-shadow: 0 0 10px rgba(236, 228, 206, 0.6); transition: width 0.25s; }
+        .loader__status { margin: 0; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; font-size: 0.7rem; }
+        .loader__error { display: none; max-width: 46ch; margin: 0; color: #d98a72; line-height: 1.6; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .loader__bar { display: none; }
+        .back { position: fixed; top: 12px; left: 14px; z-index: 11; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+        .back:hover, .back:focus-visible { color: var(--beam); }
+        .embedded .back { display: none; }
+        @media (prefers-reduced-motion: reduce) { .loader { transition: none; } .loader::before { animation: none; } }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#arkade">&larr; Ryan Barry</a>
+    <canvas id="unity-canvas" tabindex="-1" aria-label="Last Known Location game"></canvas>
+
+    <div class="loader" role="status" aria-live="polite">
+        <p class="loader__kicker">Púca Games &middot; Arkade Gaming Gun</p>
+        <p class="loader__title">LAST KNOWN LOCATION</p>
+        <p class="loader__line">Her phone was last seen here. Headphones on.</p>
+        <div class="loader__bar"><div class="loader__fill"></div></div>
+        <p class="loader__status">Loading 0%</p>
+        <p class="loader__error"></p>
+    </div>
+
+    <script src="../assets/js/unity-frame.js" data-build="LastKnownLocation" data-parts="2" data-title="Last Known Location"
+        data-progress="Finding the farmhouse|Checking the torch|On the porch|The door is open"></script>
+</body>
+</html>

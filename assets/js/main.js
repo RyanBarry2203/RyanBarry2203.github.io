@@ -465,11 +465,13 @@ function setUpGamePlayer(player) {
         }
     };
 
-    const unload = () => {
+    // quit: the game's own QUIT asked for the cover back, so there is nothing to explain.
+    const unload = (quit = false) => {
+        if (document.fullscreenElement === view) document.exitFullscreen();
         frame = null;
         view.replaceChildren(cover);
         if (fullscreen) fullscreen.hidden = true;
-        if (!cover.querySelector('[data-game-stopped]')) {
+        if (!quit && !cover.querySelector('[data-game-stopped]')) {
             const note = document.createElement('p');
             note.className = 'game-cover__note';
             note.dataset.gameStopped = '';
@@ -494,6 +496,24 @@ function setUpGamePlayer(player) {
     fullscreen?.addEventListener('click', () => {
         view.requestFullscreen?.().catch(() => window.open(src, '_blank', 'noopener'));
     });
+
+    // The Arkade builds talk back through their PageBridge: QUIT puts the cover back, and A Sangue Frio's library card
+    // for the other game hands over to that game's player further down the page.
+    if (ownBuild) {
+        window.addEventListener('message', (event) => {
+            if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin) return;
+            const { type, id } = event.data ?? {};
+            if (type === 'game:quit') {
+                unload(true);
+            } else if (type === 'game:open') {
+                const next = document.querySelector(`[data-game-player][data-game-id="${CSS.escape(String(id))}"]`);
+                if (!next) return;
+                unload(true);
+                next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                next.querySelector('[data-game-play]')?.click();
+            }
+        });
+    }
 
     new IntersectionObserver(([entry]) => {
         visibleRatio = entry.isIntersecting ? entry.intersectionRatio : 0;

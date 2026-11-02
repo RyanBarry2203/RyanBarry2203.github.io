@@ -1155,3 +1155,60 @@ main, .site-footer { position: relative; z-index: 1; }
         transition: none !important;
     }
 }
+
+/* Arkade gun games: the HUD language again, in A Sangue Frio's sunset blood and gold and Last Known Location's torch white */
+
+.sector-head--arkade h2 { text-shadow: 0 0 26px rgba(232, 72, 46, 0.45); }
+.sector-head--arkade .sector-head__line { background: linear-gradient(90deg, #e8482e, rgba(240, 200, 120, 0.35) 55%, transparent); box-shadow: 0 0 14px #e8482e; }
+
+.hud.game-player--blood {
+    --game-rgb: 232, 72, 46;
+    --game-accent: #ff6a4a;
+    --game-bg: #0a0504;
+    --game-text: #f1dcc4;
+    --game-play: #ffe2c2;
+    --game-note: #a8826a;
+    --game-title: linear-gradient(180deg, #fff2d6 0%, #f0c878 50%, #e8482e 100%);
+}
+.hud.game-player--torch {
+    --game-rgb: 236, 228, 206;
+    --game-accent: #ece4ce;
+    --game-bg: #030404;
+    --game-text: #d9d3c2;
+    --game-play: #f6f1e2;
+    --game-note: #7d786b;
+    --game-title: linear-gradient(180deg, #ffffff 0%, #ece4ce 55%, #8f8a7c 100%);
+}
+.game-player--blood .game-cover__art { filter: brightness(0.5) sepia(0.3) saturate(1.3); }
+/* a sight over the cover: ring, red dot and a sunset glow from below */
+.game-player--blood .game-cover__glow {
+    background:
+        radial-gradient(circle 6px at 50% 34%, #ff3b22 3px, transparent 4px),
+        radial-gradient(circle 64px at 50% 34%, transparent 59px, rgba(255, 106, 74, 0.8) 60px, transparent 62px),
+        radial-gradient(60% 50% at 50% 115%, rgba(232, 96, 40, 0.35), transparent 70%),
+        repeating-linear-gradient(0deg, rgba(255, 106, 74, 0.04) 0 1px, transparent 1px 4px),
+        radial-gradient(120% 90% at 50% 50%, transparent 38%, rgba(10, 5, 4, 0.92) 100%);
+}
+.game-player--torch .game-cover__art { filter: brightness(1.15) saturate(0.7) contrast(1.05); }
+/* black except for one torch beam that drifts and stutters, like the game's */
+.game-player--torch .game-cover__glow {
+    background: radial-gradient(circle 28vmax at 50% 42%, rgba(236, 228, 206, 0.05), rgba(3, 4, 4, 0.25) 30%, rgba(3, 4, 4, 0.92) 58%, rgba(3, 4, 4, 0.98) 80%);
+    background-size: 140% 140%;
+    animation: torch-drift 11s ease-in-out infinite alternate, torch-stutter 6.5s steps(1) infinite;
+}
+@keyframes torch-drift { from { background-position: 30% 50%; } to { background-position: 70% 45%; } }
+@keyframes torch-stutter { 0%, 70%, 72%, 100% { opacity: 1; } 71% { opacity: 0.8; } }
+@media (prefers-reduced-motion: reduce) {
+    .game-player--torch .game-cover__glow { animation: none; }
+}
+
+.feature--arkade .feature__title { text-shadow: 0 0 26px rgba(232, 72, 46, 0.45); }
+.feature--arkade .feature__media { border-color: rgba(232, 72, 46, 0.35); }
+.feature--arkade .feature__media::before, .feature--arkade .feature__media::after { border-color: #ff6a4a; filter: drop-shadow(0 0 6px #ff6a4a); }
+.feature--arkade .hud__bar { background: linear-gradient(90deg, rgba(232, 72, 46, 0.12), rgba(232, 72, 46, 0.02)); border-bottom-color: rgba(232, 72, 46, 0.25); }
+.feature--arkade .hud__label { color: #ff6a4a; }
+.feature--arkade .media-layer > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 640px) {
+    .game-player--blood .game-cover__line, .game-player--torch .game-cover__line { display: none; }
+    .game-player--torch .game-cover__title--long { font-size: clamp(1.8rem, 9vw, 2.6rem); }
+}
