@@ -45,27 +45,7 @@
         <p class="loader__error"></p>
     </div>
 
-    <script>
-        // Lets the portfolio silence the game while it is scrolled out of view: every AudioContext the game creates
-        // is tracked, then suspended or resumed on a message from the page this build is embedded in.
-        (function () {
-            var Native = window.AudioContext || window.webkitAudioContext;
-            if (!Native) return;
-            var contexts = [];
-            function Tracked(options) {
-                var context = new Native(options);
-                contexts.push(context);
-                return context;
-            }
-            Tracked.prototype = Native.prototype;
-            window.AudioContext = window.webkitAudioContext = Tracked;
-            window.addEventListener('message', function (event) {
-                if (event.origin !== location.origin) return;
-                if (event.data === 'portfolio:pause') contexts.forEach(function (context) { context.suspend(); });
-                if (event.data === 'portfolio:resume') contexts.forEach(function (context) { context.resume(); });
-            });
-        })();
-    </script>
+    <script src="../assets/js/frame-bridge.js" data-wheel="page"></script>
     <script src="Build/WebGL.loader.js"></script>
     <script>
         (function () {
@@ -98,15 +78,17 @@
                 productName: 'Tallow',
                 productVersion: '0.1.0',
                 autoSyncPersistentDataPath: true,
+                errorHandler: function (message) { return Boolean(window.portfolioUnityError && window.portfolioUnityError(message)); },
                 showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
-            }, burn).then(function () {
+            }, burn).then(function (instance) {
                 status.textContent = 'The Chandler is waiting';
                 loader.classList.add('is-done');
                 canvas.focus();
+                window.portfolioFrame.ready(instance, canvas);
             }).catch(function (message) {
                 loader.classList.add('is-error');
                 status.textContent = 'The candle would not light';
-                error.textContent = 'Tallow needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+                error.textContent = 'Tallow needs a desktop browser with WebGL 2 (Chrome, Edge, Firefox or Safari). ' + message;
             });
         })();
     </script>

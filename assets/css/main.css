@@ -112,12 +112,14 @@ code {
 
 main, .site-footer { position: relative; z-index: 1; }
 
+/* The script sets the height in pixels, so a phone's toolbar sliding in and out never stretches the drawing. */
 .rider-canvas {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
     z-index: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
 }
 
@@ -305,9 +307,26 @@ main, .site-footer { position: relative; z-index: 1; }
         transition: opacity 0.3s, transform 0.3s var(--ease-out), visibility 0s linear 0.3s;
     }
     .nav-open .site-nav__menu { opacity: 1; transform: none; visibility: visible; transition: opacity 0.3s, transform 0.3s var(--ease-out); }
+    .site-nav__menu { overflow-y: auto; overscroll-behavior: contain; padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
     .site-nav__links { flex-direction: column; align-items: flex-start; gap: 22px; }
     .site-nav__links a:not(.btn) { font-size: 2rem; }
     .site-nav__links a:not(.btn) span { font-size: 0.8rem; }
+    .nav-open, .nav-open body { overflow: hidden; }
+}
+
+/* A phone on its side: the menu runs in rows so every item fits without scrolling. */
+@media (max-width: 900px) and (max-height: 500px) {
+    .site-nav__menu { padding-top: 18px; }
+    .site-nav__links { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 14px 28px; }
+    .site-nav__links a:not(.btn) { font-size: 1.3rem; }
+}
+
+/* Small laptops and tablets in landscape: the full bar is too wide, so the numbers and switch states go. */
+@media (min-width: 901px) and (max-width: 1180px) {
+    .site-nav__links { gap: clamp(8px, 1.2vw, 14px); }
+    .site-nav__links a:not(.btn) span,
+    .fx-toggle [data-fx-state],
+    .fx-toggle [data-sound-state] { display: none; }
 }
 
 /* Hero */
@@ -500,10 +519,11 @@ main, .site-footer { position: relative; z-index: 1; }
     background: linear-gradient(90deg, rgba(0, 243, 255, 0.1), rgba(0, 243, 255, 0.02));
     border-bottom: 1px solid rgba(0, 243, 255, 0.22);
 }
+/* A block, not a flex box: text-overflow only draws its "…" on text in a block, so a long label on a narrow phone ends
+   in an ellipsis instead of being sliced mid-letter. */
 .hud__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: block;
+    min-width: 0;
     font: 600 0.7rem/1 var(--font-mono);
     letter-spacing: 0.12em;
     color: var(--cyan);
@@ -512,7 +532,7 @@ main, .site-footer { position: relative; z-index: 1; }
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.hud__rec { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 8px var(--orange); animation: blink 1.4s steps(1) infinite; }
+.hud__rec { display: inline-block; vertical-align: 1px; margin-right: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 8px var(--orange); animation: blink 1.4s steps(1) infinite; }
 .hud__view { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #02060a; }
 .hud__hint { padding: 8px 12px; font: 500 0.7rem/1.4 var(--font-mono); color: var(--muted); border-top: 1px solid rgba(0, 243, 255, 0.14); background: rgba(0, 243, 255, 0.03); }
 
@@ -658,10 +678,15 @@ main, .site-footer { position: relative; z-index: 1; }
     grid-template-columns: minmax(0, 1fr);
     margin-top: 40px;
 }
+/* In one column the media sticks above the steps, so it is held to under half the screen height, or the steps
+   would scroll by underneath it unread. */
 .feature__media {
     position: sticky;
     top: calc(var(--nav-h) + 12px);
     z-index: 2;
+    width: min(100%, calc((45vh - 38px) * 16 / 9));
+    width: min(100%, calc((45svh - 38px) * 16 / 9));
+    margin-inline: auto;
 }
 .feature__steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .step {
@@ -683,6 +708,17 @@ main, .site-footer { position: relative; z-index: 1; }
 
 .feature__links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 
+/* A phone on its side has no room for sticky media and text together: the media scrolls with the page instead. */
+@media (max-width: 999px) and (max-height: 520px) {
+    .feature__media {
+        position: relative;
+        top: auto;
+        width: min(100%, calc((100vh - var(--nav-h) - 38px - 24px) * 16 / 9));
+        width: min(100%, calc((100svh - var(--nav-h) - 38px - 24px) * 16 / 9));
+    }
+    .step { min-height: 0; padding-block: 28px; opacity: 1; }
+}
+
 @media (min-width: 1000px) {
     .feature__body {
         grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
@@ -692,7 +728,10 @@ main, .site-footer { position: relative; z-index: 1; }
     .feature--flip .feature__body { grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); }
     .feature--flip .feature__media { order: 2; }
     .feature--flip .feature__steps { order: 1; }
-    .feature__media { top: calc(var(--nav-h) + max(16px, (100vh - var(--nav-h) - 46vw * 0.5625 - 38px) / 2)); }
+    .feature__media {
+        width: min(100%, calc((100vh - var(--nav-h) - 38px - 32px) * 16 / 9));
+        top: calc(var(--nav-h) + max(16px, (100vh - var(--nav-h) - min(46vw * 0.5625, 100vh - var(--nav-h) - 70px) - 38px) / 2));
+    }
     .step { min-height: 92vh; padding-block: 0; }
     .step.is-active { transform: translateX(8px); }
     .feature--flip .step.is-active { transform: translateX(-8px); }
@@ -911,6 +950,11 @@ main, .site-footer { position: relative; z-index: 1; }
     --game-play: #d6f6ff;
     --game-note: #6f97a3;
     --game-title: linear-gradient(180deg, #ffffff 0%, #bff9ff 45%, var(--cyan) 100%);
+    /* Never taller than the screen below the nav: the bar and the whole game fit, the controls hint sits just under. */
+    width: min(100%, calc((100vh - var(--nav-h) - 24px - 39px) * 16 / 9));
+    width: min(100%, calc((100svh - var(--nav-h) - 24px - 39px) * 16 / 9));
+    margin-inline: auto;
+    scroll-margin-top: calc(var(--nav-h) + 12px);
     margin-bottom: clamp(70px, 9vw, 130px);
     border-color: rgba(var(--game-rgb), 0.35);
     box-shadow: 0 0 70px rgba(var(--game-rgb), 0.14), 0 30px 60px rgba(0, 0, 0, 0.6);
@@ -942,6 +986,7 @@ main, .site-footer { position: relative; z-index: 1; }
 .game-player__tab {
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
     min-height: 28px;
     padding: 0 10px;
     border: 1px solid rgba(var(--game-rgb), 0.4);
@@ -1022,7 +1067,7 @@ main, .site-footer { position: relative; z-index: 1; }
     padding: 20px;
     text-align: center;
 }
-.game-cover__kicker { font: 600 clamp(0.62rem, 1.1vw, 0.78rem)/1.3 var(--font-mono); letter-spacing: 0.3em; color: var(--game-accent); text-shadow: 0 0 10px rgba(var(--game-rgb), 0.5); }
+.game-cover__kicker { font: 600 clamp(0.62rem, 1.1vw, 0.78rem)/1.3 var(--font-mono); letter-spacing: 0.3em; color: var(--game-accent); text-shadow: 0 0 10px rgba(var(--game-rgb), 0.5); text-wrap: balance; }
 .game-cover__title {
     font: 700 clamp(3rem, 11vw, 8rem)/0.9 var(--font-display);
     letter-spacing: 0.28em;
@@ -1053,10 +1098,48 @@ main, .site-footer { position: relative; z-index: 1; }
 }
 .game-cover__play:hover { background: var(--game-accent); color: #000; }
 @keyframes play-pulse { 50% { box-shadow: 0 0 34px rgba(var(--game-rgb), 0.55); background: rgba(var(--game-rgb), 0.24); } }
-.game-cover__note { font: 500 clamp(0.6rem, 1vw, 0.72rem)/1.4 var(--font-mono); color: var(--game-note); letter-spacing: 0.06em; }
+.game-cover__note { font: 500 clamp(0.6rem, 1vw, 0.72rem)/1.4 var(--font-mono); color: var(--game-note); letter-spacing: 0.06em; text-wrap: balance; }
+
+/* On a phone or tablet the first tap on play asks before downloading a desktop build. */
+.game-cover__content.is-asking > :not(.game-cover__title, .game-ask) { display: none; }
+.game-ask { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 42ch; }
+.game-ask__text { color: var(--game-text); font-size: 0.98rem; text-wrap: balance; }
+.game-ask__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 18px; }
+.game-ask__actions .game-cover__play { margin-top: 0; animation: none; }
+.game-ask__anyway {
+    min-height: 44px;
+    padding: 0 6px;
+    border: 0;
+    background: none;
+    color: var(--game-accent);
+    font: 600 0.78rem/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+}
+.touch-only .game-player:not(.is-playing) .hud__hint { display: none; }
 
 @media (max-width: 640px) {
     .game-player__view { aspect-ratio: 4 / 3; }
+    /* The cover grows to fit its words on small phones; the game itself keeps 4:3 once it is loaded. */
+    .game-player:not(.is-playing) .game-player__view { aspect-ratio: auto; }
+    .game-player:not(.is-playing) .game-cover { position: relative; min-height: calc(75vw - 24px); }
+    .game-cover__content { position: relative; inset: auto; min-height: inherit; padding: 28px 16px; }
+    .game-cover__play { padding: 12px 20px; }
+    .game-cover__note { font-size: 0.75rem; }
+}
+
+/* A phone on its side: the player is held to the screen height, which leaves a 16:9 box too short for the cover's
+   words. The cover keeps at least that box but grows to fit, and its type is sized by the screen height instead. */
+@media (max-height: 520px) {
+    .game-player:not(.is-playing) .game-player__view { aspect-ratio: auto; }
+    .game-player:not(.is-playing) .game-cover { position: relative; min-height: calc(100vh - var(--nav-h) - 63px); }
+    .game-player:not(.is-playing) .game-cover { min-height: calc(100svh - var(--nav-h) - 63px); }
+    .game-cover__content { position: relative; inset: auto; min-height: inherit; padding: 16px; gap: 8px; }
+    .game-cover__title { font-size: clamp(2rem, 14vh, 3.6rem); }
+    .game-cover__title--long { font-size: clamp(1.6rem, 10vh, 2.8rem); }
+    .game-cover__play { margin-top: 0; padding: 11px 20px; }
 }
 
 .slideshow--pixel img { image-rendering: pixelated; }
@@ -1209,6 +1292,34 @@ main, .site-footer { position: relative; z-index: 1; }
 .feature--arkade .hud__label { color: #ff6a4a; }
 .feature--arkade .media-layer > img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (max-width: 640px) {
+    /* the sight ring would sit across the title on a phone, so only the sunset stays */
+    .game-player--blood .game-cover__glow {
+        background:
+            radial-gradient(60% 50% at 50% 115%, rgba(232, 96, 40, 0.35), transparent 70%),
+            repeating-linear-gradient(0deg, rgba(255, 106, 74, 0.04) 0 1px, transparent 1px 4px),
+            radial-gradient(120% 90% at 50% 50%, transparent 38%, rgba(10, 5, 4, 0.92) 100%);
+    }
     .game-player--blood .game-cover__line, .game-player--torch .game-cover__line { display: none; }
     .game-player--torch .game-cover__title--long { font-size: clamp(1.8rem, 9vw, 2.6rem); }
+}
+
+/* Touch screens: bigger targets for fingers, and no blur over the moving rider canvas, which a phone would have to
+   redo every frame while scrolling. */
+@media (pointer: coarse) {
+    .slideshow__dots button { height: 32px; }
+    .slideshow__dots button::before, .slideshow__dots button::after { top: 15px; }
+    .hud__tabs button, .game-player__tab { min-height: 40px; padding: 0 12px; }
+    .chip-btn { min-height: 40px; }
+    .fx-toggle { min-height: 44px; }
+}
+@media (pointer: coarse), (max-width: 768px) {
+    .bay {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: linear-gradient(135deg, rgba(0, 243, 255, 0.05), rgba(9, 16, 23, 0.92) 40%);
+    }
+}
+/* Narrow phones: the HUD tabs drop under the label instead of cutting it short. */
+@media (max-width: 480px) {
+    .hud__bar { flex-wrap: wrap; row-gap: 4px; }
 }

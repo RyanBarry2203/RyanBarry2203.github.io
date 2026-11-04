@@ -8,11 +8,17 @@ const CROSSING_KEYS = 140;
 const MIN_LEG = 420;
 const CELL = 48;
 const PARTICLES = 90;
+const TOOLBAR_SLACK = 160;
+const NARROW_WIDTH = 700;
+// Once the bike has caught up with the scroll, the trail's travelling dash is drawn at this rate instead of every frame.
+const IDLE_FRAME_MS = 1000 / 30;
 
 export function createScrollRider(canvas, { stops, hero, lowPower = false, onPass = () => {} }) {
     const context = canvas.getContext('2d');
     const ratio = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5);
-    const scale = lowPower ? 0.7 : 1;
+    let scale = 1;
+    // On a phone there is no margin beside the text, so the rider hugs the screen edge, smaller and without its glow.
+    let narrow = false;
 
     let width = 0;
     let height = 0;
@@ -31,22 +37,61 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         return element.getBoundingClientRect().top + scrollY;
     }
 
+    // Each crossing runs the full width of the page, so it must sit in a gap between lines of text, never through a
+    // heading or paragraph, or it reads like a strike-through. This merges the page's text boxes into vertical bands
+    // (page coordinates) and returns a function that moves a y out of any band to its nearest edge, never above floor.
+    const TEXT = 'main :is(h1, h2, h3, h4, p, li, dt, dd, blockquote, figcaption, pre, .btn, .hud__label)';
+    const TEXT_PAD = 8;
+    function clearOfText() {
+        const bands = [];
+        document.querySelectorAll(TEXT).forEach((element) => {
+            const box = element.getBoundingClientRect();
+            if (box.height > 0) bands.push([box.top + scrollY - TEXT_PAD, box.bottom + scrollY + TEXT_PAD]);
+        });
+        bands.sort((a, b) => a[0] - b[0]);
+        const merged = [];
+        bands.forEach((band) => {
+            const previousBand = merged[merged.length - 1];
+            if (previousBand && band[0] <= previousBand[1]) previousBand[1] = Math.max(previousBand[1], band[1]);
+            else merged.push(band);
+        });
+        return (y, floor) => {
+            const band = merged.find((b) => y > b[0] && y < b[1]);
+            if (!band) return y;
+            const up = band[0];
+            const down = band[1];
+            return up >= floor && y - up <= down - y ? up : down;
+        };
+    }
+
     // Rebuild the route from the current layout: down from the hero, then lane to lane per section.
     function layout() {
-        width = innerWidth;
-        height = innerHeight;
-        canvas.width = Math.round(width * ratio);
-        canvas.height = Math.round(height * ratio);
+        const nextWidth = canvas.clientWidth || innerWidth;
+        const nextHeight = Math.max(1, innerHeight);
+        // A phone's toolbar sliding away changes the height a little on every scroll. Keeping the taller canvas then
+        // avoids clearing and reallocating it mid-scroll; the spare strip just sits below the screen.
+        const toolbarOnly = nextWidth === width && nextHeight <= height && height - nextHeight < TOOLBAR_SLACK;
+        if (!toolbarOnly) {
+            width = nextWidth;
+            height = nextHeight;
+            canvas.width = Math.round(width * ratio);
+            canvas.height = Math.round(height * ratio);
+            canvas.style.height = `${height}px`;
+        }
 
         const spare = (width - Math.min(width, CONTENT_WIDTH)) / 2;
-        const left = spare > 90 ? spare - 34 : 12;
+        narrow = width < NARROW_WIDTH;
+        scale = narrow ? 0.5 : lowPower ? 0.7 : 1;
+        const left = spare > 90 ? spare - 34 : narrow ? 4 : 12;
         const right = width - left;
         const heroBottom = hero ? docTop(hero) + hero.offsetHeight : height;
         const pageEnd = document.documentElement.scrollHeight - 80;
 
+        const clear = clearOfText();
         const points = [{ x: width / 2, y: heroBottom - 4 }];
         const crossings = [];
-        let y = heroBottom + 200;
+        // The first turn comes straight after the hero, so the run down the middle never crosses the first heading.
+        let y = clear(heroBottom + 24, heroBottom + 8);
         points.push({ x: width / 2, y });
         points.push({ x: left, y });
         crossings.push(1);
@@ -54,7 +99,7 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         markers = [];
 
         [...stops].sort((a, b) => docTop(a) - docTop(b)).forEach((stop) => {
-            const crossY = Math.max(docTop(stop) - 40, y + MIN_LEG);
+            const crossY = clear(Math.max(docTop(stop) - 40, y + MIN_LEG), y + MIN_LEG * 0.6);
             if (crossY > pageEnd - 200) return;
             side = side === left ? right : left;
             points.push({ x: points[points.length - 1].x, y: crossY });
@@ -123,21 +168,28 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         spark.life = 0.35 + Math.random() * 0.35;
     }
 
-    function drawBike(x, y, angle, speed) {
-        const glow = context.createRadialGradient(x, y, 0, x, y, 120 * scale);
-        glow.addColorStop(0, 'rgba(0, 243, 255, 0.35)');
-        glow.addColorStop(1, 'rgba(0, 243, 255, 0)');
-        context.fillStyle = glow;
-        context.fillRect(x - 120 * scale, y - 120 * scale, 240 * scale, 240 * scale);
+    // The gradients are built once around the origin and moved into place with translate, not rebuilt every frame.
+    const beam = context.createLinearGradient(14, 0, 150, 0);
+    beam.addColorStop(0, 'rgba(180, 255, 255, 1)');
+    beam.addColorStop(1, 'rgba(180, 255, 255, 0)');
+    const lit = context.createRadialGradient(0, 0, 0, 0, 0, 300);
+    lit.addColorStop(0, 'rgba(0, 243, 255, 0.5)');
+    lit.addColorStop(1, 'rgba(0, 243, 255, 0)');
+    const glow = context.createRadialGradient(0, 0, 0, 0, 0, 120);
+    glow.addColorStop(0, 'rgba(0, 243, 255, 0.35)');
+    glow.addColorStop(1, 'rgba(0, 243, 255, 0)');
 
+    function drawBike(x, y, angle, speed) {
         context.save();
         context.translate(x, y);
-        context.rotate(angle);
         context.scale(scale, scale);
+        if (!narrow) {
+            context.fillStyle = glow;
+            context.fillRect(-120, -120, 240, 240);
+        }
+        context.rotate(angle);
 
-        const beam = context.createLinearGradient(14, 0, 150, 0);
-        beam.addColorStop(0, `rgba(180, 255, 255, ${0.18 + speed * 0.2})`);
-        beam.addColorStop(1, 'rgba(180, 255, 255, 0)');
+        context.globalAlpha = 0.18 + speed * 0.2;
         context.fillStyle = beam;
         context.beginPath();
         context.moveTo(14, -4);
@@ -146,6 +198,7 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         context.lineTo(14, 4);
         context.closePath();
         context.fill();
+        context.globalAlpha = 1;
 
         context.fillStyle = '#04070b';
         context.strokeStyle = '#00f3ff';
@@ -173,8 +226,24 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         context.restore();
     }
 
+    // A playing game shares this page's main thread, so the rider stops drawing until it is closed. With nothing
+    // moving it draws at a lower rate, and on low-power devices it stops until the next scroll or resize.
+    let paused = false;
+    let running = false;
+    let settled = false;
     let last = performance.now();
+    let drawnAt = 0;
+
     function frame(now) {
+        if (paused) {
+            running = false;
+            return;
+        }
+        if (settled && now - drawnAt < IDLE_FRAME_MS) {
+            requestAnimationFrame(frame);
+            return;
+        }
+        drawnAt = now;
         const dt = Math.min(0.05, (now - last) / 1000);
         last = now;
         time += dt;
@@ -210,19 +279,17 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
 
         const bx = bike.x;
         const by = bike.y - scroll;
-        if (!lowPower) {
+        if (!lowPower && !narrow) {
             context.save();
+            context.translate(bx, by);
             context.beginPath();
-            context.arc(bx, by, 300, 0, Math.PI * 2);
+            context.arc(0, 0, 300, 0, Math.PI * 2);
             context.clip();
-            const lit = context.createRadialGradient(bx, by, 0, bx, by, 300);
-            lit.addColorStop(0, 'rgba(0, 243, 255, 0.5)');
-            lit.addColorStop(1, 'rgba(0, 243, 255, 0)');
             context.strokeStyle = lit;
             context.lineWidth = 1;
             context.beginPath();
-            for (let x = 0; x <= width; x += CELL) { context.moveTo(x + 0.5, by - 300); context.lineTo(x + 0.5, by + 300); }
-            for (let y = -(scroll % CELL); y <= height; y += CELL) { context.moveTo(bx - 300, y + 0.5); context.lineTo(bx + 300, y + 0.5); }
+            for (let x = 0; x <= width; x += CELL) { context.moveTo(x + 0.5 - bx, -300); context.lineTo(x + 0.5 - bx, 300); }
+            for (let y = -(scroll % CELL); y <= height; y += CELL) { context.moveTo(-300, y + 0.5 - by); context.lineTo(300, y + 0.5 - by); }
             context.stroke();
             context.restore();
         }
@@ -254,12 +321,14 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
             const dirY = Math.sin(heading);
             for (let i = 0; i < 2; i++) emitSpark(bike.x - dirX * 18 * scale, bike.y - dirY * 18 * scale, dirX, dirY);
         }
+        let sparksAlive = false;
         context.strokeStyle = '#bff9ff';
         context.lineWidth = 1.5;
         context.beginPath();
         for (const spark of sparks) {
             if (spark.life <= 0) continue;
             spark.life -= dt;
+            sparksAlive = true;
             spark.x += spark.vx * dt;
             spark.y += spark.vy * dt;
             const sy = spark.y - scroll;
@@ -269,20 +338,22 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         context.stroke();
 
         drawBike(bx, by, heading, speed);
-        if (paused) running = false;
+
+        settled = Math.abs(target - key) < 0.5 && moved < 0.3 && !sparksAlive;
+        if (settled && lowPower) running = false;
         else requestAnimationFrame(frame);
     }
 
-    // A playing game shares this page's main thread, so the rider stops drawing until it is closed.
-    let paused = false;
-    let running = true;
+    const wake = () => {
+        settled = false;
+        if (paused || running) return;
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(frame);
+    };
     const setPaused = (value) => {
         paused = value;
-        if (!paused && !running) {
-            running = true;
-            last = performance.now();
-            requestAnimationFrame(frame);
-        }
+        wake();
     };
 
     let pending = 0;
@@ -291,18 +362,20 @@ export function createScrollRider(canvas, { stops, hero, lowPower = false, onPas
         pending = setTimeout(() => {
             layout();
             markers.forEach((marker) => { if (key >= marker.key) marker.passed = true; });
+            wake();
         }, 150);
     };
     addEventListener('resize', relayout);
+    addEventListener('scroll', wake, { passive: true });
     new ResizeObserver(relayout).observe(document.body);
     document.fonts?.ready.then(relayout);
 
     layout();
-    key = Math.min(endKey, scrollY + innerHeight * 0.62);
+    key = Math.min(endKey, scrollY + height * 0.62);
     previous = pointAt(key);
     markers.forEach((marker) => {
         if (key >= marker.key) { marker.passed = true; onPass(marker.element); }
     });
-    requestAnimationFrame(frame);
+    wake();
     return { setPaused };
 }

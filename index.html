@@ -60,7 +60,7 @@
                 <p class="hero__role">Gameplay &amp; AI Programmer</p>
                 <p class="hero__lede">I build game AI and engine systems in C#, from a custom MonoGame engine to Unity DOTS. My solo game Pale Roots won EA's <strong>Best Use of AI Algorithms</strong> award at Games Fleadh 2026.</p>
                 <div class="hero__actions">
-                    <a class="btn btn--accent" data-magnetic href="#pale-roots-player">Play Pale Roots</a>
+                    <a class="btn btn--accent" data-magnetic href="#pale-roots-player" data-touch-href="#pale-roots" data-touch-text="See Pale Roots">Play Pale Roots</a>
                     <a class="btn" data-magnetic href="#featured">Enter the grid</a>
                     <a class="btn btn--ghost" href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
                 </div>
@@ -81,7 +81,7 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
-            <div class="game-player hud" id="pale-roots-player" data-game-player data-game-src="https://itch.io/embed-upload/16990658?color=02060a" data-game-title="Pale Roots" data-rider-stop>
+            <div class="game-player hud" id="pale-roots-player" data-game-player data-game-size="200" data-game-watch="#pale-roots" data-game-src="https://itch.io/embed-upload/16990658?color=02060a" data-game-title="Pale Roots" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // PALE_ROOTS_WASM</span>
                     <div class="hud__tabs">
@@ -137,7 +137,7 @@
                             </figure>
                             <figure class="media-layer" data-media="2" data-caption="SIM // GRAVITY_BOSS">
                                 <canvas class="demo-canvas" data-demo="gravity" tabindex="0" aria-label="Playable demo of the Black Hole boss. Move the pointer to steer the player and click to attack. The boss pulls you in on a cooldown and blasts you away after taking 200 damage."></canvas>
-                                <div class="demo-ui"><span class="demo-ui__note">Steer with the pointer &middot; click to hit the boss</span></div>
+                                <div class="demo-ui"><span class="demo-ui__note" data-touch-text="Drag sideways to steer · tap to hit the boss">Steer with the pointer &middot; click to hit the boss</span></div>
                             </figure>
                             <figure class="media-layer" data-media="3" data-caption="ENGINE // GAMEPLAY">
                                 <div class="slideshow" data-slideshow>
@@ -182,7 +182,7 @@
                 </div>
             </article>
 
-            <div class="game-player game-player--grid hud" id="hybrid-lod-player" data-game-player data-game-silent data-game-src="Project300/index.html" data-game-title="Hybrid LOD Traffic" data-rider-stop>
+            <div class="game-player game-player--grid hud" id="hybrid-lod-player" data-game-player data-game-size="15" data-game-watch="#hybrid-lod" data-game-silent data-game-src="Project300/index.html" data-game-title="Hybrid LOD Traffic" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // HYBRID_LOD_WEBGL</span>
                     <div class="hud__tabs">
@@ -293,7 +293,7 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
-            <div class="game-player game-player--wax hud" id="tallow-player" data-game-player data-game-src="Tallow/index.html" data-game-title="Tallow" data-rider-stop>
+            <div class="game-player game-player--wax hud" id="tallow-player" data-game-player data-game-size="16" data-game-watch="#tallow-systems" data-game-src="Tallow/index.html" data-game-title="Tallow" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // TALLOW_WEBGL</span>
                     <div class="hud__tabs">
@@ -419,11 +419,11 @@
             <header class="sector-head sector-head--arkade" data-rider-stop>
                 <p class="sector-head__id">// SECTOR_03</p>
                 <h2 id="arkade-title" data-scramble>Arkade_Gun.lib</h2>
-                <p class="sector-head__sub">Two light-gun games I led for my studio, Púca Games, built for the Arkade Gaming Gun and pitched to Arkade as exclusives. Both run right here; your mouse stands in for the gun.</p>
+                <p class="sector-head__sub">Two light-gun games I led for my studio, <a href="https://pucagames.com" target="_blank" rel="noopener">Púca Games</a>, built for the Arkade Gaming Gun and pitched to Arkade as exclusives. Both run right here; your mouse stands in for the gun.</p>
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
-            <div class="game-player game-player--blood hud" id="sangue-frio-player" data-game-player data-game-id="SangueFrio" data-game-src="SangueFrio/index.html" data-game-title="A Sangue Frio" data-rider-stop>
+            <div class="game-player game-player--blood hud" id="sangue-frio-player" data-game-player data-game-size="82" data-game-watch="#arkade-systems" data-game-id="SangueFrio" data-game-src="SangueFrio/index.html" data-game-title="A Sangue Frio" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // A_SANGUE_FRIO_WEBGL</span>
                     <div class="hud__tabs">
@@ -447,7 +447,7 @@
                 <p class="hud__hint">Mouse aims &middot; left click fire &middot; hold right click to focus &middot; R reload (again in the gold for a perfect one) &middot; hold Space for cover, A / D to shift &middot; Q Sangue Frio &middot; Esc pause</p>
             </div>
 
-            <div class="game-player game-player--torch hud" id="last-known-location-player" data-game-player data-game-id="LastKnownLocation" data-game-src="LastKnownLocation/index.html" data-game-title="Last Known Location" data-rider-stop>
+            <div class="game-player game-player--torch hud" id="last-known-location-player" data-game-player data-game-size="155" data-game-watch="#arkade-systems" data-game-id="LastKnownLocation" data-game-src="LastKnownLocation/index.html" data-game-title="Last Known Location" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // LAST_KNOWN_LOCATION_WEBGL</span>
                     <div class="hud__tabs">
@@ -558,7 +558,7 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
 
-            <div class="game-player game-player--grid hud" id="split-shift-player" data-game-player data-game-silent data-game-src="SplitShift/index.html" data-game-title="Split Shift" data-rider-stop>
+            <div class="game-player game-player--grid hud" id="split-shift-player" data-game-player data-game-size="25" data-game-watch="#split-shift" data-game-silent data-game-src="SplitShift/index.html" data-game-title="Split Shift" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // SPLIT_SHIFT_WEBGL</span>
                     <div class="hud__tabs">
@@ -605,7 +605,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hud__hint">Arrows / WASD or hold the pointer to drive &middot; R reports a crime</p>
+                    <p class="hud__hint" data-touch-text="Hold a finger on the map to drive towards it">Arrows / WASD or hold the pointer to drive &middot; R reports a crime</p>
                 </div>
                 <div class="bay__info">
                     <p class="bay__index">PRJ_01 // Unity 6 &middot; Team of 4 &middot; Tech lead</p>
@@ -626,7 +626,7 @@
                 </div>
             </article>
 
-            <div class="game-player game-player--bulb hud" id="wrong-house-player" data-game-player data-game-src="WrongHouse/index.html" data-game-title="Wrong House" data-rider-stop>
+            <div class="game-player game-player--bulb hud" id="wrong-house-player" data-game-player data-game-size="31" data-game-watch="#paranormal" data-game-src="WrongHouse/index.html" data-game-title="Wrong House" data-rider-stop>
                 <div class="hud__bar">
                     <span class="hud__label"><i class="hud__rec"></i>LIVE // WRONG_HOUSE_WEBGL</span>
                     <div class="hud__tabs">
@@ -672,7 +672,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hud__hint">Pointer moves you and your torch &middot; click a room to flick its light</p>
+                    <p class="hud__hint" data-touch-text="Drag to move you and your torch · tap a room to flick its light">Pointer moves you and your torch &middot; click a room to flick its light</p>
                 </div>
                 <div class="bay__info">
                     <p class="bay__index">PRJ_02 // Unity 6 &middot; WebGL</p>
@@ -714,7 +714,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hud__hint">Arrows / WASD to drive &middot; steer hard at speed to drift &middot; F for the flash</p>
+                    <p class="hud__hint" data-touch-text="Hold a finger where the car should go · it drifts on hard turns">Arrows / WASD to drive &middot; steer hard at speed to drift &middot; F for the flash</p>
                 </div>
                 <div class="bay__info">
                     <p class="bay__index">PRJ_03 // Unity &middot; WebGL</p>
@@ -800,7 +800,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hud__hint">Click a connected room to move &middot; hide when the monster gets close</p>
+                    <p class="hud__hint" data-touch-text="Tap a connected room to move · hide when the monster gets close">Click a connected room to move &middot; hide when the monster gets close</p>
                 </div>
                 <div class="bay__info">
                     <p class="bay__index">PRJ_05 // C# &middot; WPF &middot; SQLite</p>
@@ -840,7 +840,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hud__hint">Type a number or click an option &middot; find the fuse and the key</p>
+                    <p class="hud__hint" data-touch-text="Tap an option · find the fuse and the key">Type a number or click an option &middot; find the fuse and the key</p>
                 </div>
                 <div class="bay__info">
                     <p class="bay__index">PRJ_06 // C# &middot; Console</p>
@@ -867,7 +867,7 @@
                 <span class="sector-head__line" aria-hidden="true"></span>
             </header>
             <div class="video-facade hud" data-youtube="PDtobaZvCbc">
-                <img src="https://i.ytimg.com/vi/PDtobaZvCbc/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <img src="https://i.ytimg.com/vi/PDtobaZvCbc/maxresdefault.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="">
                 <a class="video-facade__play" href="https://www.youtube.com/watch?v=PDtobaZvCbc" target="_blank" rel="noopener">
                     <span class="video-facade__icon" aria-hidden="true"></span>
                     <span>Play showreel</span>
@@ -897,6 +897,7 @@
                         <a class="btn btn--accent" data-magnetic href="Content/RyanBarryCV.pdf" target="_blank" rel="noopener">Download CV</a>
                         <a class="btn" href="https://www.linkedin.com/in/ryan-barry-gamedev/" target="_blank" rel="noopener">LinkedIn</a>
                         <a class="btn" href="https://github.com/RyanBarry2203" target="_blank" rel="noopener">GitHub</a>
+                        <a class="btn btn--ghost" href="mailto:S00250496@atu.ie">Email me</a>
                     </div>
                 </div>
             </div>

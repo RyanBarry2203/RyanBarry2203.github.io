@@ -176,6 +176,7 @@
         <p class="loader__error" data-loader-error></p>
     </div>
 
+    <script src="../assets/js/frame-bridge.js"></script>
     <script src="Build/HybridLOD.loader.js"></script>
     <script>
         (function () {
@@ -286,16 +287,18 @@
                 productName: 'Hybrid LOD Traffic',
                 productVersion: '1.0',
                 devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+                errorHandler: function (message) { return Boolean(window.portfolioUnityError && window.portfolioUnityError(message)); },
                 showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
             }, progress).then(function (unityInstance) {
                 instance = unityInstance;
                 loader.classList.add('is-done');
                 hud.classList.add('is-live');
                 canvas.focus();
+                window.portfolioFrame.ready(unityInstance, canvas);
             }).catch(function (message) {
                 loader.classList.add('is-error');
                 status.textContent = 'The city would not load';
-                error.textContent = 'This needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+                error.textContent = 'This needs a desktop browser with WebGL 2 (Chrome, Edge, Firefox or Safari). ' + message;
             });
         })();
     </script>

@@ -530,7 +530,10 @@ const RIDER_SETUP = [
 
 export function createHeroGrid(container, { lowPower = false, reducedMotion = false, hud = null } = {}) {
     const renderer = new THREE.WebGLRenderer({ antialias: !lowPower, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2));
+    // Capped at 1.5: a Retina laptop would otherwise draw four times the pixels of its window. If frames still run
+    // slow, the resolution steps down towards 1 (see frame()).
+    let pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    renderer.setPixelRatio(pixelRatio);
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
@@ -647,10 +650,55 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         }
     }
 
+    // Frame times are averaged over one-second windows. Two slow windows in a row (under 50 fps) drop the pixel ratio a
+    // step; three smooth ones (holding 60 fps or better) raise it a step again, up to where it started. If a raise is
+    // followed by a drop, that lower level becomes the ceiling, so it can't flicker between two sizes. The first second
+    // after the loop starts (shader compiling) and any single frame over 100 ms (a tab switch, a garbage-collection
+    // pause) are left out, so one hitch can't blur the scene for good.
+    const SLOW_FRAME_MS = 20;
+    const SMOOTH_FRAME_MS = 17.5;
+    const HITCH_MS = 100;
+    const WARM_UP_MS = 1000;
+    const minPixelRatio = 1;
+    let maxPixelRatio = pixelRatio;
     let last = performance.now();
+    let loopStart = last;
+    let sampleTime = 0;
+    let sampleFrames = 0;
+    let slowWindows = 0;
+    let smoothWindows = 0;
+    let lastStep = 0;
+    function setResolution(next) {
+        if (next === pixelRatio) return;
+        if (next < pixelRatio && lastStep > 0) maxPixelRatio = next;
+        lastStep = next > pixelRatio ? 1 : -1;
+        pixelRatio = next;
+        renderer.setPixelRatio(pixelRatio);
+        resize();
+    }
+    function adaptResolution(now, elapsed) {
+        if (now - loopStart < WARM_UP_MS || elapsed > HITCH_MS) return;
+        sampleTime += elapsed;
+        sampleFrames++;
+        if (sampleTime < 1000) return;
+        const average = sampleTime / sampleFrames;
+        sampleTime = 0;
+        sampleFrames = 0;
+        slowWindows = average > SLOW_FRAME_MS ? slowWindows + 1 : 0;
+        smoothWindows = average < SMOOTH_FRAME_MS ? smoothWindows + 1 : 0;
+        if (slowWindows >= 2 && pixelRatio > minPixelRatio) {
+            slowWindows = 0;
+            setResolution(Math.max(minPixelRatio, pixelRatio * 0.8));
+        } else if (smoothWindows >= 3 && pixelRatio < maxPixelRatio) {
+            smoothWindows = 0;
+            setResolution(Math.min(maxPixelRatio, pixelRatio / 0.8));
+        }
+    }
     function frame(now) {
-        const dt = Math.min(0.05, (now - last) / 1000);
+        const elapsed = now - last;
+        const dt = Math.min(0.05, elapsed / 1000);
         last = now;
+        adaptResolution(now, elapsed);
         step(dt);
         renderer.render(scene, camera);
     }
@@ -660,6 +708,11 @@ export function createHeroGrid(container, { lowPower = false, reducedMotion = fa
         if (shouldRun === state.running) return;
         state.running = shouldRun;
         last = performance.now();
+        loopStart = last;
+        sampleTime = 0;
+        sampleFrames = 0;
+        slowWindows = 0;
+        smoothWindows = 0;
         renderer.setAnimationLoop(shouldRun ? frame : null);
     }
 

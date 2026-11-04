@@ -1,6 +1,7 @@
-// Runs inside an Arkade game's frame (SangueFrio/, LastKnownLocation/): starts the Unity build, lets the portfolio
-// silence it while it is scrolled away, and passes the game's QUIT and library calls up to the portfolio. Those calls
-// come from the build's PageBridge.jslib through window.pucaGame. Opened in its own tab, they navigate instead.
+// Runs inside an Arkade game's frame (SangueFrio/, LastKnownLocation/): starts the Unity build and passes the game's
+// QUIT and library calls up to the portfolio. Those calls come from the build's PageBridge.jslib through
+// window.pucaGame. Opened in its own tab, they navigate instead. Pausing, focus, the mouse and the wheel are left to
+// frame-bridge.js, which the page loads first.
 (function () {
     var script = document.currentScript;
     var build = script.dataset.build;
@@ -9,24 +10,6 @@
     var pages = { LastKnownLocation: '../LastKnownLocation/index.html', SangueFrio: '../SangueFrio/index.html' };
 
     if (embedded) document.documentElement.classList.add('embedded');
-
-    // Every AudioContext the game makes is kept, so the portfolio can suspend or resume them all.
-    var Native = window.AudioContext || window.webkitAudioContext;
-    var contexts = [];
-    if (Native) {
-        var Tracked = function (options) {
-            var context = new Native(options);
-            contexts.push(context);
-            return context;
-        };
-        Tracked.prototype = Native.prototype;
-        window.AudioContext = window.webkitAudioContext = Tracked;
-    }
-    window.addEventListener('message', function (event) {
-        if (event.origin !== location.origin) return;
-        if (event.data === 'portfolio:pause') contexts.forEach(function (context) { context.suspend(); });
-        if (event.data === 'portfolio:resume') contexts.forEach(function (context) { context.resume(); });
-    });
 
     window.pucaGame = {
         quit: function () {
@@ -96,7 +79,7 @@
     function fail(message) {
         loader.classList.add('is-error');
         status.textContent = 'It would not start';
-        error.textContent = script.dataset.title + ' needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+        error.textContent = script.dataset.title + ' needs a desktop browser with WebGL 2 (Chrome, Edge, Firefox or Safari).' + message;
     }
 
     var tag = document.createElement('script');
@@ -116,10 +99,12 @@
             productName: script.dataset.title,
             productVersion: '1.0',
             devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+            errorHandler: function (message) { return Boolean(window.portfolioUnityError && window.portfolioUnityError(message)); },
             showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
-        }, function (value) { progress(offset + (1 - offset) * value); }).then(function () {
+        }, function (value) { progress(offset + (1 - offset) * value); }).then(function (instance) {
             loader.classList.add('is-done');
             canvas.focus();
+            if (window.portfolioFrame) window.portfolioFrame.ready(instance, canvas);
         }).catch(fail);
     }
 })();

@@ -11,9 +11,18 @@ const motionChoice = readMotionChoice();
 const osPrefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const reducedMotion = motionChoice ? motionChoice === 'off' : osPrefersReduced;
 const finePointer = matchMedia('(pointer: fine)').matches;
+// A phone or tablet with no mouse attached: the playable builds need one, and the copy talks about taps instead.
+const touchOnly = matchMedia('(hover: none) and (pointer: coarse)').matches && !matchMedia('(any-pointer: fine)').matches;
 root.classList.add(reducedMotion ? 'reduced' : 'motion-on');
+if (touchOnly) root.classList.add('touch-only');
 
 const navHeight = () => parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 64;
+
+// Scrolls through Lenis when it is running, so a programmatic scroll never fights the smooth scroll.
+function scrollToElement(target, offset = -navHeight()) {
+    if (motion?.lenis) motion.lenis.scrollTo(target, { offset });
+    else target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+}
 
 function onIdle(callback) {
     if ('requestIdleCallback' in window) requestIdleCallback(callback, { timeout: 1500 });
@@ -133,14 +142,17 @@ function setUpFxToggle() {
 
 function setUpNavigation(motion) {
     const toggle = document.querySelector('[data-nav-toggle]');
-    const closeMenu = () => {
-        root.classList.remove('nav-open');
-        toggle?.setAttribute('aria-expanded', 'false');
+    // While the menu is open the page behind it holds still, so a swipe scrolls the menu, not the page.
+    const setMenuOpen = (open) => {
+        if (open === root.classList.contains('nav-open')) return;
+        root.classList.toggle('nav-open', open);
+        toggle?.setAttribute('aria-expanded', String(open));
+        if (open) motion?.lenis?.stop();
+        else motion?.lenis?.start();
     };
-    toggle?.addEventListener('click', () => {
-        const open = root.classList.toggle('nav-open');
-        toggle.setAttribute('aria-expanded', String(open));
-    });
+    const closeMenu = () => setMenuOpen(false);
+    toggle?.addEventListener('click', () => setMenuOpen(!root.classList.contains('nav-open')));
+    matchMedia('(min-width: 901px)').addEventListener('change', (event) => { if (event.matches) closeMenu(); });
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
 
     document.addEventListener('click', (event) => {
@@ -274,8 +286,11 @@ const DEMO_LOADERS = {
     replay: () => import('./demos/replay.js').then((m) => m.createReplayDemo),
 };
 
+// Every host's sync, so a game starting or stopping can pause or wake the demos.
+const demoHosts = [];
+
 // Each container owns a set of "slots" (layers or tab panels). A demo runs only when its slot
-// is the active one and the container is on screen.
+// is the active one, the container is on screen and no game is playing.
 function setUpDemoHost(container, slotSelector) {
     const slots = [...container.querySelectorAll(slotSelector)];
     const demos = new Map();
@@ -285,9 +300,11 @@ function setUpDemoHost(container, slotSelector) {
     // With reduced motion, a demo shows a still preview until the visitor presses Run.
     const userStarted = (slot) => !reducedMotion || slot.dataset.userRun === 'true';
     const sync = () => {
-        demos.forEach((demo, slot) => demo?.setActive(visible && slot.classList.contains('is-active') && userStarted(slot)));
+        const live = visible && runningGames.size === 0;
+        demos.forEach((demo, slot) => demo?.setActive(live && slot.classList.contains('is-active') && userStarted(slot)));
         syncSlideshows();
     };
+    demoHosts.push(sync);
 
     if (reducedMotion) {
         slots.forEach((slot) => {
@@ -307,10 +324,11 @@ function setUpDemoHost(container, slotSelector) {
         });
     }
 
-    new IntersectionObserver(([entry]) => {
-        visible = entry.isIntersecting;
-        if (visible && !loaded) {
+    // Demos load a little before they scroll in, but only run once they are actually on screen.
+    const loadObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !loaded) {
             loaded = true;
+            loadObserver.disconnect();
             slots.forEach((slot) => {
                 const target = slot.querySelector('[data-demo]');
                 if (!target) return;
@@ -323,8 +341,12 @@ function setUpDemoHost(container, slotSelector) {
                     .catch((error) => console.warn(`Demo "${target.dataset.demo}" failed to load`, error));
             });
         }
+    }, { rootMargin: '250px 0px' });
+    loadObserver.observe(container);
+    new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
         sync();
-    }, { rootMargin: '250px 0px' }).observe(container);
+    }).observe(container);
 
     return { slots, sync };
 }
@@ -440,76 +462,169 @@ function setUpSoundtrack() {
 
 // Below this share of the player on screen, the game counts as scrolled away and goes quiet.
 const GAME_VISIBLE_RATIO = 0.3;
+// A build hosted elsewhere can't be paused, so it is unloaded once it has been fully off screen for this long.
+const FOREIGN_UNLOAD_DELAY = 20000;
+const STOPPED_NOTE = 'Stopped when you scrolled away, so it wouldn’t play in the background.';
+const SWITCHED_NOTE = 'Closed when you started another game, so the two wouldn’t share your computer.';
+// Wheel deltas from a frame can be in lines or pages (deltaMode 1 and 2); the page scrolls in pixels.
+const WHEEL_LINE = 16;
 
 // Our builds run in same-origin frames, which share this page's main thread: while any game is on screen, the page's
-// always-on animation (the scroll rider) stops so the game gets the whole frame.
+// always-on animation (the scroll rider and the demos) stops so the game gets the whole frame.
 const runningGames = new Set();
+const gamePlayers = [];
 let scrollRider = null;
 
 function setGameRunning(player, running) {
     if (running) runningGames.add(player);
     else runningGames.delete(player);
     scrollRider?.setPaused(runningGames.size > 0);
+    demoHosts.forEach((sync) => sync());
+}
+
+const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+
+function scrollPageBy(delta, mode) {
+    const pixels = mode === 1 ? delta * WHEEL_LINE : mode === 2 ? delta * innerHeight : delta;
+    if (motion?.lenis) motion.lenis.scrollTo(motion.lenis.targetScroll + pixels);
+    else scrollBy(0, pixels);
 }
 
 function setUpGamePlayer(player) {
-    const { gameSrc: src, gameTitle: title } = player.dataset;
+    const { gameSrc: src, gameTitle: title, gameSize: size, gameWatch: watch } = player.dataset;
     const view = player.querySelector('[data-game-view]');
     const play = player.querySelector('[data-game-play]');
     const fullscreen = player.querySelector('[data-game-fullscreen]');
     const cover = view.firstElementChild;
+    const content = cover.querySelector('.game-cover__content');
     // Our own builds listen for pause/resume messages. A build hosted elsewhere can't be reached, so it is unloaded.
     const ownBuild = new URL(src, location.href).origin === location.origin;
     // A build with no sound of its own (data-game-silent) leaves the soundtrack playing.
     const silent = 'gameSilent' in player.dataset;
+    const canFullscreen = Boolean(view.requestFullscreen || view.webkitRequestFullscreen);
+    // On a phone or tablet the first tap explains the build needs a mouse and keyboard before it downloads.
+    let confirmed = !touchOnly;
     let frame = null;
     let visibleRatio = 0;
+    let unloadTimer = 0;
+    let wasFullscreen = false;
 
-    const update = () => {
-        if (!frame || player.contains(document.fullscreenElement)) return;
-        if (ownBuild) {
-            const active = visibleRatio >= GAME_VISIBLE_RATIO && !document.hidden;
-            frame.contentWindow?.postMessage(active ? 'portfolio:resume' : 'portfolio:pause', location.origin);
-            setAudible(player, active && !silent);
-            setGameRunning(player, active);
-        } else if (visibleRatio === 0) {
-            unload();
-        }
+    const post = (message) => frame?.contentWindow?.postMessage(message, location.origin);
+    const focusGame = () => {
+        frame?.focus({ preventScroll: true });
+        post('portfolio:focus');
     };
 
-    // quit: the game's own QUIT asked for the cover back, so there is nothing to explain.
-    const unload = (quit = false) => {
-        if (document.fullscreenElement === view) document.exitFullscreen();
-        frame = null;
-        view.replaceChildren(cover);
-        setGameRunning(player, false);
-        if (fullscreen) fullscreen.hidden = true;
-        if (!quit && !cover.querySelector('[data-game-stopped]')) {
-            const note = document.createElement('p');
+    const showNote = (text) => {
+        let note = cover.querySelector('[data-game-stopped]');
+        if (!note) {
+            note = document.createElement('p');
             note.className = 'game-cover__note';
             note.dataset.gameStopped = '';
-            note.textContent = 'Stopped when you scrolled away, so it wouldn’t play in the background.';
             play.after(note);
         }
+        note.textContent = text;
+    };
+
+    // note: why the game was closed. The game's own QUIT asked for the cover back, so it has nothing to explain.
+    const unload = (note = null) => {
+        clearTimeout(unloadTimer);
+        unloadTimer = 0;
+        if (fullscreenElement() === view) (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+        frame = null;
+        view.replaceChildren(cover);
+        player.classList.remove('is-playing');
+        setGameRunning(player, false);
+        if (fullscreen) fullscreen.hidden = true;
+        if (note) showNote(note);
         setAudible(player, false);
     };
 
-    play?.addEventListener('click', () => {
+    const update = () => {
+        if (!frame || player.contains(fullscreenElement())) return;
+        if (ownBuild) {
+            const active = visibleRatio >= GAME_VISIBLE_RATIO && !document.hidden;
+            post(active ? 'portfolio:resume' : 'portfolio:pause');
+            setAudible(player, active && !silent);
+            setGameRunning(player, active);
+        } else if (visibleRatio > 0) {
+            clearTimeout(unloadTimer);
+            unloadTimer = 0;
+        } else if (!unloadTimer) {
+            unloadTimer = setTimeout(() => unload(STOPPED_NOTE), FOREIGN_UNLOAD_DELAY);
+        }
+    };
+
+    const load = () => {
+        // One game at a time: each one wants the whole machine, and a second heap can run a laptop out of memory.
+        gamePlayers.forEach((other) => { if (other !== controller && other.loaded()) other.unload(SWITCHED_NOTE); });
+        content.classList.remove('is-asking');
+        content.querySelector('.game-ask')?.remove();
         frame = document.createElement('iframe');
         frame.src = src;
         frame.title = `${title}, playable`;
         frame.allow = 'fullscreen; autoplay; gamepad';
         frame.allowFullscreen = true;
         view.replaceChildren(frame);
+        player.classList.add('is-playing');
         if (ownBuild) setGameRunning(player, true);
-        frame.focus();
-        if (fullscreen && view.requestFullscreen) fullscreen.hidden = false;
+        // Frame the whole game below the nav, so nothing it draws is hidden while it boots.
+        scrollToElement(player, -(navHeight() + 12));
+        frame.focus({ preventScroll: true });
+        if (fullscreen && canFullscreen) fullscreen.hidden = false;
         setAudible(player, !silent);
+    };
+
+    const ask = () => {
+        if (content.querySelector('.game-ask')) return;
+        const panel = document.createElement('div');
+        panel.className = 'game-ask';
+        const text = document.createElement('p');
+        text.className = 'game-ask__text';
+        text.textContent = `Made for a mouse and keyboard${size ? `, and about ${size} MB to download` : ''}. It plays best on a computer.`;
+        const actions = document.createElement('div');
+        actions.className = 'game-ask__actions';
+        const target = watch && document.querySelector(watch);
+        if (target) {
+            const see = document.createElement('button');
+            see.type = 'button';
+            see.className = 'game-cover__play';
+            see.textContent = 'See it in action';
+            see.addEventListener('click', () => scrollToElement(target));
+            actions.append(see);
+        }
+        const anyway = document.createElement('button');
+        anyway.type = 'button';
+        anyway.className = 'game-ask__anyway';
+        anyway.textContent = 'Load it anyway';
+        anyway.addEventListener('click', () => {
+            confirmed = true;
+            load();
+        });
+        actions.append(anyway);
+        panel.append(text, actions);
+        content.classList.add('is-asking');
+        content.append(panel);
+        actions.firstElementChild.focus({ preventScroll: true });
+    };
+
+    play?.addEventListener('click', () => {
+        if (confirmed) load();
+        else ask();
     });
 
     fullscreen?.addEventListener('click', () => {
-        view.requestFullscreen?.().catch(() => window.open(src, '_blank', 'noopener'));
+        const request = view.requestFullscreen ? view.requestFullscreen() : view.webkitRequestFullscreen?.();
+        // Focus goes to the game, so the first key press reaches it rather than this button.
+        Promise.resolve(request).then(focusGame).catch(() => window.open(src, '_blank', 'noopener'));
     });
+
+    const onFullscreenChange = () => {
+        const isFullscreen = player.contains(fullscreenElement());
+        if (wasFullscreen && !isFullscreen) focusGame();
+        wasFullscreen = isFullscreen;
+        update();
+    };
 
     // The Arkade builds talk back through their PageBridge: QUIT puts the cover back, and A Sangue Frio's library card
     // for the other game hands over to that game's player further down the page.
@@ -518,12 +633,12 @@ function setUpGamePlayer(player) {
             if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin) return;
             const { type, id } = event.data ?? {};
             if (type === 'game:quit') {
-                unload(true);
+                unload();
+                play.focus({ preventScroll: true });
             } else if (type === 'game:open') {
                 const next = document.querySelector(`[data-game-player][data-game-id="${CSS.escape(String(id))}"]`);
                 if (!next) return;
-                unload(true);
-                next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                unload();
                 next.querySelector('[data-game-play]')?.click();
             }
         });
@@ -534,11 +649,23 @@ function setUpGamePlayer(player) {
         update();
     }, { threshold: [0, GAME_VISIBLE_RATIO] }).observe(player);
     document.addEventListener('visibilitychange', update);
-    document.addEventListener('fullscreenchange', update);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+    const controller = { loaded: () => Boolean(frame), unload, source: () => frame?.contentWindow ?? null };
+    return controller;
 }
 
 function setUpGamePlayers() {
-    document.querySelectorAll('[data-game-player]').forEach(setUpGamePlayer);
+    document.querySelectorAll('[data-game-player]').forEach((player) => gamePlayers.push(setUpGamePlayer(player)));
+
+    // A build that has no use for the wheel sends it here (frame-bridge.js), so the page still scrolls over a game.
+    window.addEventListener('message', (event) => {
+        if (event.origin !== location.origin || event.data?.type !== 'game:wheel') return;
+        if (!gamePlayers.some((player) => player.source() === event.source)) return;
+        const { dy, mode } = event.data;
+        if (Number.isFinite(dy)) scrollPageBy(dy, mode);
+    });
 }
 
 // ---------- Showreel facade ----------
@@ -635,10 +762,14 @@ const lowPower = matchMedia('(max-width: 768px)').matches
     || matchMedia('(pointer: coarse)').matches
     || (navigator.hardwareConcurrency || 8) <= 4;
 
+// Phones keep the CSS grid floor in the hero instead of the 3D scene: it saves the three.js download and leaves the
+// GPU to the scroll rider and the demos.
+const phoneSized = matchMedia('(pointer: coarse) and (max-width: 768px), (pointer: coarse) and (max-height: 500px)').matches;
+
 async function startHero(motion) {
     const hero = document.querySelector('.hero');
     const stage = document.querySelector('[data-hero-stage]');
-    if (!hero || !stage || !canUseWebGL2()) return;
+    if (!hero || !stage || phoneSized || !canUseWebGL2()) return;
 
     let scene;
     try {
@@ -706,9 +837,18 @@ async function startRider() {
     }
 }
 
+// ---------- Touch devices: copy that talks about taps, and links that don't start a desktop download ----------
+
+function useTouchCopy() {
+    if (!touchOnly) return;
+    document.querySelectorAll('[data-touch-text]').forEach((element) => { element.textContent = element.dataset.touchText; });
+    document.querySelectorAll('[data-touch-href]').forEach((link) => { link.setAttribute('href', link.dataset.touchHref); });
+}
+
 // ---------- Boot ----------
 
 const motion = setUpMotion();
+useTouchCopy();
 setUpFxToggle();
 setUpSoundtrack();
 setUpNavigation(motion);

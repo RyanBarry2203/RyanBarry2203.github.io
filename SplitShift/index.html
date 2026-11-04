@@ -61,7 +61,7 @@
         .controls dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 0.72rem; }
         .controls dt { color: var(--cyan); white-space: nowrap; }
         .controls dd { margin: 0; color: var(--text); }
-        .back { position: fixed; top: 12px; left: 14px; z-index: 6; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+        .back { position: fixed; bottom: 12px; left: 14px; z-index: 6; padding: 7px 10px; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; background: rgba(8, 5, 18, 0.78); border: 1px solid rgba(255, 43, 214, 0.25); }
         .back:hover, .back:focus-visible { color: var(--neon); }
         .embedded .back { display: none; }
         @media (max-width: 640px) { .controls { display: none; } }
@@ -95,6 +95,7 @@
         </dl>
     </aside>
 
+    <script src="../assets/js/frame-bridge.js" data-wheel="page"></script>
     <script src="Build/SplitShift.loader.js"></script>
     <script>
         (function () {
@@ -129,15 +130,17 @@
                 productName: 'Split Shift',
                 productVersion: '0.2',
                 devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+                errorHandler: function (message) { return Boolean(window.portfolioUnityError && window.portfolioUnityError(message)); },
                 showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
-            }, progress).then(function () {
+            }, progress).then(function (instance) {
                 loader.classList.add('is-done');
                 controls.classList.add('is-live');
                 canvas.focus();
+                window.portfolioFrame.ready(instance, canvas);
             }).catch(function (message) {
                 loader.classList.add('is-error');
                 status.textContent = 'The engine would not start';
-                error.textContent = 'Split Shift needs a desktop browser with WebGL 2 (Chrome, Edge or Firefox). ' + message;
+                error.textContent = 'Split Shift needs a desktop browser with WebGL 2 (Chrome, Edge, Firefox or Safari). ' + message;
             });
         })();
     </script>

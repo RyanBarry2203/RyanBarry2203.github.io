@@ -1,133 +1,101 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | 3DGamesProject</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">3DGamesProject</div>
-      </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gameplay Systems &amp; AI | Ryan Barry</title>
+    <meta name="description" content="Gameplay Systems and AI, a Unity build by Ryan Barry: arcade drifting, a pooled camera flash and enemy state machines. Play it in your browser.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Rajdhani:wght@700&display=swap">
+    <style>
+        :root { color-scheme: dark; --night: #04070b; --text: #d5e3ea; --muted: #8ba3b0; --cyan: #00f3ff; --orange: #ff8c00; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; overflow: hidden; background: var(--night); color: var(--text); font: 500 13px/1.5 var(--mono); }
+        canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: #000; touch-action: none; }
+
+        .loader {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center;
+            background:
+                radial-gradient(60% 45% at 50% 110%, rgba(0, 243, 255, 0.18), transparent 70%),
+                repeating-linear-gradient(0deg, transparent 0 63px, rgba(0, 243, 255, 0.05) 63px 64px),
+                repeating-linear-gradient(90deg, transparent 0 63px, rgba(0, 243, 255, 0.05) 63px 64px),
+                var(--night);
+            transition: opacity 0.6s;
+        }
+        .loader.is-done { opacity: 0; pointer-events: none; }
+        .loader__kicker { margin: 0; letter-spacing: 0.32em; color: var(--orange); font-size: 0.72rem; text-transform: uppercase; }
+        .loader__title { margin: 0; padding-left: 0.12em; font: 700 clamp(2.2rem, 7vw, 4.2rem)/0.95 "Rajdhani", "Arial Narrow", sans-serif; letter-spacing: 0.12em; color: #fff; text-shadow: 0 0 18px rgba(0, 243, 255, 0.6); }
+        .loader__line { margin: 0; color: var(--muted); }
+        .loader__bar { position: relative; width: min(340px, 70vw); height: 3px; background: rgba(0, 243, 255, 0.15); overflow: hidden; }
+        .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--cyan), var(--orange)); box-shadow: 0 0 12px var(--cyan); transition: width 0.25s; }
+        .loader__status { margin: 0; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; font-size: 0.7rem; }
+        .loader__error { display: none; max-width: 46ch; margin: 0; color: #ff8a6a; line-height: 1.6; }
+        .loader.is-error .loader__error { display: block; }
+        .loader.is-error .loader__bar { display: none; }
+        .back { position: fixed; bottom: 12px; left: 14px; z-index: 11; padding: 7px 10px; font: 600 0.72rem/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); text-decoration: none; text-transform: uppercase; background: rgba(4, 7, 11, 0.78); border: 1px solid rgba(0, 243, 255, 0.25); }
+        .back:hover, .back:focus-visible { color: var(--cyan); }
+        @media (prefers-reduced-motion: reduce) { .loader { transition: none; } }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#gameplay-ai">&larr; Ryan Barry</a>
+    <canvas id="unity-canvas" tabindex="-1" aria-label="Gameplay Systems and AI demo"></canvas>
+
+    <div class="loader" role="status" aria-live="polite">
+        <p class="loader__kicker">Unity &middot; C# &middot; WebGL</p>
+        <p class="loader__title">GAMEPLAY SYSTEMS &amp; AI</p>
+        <p class="loader__line">Arcade drifting, a camera flash that stuns, and enemies run by state machines.</p>
+        <div class="loader__bar"><div class="loader__fill"></div></div>
+        <p class="loader__status">Loading 0%</p>
+        <p class="loader__error"></p>
     </div>
+
+    <script src="../assets/js/frame-bridge.js"></script>
+    <script src="Build/UnityDemo2.loader.js"></script>
     <script>
-      var canvas = document.querySelector("#unity-canvas");
+        (function () {
+            var canvas = document.getElementById('unity-canvas');
+            var loader = document.querySelector('.loader');
+            var status = document.querySelector('.loader__status');
+            var fill = document.querySelector('.loader__fill');
+            var error = document.querySelector('.loader__error');
+            var touchOnly = matchMedia('(hover: none) and (pointer: coarse)').matches && !matchMedia('(any-pointer: fine)').matches;
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+            canvas.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+            canvas.addEventListener('pointerdown', function () { canvas.focus(); });
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/UnityDemo2.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/UnityDemo2.data",
-        frameworkUrl: buildUrl + "/UnityDemo2.framework.js",
-        codeUrl: buildUrl + "/UnityDemo2.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "3DGamesProject",
-        productVersion: "0.1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
+            function progress(value) {
+                fill.style.width = Math.round(value * 100) + '%';
+                status.textContent = 'Loading ' + Math.round(value * 100) + '%';
+            }
+            progress(0);
+            if (touchOnly) document.querySelector('.loader__line').textContent = 'Made for a mouse and keyboard, so it plays best on a computer.';
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
-
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
+            // The names below stay as the build was made with, because Unity keys saved data on them.
+            createUnityInstance(canvas, {
+                dataUrl: 'Build/UnityDemo2.data',
+                frameworkUrl: 'Build/UnityDemo2.framework.js',
+                codeUrl: 'Build/UnityDemo2.wasm',
+                streamingAssetsUrl: 'StreamingAssets',
+                companyName: 'DefaultCompany',
+                productName: '3DGamesProject',
+                productVersion: '0.1.0',
+                devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+                errorHandler: function (message) { return Boolean(window.portfolioUnityError && window.portfolioUnityError(message)); },
+                showBanner: function (message, type) { if (type === 'error') console.error(message); else console.warn(message); }
+            }, progress).then(function (instance) {
+                loader.classList.add('is-done');
+                canvas.focus();
+                window.portfolioFrame.ready(instance, canvas);
+            }).catch(function (message) {
+                loader.classList.add('is-error');
+                status.textContent = 'It would not start';
+                error.textContent = 'This demo needs a desktop browser with WebGL 2 (Chrome, Edge, Firefox or Safari). ' + message;
+            });
+        })();
     </script>
-  </body>
+</body>
 </html>
